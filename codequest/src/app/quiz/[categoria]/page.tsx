@@ -4,19 +4,20 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter, useParams } from 'next/navigation';
 import { useEffect, useState, useCallback } from 'react';
 import { categorias } from '@/lib/quizzes';
+import type { Pergunta } from '@/lib/quizzes';
+import { gerarPerguntasComIA } from '@/lib/gemini';
 import { saveQuizResult } from '@/lib/firestore';
 import Link from 'next/link';
-import { X, Code2, Zap, RefreshCw, ArrowLeft, CheckCircle2, XCircle, CircleDot, ChevronRight, Award, AlertCircle, Database, Cpu, FileCode, Palette, Atom, Terminal } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+import { X, Code2, Zap, RefreshCw, CheckCircle2, XCircle, CircleDot, ChevronRight, Award, AlertCircle, Sparkles } from 'lucide-react';
+import { languageIconMap } from '@/components/LanguageIcons';
 
-const categoryIcons: Record<string, LucideIcon> = {
-    javascript: FileCode,
-    python: Terminal,
-    htmlcss: Palette,
-    logica: Cpu,
-    sql: Database,
-    react: Atom,
-};
+const loadingMessages = [
+    'A IA está preparando suas perguntas...',
+    'Gerando desafios personalizados...',
+    'Formulando questões inteligentes...',
+    'Quase lá, calibrando dificuldade...',
+    'Criando um quiz único para você...',
+];
 
 export default function QuizPage() {
     const { user, loading: authLoading } = useAuth();
@@ -26,8 +27,12 @@ export default function QuizPage() {
 
     const categoria = categorias.find((c) => c.id === categoriaId);
 
-    const CatIcon = categoryIcons[categoriaId] || Code2;
+    const LangIcon = languageIconMap[categoriaId];
 
+    const [perguntas, setPerguntas] = useState<Pergunta[]>([]);
+    const [carregandoPerguntas, setCarregandoPerguntas] = useState(true);
+    const [erroCarregamento, setErroCarregamento] = useState(false);
+    const [loadingMsg, setLoadingMsg] = useState(loadingMessages[0]);
     const [perguntaAtual, setPerguntaAtual] = useState(0);
     const [respostaSelecionada, setRespostaSelecionada] = useState<number | null>(null);
     const [acertos, setAcertos] = useState(0);
@@ -36,28 +41,59 @@ export default function QuizPage() {
     const [xpGanho, setXpGanho] = useState(0);
     const [salvando, setSalvando] = useState(false);
 
+    // Rotate loading messages
+    useEffect(() => {
+        if (!carregandoPerguntas) return;
+        let i = 0;
+        const interval = setInterval(() => {
+            i = (i + 1) % loadingMessages.length;
+            setLoadingMsg(loadingMessages[i]);
+        }, 2500);
+        return () => clearInterval(interval);
+    }, [carregandoPerguntas]);
+
+    // Generate questions with AI
+    const carregarPerguntas = useCallback(async () => {
+        if (!categoria) return;
+        setCarregandoPerguntas(true);
+        setErroCarregamento(false);
+        try {
+            const perguntasIA = await gerarPerguntasComIA(categoria.nome, categoriaId, 10);
+            setPerguntas(perguntasIA);
+        } catch (err) {
+            console.error('Erro ao gerar perguntas, usando fallback:', err);
+            // Fallback to static questions
+            setPerguntas(categoria.perguntas);
+        }
+        setCarregandoPerguntas(false);
+    }, [categoria, categoriaId]);
+
     useEffect(() => {
         if (!authLoading && !user) {
             router.push('/login');
+            return;
         }
-    }, [user, authLoading, router]);
+        if (user && categoria) {
+            carregarPerguntas();
+        }
+    }, [user, authLoading, router, categoria]);
 
     const handleResposta = useCallback(
         (index: number) => {
-            if (respondida || !categoria) return;
+            if (respondida || perguntas.length === 0) return;
             setRespostaSelecionada(index);
             setRespondida(true);
-            const pergunta = categoria.perguntas[perguntaAtual];
+            const pergunta = perguntas[perguntaAtual];
             if (index === pergunta.respostaCorreta) {
                 setAcertos((prev) => prev + 1);
             }
         },
-        [respondida, categoria, perguntaAtual]
+        [respondida, perguntas, perguntaAtual]
     );
 
     const proximaPergunta = useCallback(async () => {
-        if (!categoria || !user) return;
-        if (perguntaAtual < categoria.perguntas.length - 1) {
+        if (perguntas.length === 0 || !user) return;
+        if (perguntaAtual < perguntas.length - 1) {
             setPerguntaAtual((prev) => prev + 1);
             setRespostaSelecionada(null);
             setRespondida(false);
@@ -65,7 +101,7 @@ export default function QuizPage() {
             setSalvando(true);
             const totalAcertos = acertos;
             try {
-                const xp = await saveQuizResult(user.uid, categoriaId, totalAcertos, categoria.perguntas.length);
+                const xp = await saveQuizResult(user.uid, categoriaId, totalAcertos, perguntas.length);
                 setXpGanho(xp);
             } catch (err) {
                 console.error('Erro ao salvar resultado:', err);
@@ -73,7 +109,18 @@ export default function QuizPage() {
             setSalvando(false);
             setFinalizado(true);
         }
-    }, [categoria, user, perguntaAtual, respostaSelecionada, acertos, categoriaId]);
+    }, [perguntas, user, perguntaAtual, acertos, categoriaId]);
+
+    const jogarNovamente = useCallback(() => {
+        setPerguntaAtual(0);
+        setRespostaSelecionada(null);
+        setAcertos(0);
+        setRespondida(false);
+        setFinalizado(false);
+        setXpGanho(0);
+        setPerguntas([]);
+        carregarPerguntas();
+    }, [carregarPerguntas]);
 
     if (authLoading) {
         return (
@@ -100,9 +147,81 @@ export default function QuizPage() {
         );
     }
 
+    // Loading screen while AI generates questions
+    if (carregandoPerguntas) {
+        return (
+            <div style={{
+                minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: 'var(--background)', padding: '24px',
+            }}>
+                <div style={{ textAlign: 'center', maxWidth: '420px', width: '100%' }}>
+                    <div style={{
+                        width: '120px', height: '120px', borderRadius: '24px', margin: '0 auto 32px',
+                        background: `${categoria.cor}15`,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        position: 'relative', overflow: 'hidden',
+                    }}>
+                        <div style={{
+                            position: 'absolute', inset: 0,
+                            background: `radial-gradient(circle, ${categoria.cor}20, transparent 70%)`,
+                            animation: 'pulse 2s ease-in-out infinite',
+                        }} />
+                        {LangIcon ? <LangIcon size={56} /> : <Code2 size={56} style={{ color: categoria.cor }} />}
+                    </div>
+
+                    <div style={{ marginBottom: '24px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '12px' }}>
+                            <Sparkles size={20} style={{ color: '#a78bfa' }} className="animate-spin" />
+                            <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+                                Gerando Quiz com IA
+                            </h2>
+                            <Sparkles size={20} style={{ color: '#00d4ff' }} className="animate-spin" />
+                        </div>
+                        <p style={{
+                            color: 'var(--text-secondary)', fontSize: '0.9rem',
+                            minHeight: '24px', transition: 'opacity 0.3s ease',
+                        }}>
+                            {loadingMsg}
+                        </p>
+                    </div>
+
+                    {/* Loading bar animation */}
+                    <div style={{
+                        width: '100%', height: '6px', borderRadius: '3px',
+                        background: 'var(--bg-surface-lighter)', overflow: 'hidden',
+                        marginBottom: '16px',
+                    }}>
+                        <div style={{
+                            width: '40%', height: '100%', borderRadius: '3px',
+                            background: 'linear-gradient(90deg, #00d4ff, #a78bfa, #00d4ff)',
+                            backgroundSize: '200% 100%',
+                            animation: 'shimmer 1.5s ease-in-out infinite, loadingSlide 2s ease-in-out infinite',
+                        }} />
+                    </div>
+
+                    <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                        Perguntas únicas geradas por inteligência artificial
+                    </p>
+
+                    <style>{`
+                        @keyframes loadingSlide {
+                            0% { transform: translateX(-100%); }
+                            50% { transform: translateX(150%); }
+                            100% { transform: translateX(-100%); }
+                        }
+                        @keyframes shimmer {
+                            0% { background-position: 200% 0; }
+                            100% { background-position: -200% 0; }
+                        }
+                    `}</style>
+                </div>
+            </div>
+        );
+    }
+
     // Resultado final
     if (finalizado) {
-        const pct = Math.round((acertos / categoria.perguntas.length) * 100);
+        const pct = Math.round((acertos / perguntas.length) * 100);
         const ResultIcon = Award;
         const mensagem =
             pct >= 80 ? 'Incrível! Você domina esse assunto!'
@@ -126,33 +245,33 @@ export default function QuizPage() {
                             border: '1px solid rgba(0, 212, 255, 0.15)',
                         }}>
                             <div className="neon-text" style={{ fontSize: '3rem', fontWeight: 900, marginBottom: '4px' }}>
-                                {acertos}/{categoria.perguntas.length}
+                                {acertos}/{perguntas.length}
                             </div>
                             <p style={{ fontSize: '14px', color: 'var(--text-muted)' }}>respostas corretas</p>
                         </div>
 
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '32px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '12px' }}>
                             <Zap size={24} style={{ color: '#00d4ff' }} />
                             <span className="neon-text" style={{ fontSize: '1.5rem', fontWeight: 900 }}>+{xpGanho} XP</span>
                         </div>
 
+                        <div style={{
+                            display: 'inline-flex', alignItems: 'center', gap: '6px',
+                            fontSize: '0.75rem', color: '#a78bfa', marginBottom: '32px',
+                            padding: '4px 12px', borderRadius: '8px',
+                            background: 'rgba(167, 139, 250, 0.08)',
+                        }}>
+                            <Sparkles size={12} /> Perguntas geradas por IA
+                        </div>
+
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                            <Link
-                                href={`/quiz/${categoriaId}`}
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    setPerguntaAtual(0);
-                                    setRespostaSelecionada(null);
-                                    setAcertos(0);
-                                    setRespondida(false);
-                                    setFinalizado(false);
-                                    setXpGanho(0);
-                                }}
+                            <button
+                                onClick={jogarNovamente}
                                 className="btn-3d"
-                                style={{ width: '100%', padding: '16px', borderRadius: '12px', fontSize: '1rem', textAlign: 'center', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                                style={{ width: '100%', padding: '16px', borderRadius: '12px', fontSize: '1rem', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                             >
                                 <RefreshCw size={16} /> JOGAR NOVAMENTE
-                            </Link>
+                            </button>
                             <Link
                                 href="/dashboard"
                                 style={{
@@ -171,8 +290,10 @@ export default function QuizPage() {
         );
     }
 
-    const pergunta = categoria.perguntas[perguntaAtual];
-    const progresso = ((perguntaAtual) / categoria.perguntas.length) * 100;
+    if (perguntas.length === 0) return null;
+
+    const pergunta = perguntas[perguntaAtual];
+    const progresso = ((perguntaAtual) / perguntas.length) * 100;
 
     const getDifficultyStyle = () => {
         if (pergunta.dificuldade === 'facil') return { bg: 'rgba(16, 185, 129, 0.1)', color: '#10b981', border: 'rgba(16, 185, 129, 0.25)' };
@@ -191,11 +312,17 @@ export default function QuizPage() {
                         <X size={16} /> Sair
                     </Link>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <CatIcon size={20} style={{ color: '#00d4ff' }} />
+                        {LangIcon ? (
+                            <div style={{ width: '20px', height: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <LangIcon size={20} />
+                            </div>
+                        ) : (
+                            <Code2 size={20} style={{ color: '#00d4ff' }} />
+                        )}
                         <span style={{ fontWeight: 700, fontSize: '14px', color: 'var(--text-primary)' }}>{categoria.nome}</span>
                     </div>
                     <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-muted)' }}>
-                        {perguntaAtual + 1}/{categoria.perguntas.length}
+                        {perguntaAtual + 1}/{perguntas.length}
                     </span>
                 </div>
 
@@ -206,16 +333,25 @@ export default function QuizPage() {
 
                 {/* Question Card */}
                 <div className="card animate-fade-in-up" style={{ padding: '24px 32px', marginBottom: '24px' }}>
-                    <span style={{
-                        display: 'inline-block', fontSize: '12px', fontWeight: 700,
-                        padding: '4px 12px', borderRadius: '8px', marginBottom: '16px',
-                        background: diff.bg, color: diff.color, border: `1px solid ${diff.border}`,
-                    }}>
-                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                            <CircleDot size={12} />
-                            {pergunta.dificuldade === 'facil' ? 'Fácil' : pergunta.dificuldade === 'medio' ? 'Médio' : 'Difícil'}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+                        <span style={{
+                            display: 'inline-block', fontSize: '12px', fontWeight: 700,
+                            padding: '4px 12px', borderRadius: '8px',
+                            background: diff.bg, color: diff.color, border: `1px solid ${diff.border}`,
+                        }}>
+                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                <CircleDot size={12} />
+                                {pergunta.dificuldade === 'facil' ? 'Fácil' : pergunta.dificuldade === 'medio' ? 'Médio' : 'Difícil'}
+                            </span>
                         </span>
-                    </span>
+                        <span style={{
+                            display: 'inline-flex', alignItems: 'center', gap: '4px',
+                            fontSize: '11px', fontWeight: 600, padding: '4px 10px', borderRadius: '8px',
+                            background: 'rgba(167, 139, 250, 0.08)', color: '#a78bfa',
+                        }}>
+                            <Sparkles size={10} /> IA
+                        </span>
+                    </div>
 
                     <h2 style={{ fontSize: '1.25rem', fontWeight: 900, lineHeight: 1.4, color: 'var(--text-primary)' }}>
                         {pergunta.pergunta}
@@ -307,7 +443,7 @@ export default function QuizPage() {
                                 opacity: salvando ? 0.5 : 1,
                             }}
                         >
-                            {salvando ? 'SALVANDO...' : perguntaAtual < categoria.perguntas.length - 1 ? <><ChevronRight size={16} style={{ marginRight: '4px' }} /> PRÓXIMA PERGUNTA</> : <><Award size={16} style={{ marginRight: '4px' }} /> VER RESULTADO</>}
+                            {salvando ? 'SALVANDO...' : perguntaAtual < perguntas.length - 1 ? <><ChevronRight size={16} style={{ marginRight: '4px' }} /> PRÓXIMA PERGUNTA</> : <><Award size={16} style={{ marginRight: '4px' }} /> VER RESULTADO</>}
                         </button>
                     </div>
                 )}

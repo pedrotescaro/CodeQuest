@@ -1,5 +1,3 @@
-import { Code2, Heart } from 'lucide-react';
-
 export default function Footer() {
     return (
         <footer style={{
@@ -24,17 +22,6 @@ export default function Footer() {
                 <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
                     &copy; {new Date().getFullYear()} CodeQuest. Todos os direitos reservados.
                 </p>
-                <div style={{
-                    marginTop: '12px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '6px',
-                }}>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Feito com</span>
-                    <Heart size={13} style={{ color: '#ef4444' }} fill="#ef4444" />
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>para devs</span>
-                </div>
             </div>
         </footer>
     );

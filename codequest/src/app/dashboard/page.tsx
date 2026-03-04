@@ -9,18 +9,8 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import {
     Zap, Trophy, Flame, Code2, Medal, TrendingUp, ChevronRight,
-    Database, Cpu, FileCode, Palette, Atom, Terminal,
 } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
-
-const categoryIcons: Record<string, LucideIcon> = {
-    javascript: FileCode,
-    python: Terminal,
-    htmlcss: Palette,
-    logica: Cpu,
-    sql: Database,
-    react: Atom,
-};
+import { languageIconMap } from '@/components/LanguageIcons';
 
 export default function DashboardPage() {
     const { user, loading: authLoading } = useAuth();
@@ -163,7 +153,7 @@ export default function DashboardPage() {
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px' }}>
                                 {categorias.map((cat, i) => {
                                     const completado = userData.quizzesCompletos[cat.id];
-                                    const CatIcon = categoryIcons[cat.id] || Code2;
+                                    const LangIcon = languageIconMap[cat.id];
                                     return (
                                         <Link
                                             key={cat.id}
@@ -180,10 +170,10 @@ export default function DashboardPage() {
                                                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                                                     flexShrink: 0,
                                                     backgroundColor: `${cat.cor}15`,
-                                                    color: cat.cor,
                                                     transition: 'transform 0.2s',
+                                                    overflow: 'hidden',
                                                 }}>
-                                                    <CatIcon size={22} />
+                                                    {LangIcon ? <LangIcon size={28} /> : <Code2 size={22} style={{ color: cat.cor }} />}
                                                 </div>
                                                 <div style={{ flex: 1, minWidth: 0 }}>
                                                     <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>

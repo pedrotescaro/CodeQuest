@@ -4,8 +4,7 @@ import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import CatMascot from '@/components/CatMascot';
-import { ArrowLeft, Shield } from 'lucide-react';
+import { ArrowLeft, Flame } from 'lucide-react';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -160,8 +159,18 @@ export default function LoginPage() {
 
                 <div style={{ textAlign: 'center', position: 'relative', zIndex: 10 }}>
                     <div style={{ marginBottom: '32px', display: 'flex', justifyContent: 'center' }}>
-                        <div className="animate-float">
-                            <CatMascot size={160} />
+                        <div className="animate-float" style={{
+                            width: '160px', height: '160px', borderRadius: '50%',
+                            background: 'radial-gradient(circle, rgba(239, 68, 68, 0.15), rgba(245, 158, 11, 0.08), transparent 70%)',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            position: 'relative',
+                        }}>
+                            <div style={{
+                                position: 'absolute', inset: 0, borderRadius: '50%',
+                                background: 'radial-gradient(circle, rgba(245, 158, 11, 0.12), transparent 60%)',
+                                animation: 'pulse 2s ease-in-out infinite',
+                            }} />
+                            <Flame size={80} style={{ color: '#ef4444', filter: 'drop-shadow(0 0 20px rgba(239, 68, 68, 0.5))' }} />
                         </div>
                     </div>
                     <h2 className="gradient-text" style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '16px', letterSpacing: '-0.02em' }}>
