@@ -20,7 +20,7 @@ export const categorias: CategoriaQuiz[] = [
         id: 'javascript',
         nome: 'JavaScript',
         descricao: 'Domine a linguagem da web moderna',
-        icone: '⚡',
+        icone: 'javascript',
         cor: '#F7DF1E',
         perguntas: [
             {
@@ -124,7 +124,7 @@ export const categorias: CategoriaQuiz[] = [
         id: 'python',
         nome: 'Python',
         descricao: 'A linguagem mais versátil do mundo',
-        icone: '🐍',
+        icone: 'python',
         cor: '#3776AB',
         perguntas: [
             {
@@ -228,7 +228,7 @@ export const categorias: CategoriaQuiz[] = [
         id: 'htmlcss',
         nome: 'HTML & CSS',
         descricao: 'Os fundamentos de toda página web',
-        icone: '🎨',
+        icone: 'css',
         cor: '#E44D26',
         perguntas: [
             {
@@ -342,7 +342,7 @@ export const categorias: CategoriaQuiz[] = [
         id: 'logica',
         nome: 'Lógica',
         descricao: 'Pensamento computacional e algoritmos',
-        icone: '🧠',
+        icone: 'logic',
         cor: '#8B5CF6',
         perguntas: [
             {
@@ -451,7 +451,7 @@ export const categorias: CategoriaQuiz[] = [
         id: 'sql',
         nome: 'SQL',
         descricao: 'Bancos de dados relacionais e consultas',
-        icone: '🗄️',
+        icone: 'database',
         cor: '#336791',
         perguntas: [
             {
@@ -570,7 +570,7 @@ export const categorias: CategoriaQuiz[] = [
         id: 'react',
         nome: 'React',
         descricao: 'A biblioteca mais popular para UIs',
-        icone: '⚛️',
+        icone: 'react',
         cor: '#61DAFB',
         perguntas: [
             {

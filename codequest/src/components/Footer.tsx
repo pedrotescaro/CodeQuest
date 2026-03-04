@@ -1,28 +1,39 @@
+import { Code2, Heart } from 'lucide-react';
+
 export default function Footer() {
     return (
         <footer style={{
-            background: 'linear-gradient(180deg, var(--bg-surface), var(--background))',
+            background: 'var(--bg-surface)',
             borderTop: '1px solid var(--border-color)',
             padding: '40px 0',
         }}>
             <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', textAlign: 'center' }}>
                 <p style={{
-                    fontSize: '1.5rem',
-                    fontWeight: 900,
-                    letterSpacing: '-0.02em',
+                    fontSize: '1.35rem',
+                    fontWeight: 800,
+                    letterSpacing: '-0.03em',
                     marginBottom: '8px',
                     color: '#00d4ff',
-                    textShadow: '0 0 10px rgba(0, 212, 255, 0.4)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '2px',
                 }}>
                     {'<'}Code<span style={{ color: '#a78bfa' }}>Quest</span>{' />'}
                 </p>
                 <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                    © {new Date().getFullYear()} CodeQuest. Todos os direitos reservados.
+                    &copy; {new Date().getFullYear()} CodeQuest. Todos os direitos reservados.
                 </p>
-                <div style={{ marginTop: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Feito com</span>
-                    <span style={{ fontSize: '0.85rem', color: '#ff4757' }}>❤</span>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>para devs</span>
+                <div style={{
+                    marginTop: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                }}>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Feito com</span>
+                    <Heart size={13} style={{ color: '#ef4444' }} fill="#ef4444" />
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>para devs</span>
                 </div>
             </div>
         </footer>

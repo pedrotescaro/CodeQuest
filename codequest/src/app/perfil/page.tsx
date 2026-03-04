@@ -6,6 +6,9 @@ import { useEffect, useState } from 'react';
 import { getUserData, getXpParaProximoNivel, UserData } from '@/lib/firestore';
 import { categorias } from '@/lib/quizzes';
 import Navbar from '@/components/Navbar';
+import {
+    Trophy, Zap, Flame, BookOpen, Settings, LogOut, Code2, User,
+} from 'lucide-react';
 
 export default function PerfilPage() {
     const { user, logout, loading: authLoading } = useAuth();
@@ -36,11 +39,11 @@ export default function PerfilPage() {
             <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--background)' }}>
                 <div style={{ textAlign: 'center' }}>
                     <div style={{
-                        width: '64px', height: '64px', borderRadius: '50%',
-                        border: '4px solid #00d4ff', borderTopColor: 'transparent',
+                        width: '48px', height: '48px', borderRadius: '50%',
+                        border: '3px solid #00d4ff', borderTopColor: 'transparent',
                         margin: '0 auto 16px',
                     }} className="animate-spin" />
-                    <p style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>Carregando...</p>
+                    <p style={{ color: 'var(--text-secondary)', fontWeight: 600, fontSize: '0.9rem' }}>Carregando...</p>
                 </div>
             </div>
         );
@@ -76,7 +79,7 @@ export default function PerfilPage() {
                     }}>
                         {/* Avatar */}
                         <div className="profile-avatar">
-                            <span>👤</span>
+                            <User size={32} />
                             <div className="profile-level-badge">
                                 Lvl {userData.nivel}
                             </div>
@@ -86,14 +89,15 @@ export default function PerfilPage() {
                         <div style={{ flex: 1, minWidth: '200px' }}>
                             <h1 style={{
                                 fontSize: '1.5rem',
-                                fontWeight: 900,
+                                fontWeight: 800,
                                 color: 'var(--text-primary)',
                                 marginBottom: '4px',
+                                letterSpacing: '-0.02em',
                             }}>
                                 {userData.nome}
                             </h1>
                             <p style={{
-                                fontSize: '0.9rem',
+                                fontSize: '0.875rem',
                                 color: 'var(--text-secondary)',
                                 marginBottom: '16px',
                             }}>
@@ -103,10 +107,10 @@ export default function PerfilPage() {
                             {/* XP Bar */}
                             <div style={{ marginBottom: '16px' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-                                    <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
-                                        Nível {userData.nivel}
+                                    <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)' }}>
+                                        Nivel {userData.nivel}
                                     </span>
-                                    <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
+                                    <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)' }}>
                                         {xpProgress.atual}/{xpProgress.necessario} XP
                                     </span>
                                 </div>
@@ -117,15 +121,17 @@ export default function PerfilPage() {
 
                             {/* Action Buttons */}
                             <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                                <button className="btn-neon" style={{ fontSize: '0.8rem', padding: '8px 20px' }}>
-                                    ⚙️ Editar Perfil
+                                <button className="btn-neon" style={{ fontSize: '0.8rem', padding: '8px 18px' }}>
+                                    <Settings size={14} />
+                                    Editar Perfil
                                 </button>
                                 <button
                                     onClick={handleLogout}
                                     className="btn-outline-neon"
-                                    style={{ fontSize: '0.8rem', padding: '8px 20px' }}
+                                    style={{ fontSize: '0.8rem', padding: '8px 18px' }}
                                 >
-                                    ↪ Sair da Conta
+                                    <LogOut size={14} />
+                                    Sair da Conta
                                 </button>
                             </div>
                         </div>
@@ -139,44 +145,52 @@ export default function PerfilPage() {
                         marginBottom: '32px',
                     }}>
                         <div className="stat-card animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
-                            <div className="stat-card-icon" style={{ background: 'rgba(255, 165, 2, 0.1)' }}>🏆</div>
+                            <div className="stat-card-icon" style={{ background: 'rgba(245, 158, 11, 0.08)' }}>
+                                <Trophy size={20} style={{ color: '#f59e0b' }} />
+                            </div>
                             <div>
-                                <p style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                    Nível Atual
+                                <p style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                    Nivel Atual
                                 </p>
-                                <p style={{ fontSize: '1.5rem', fontWeight: 900, color: '#ffa502' }}>{userData.nivel}</p>
+                                <p style={{ fontSize: '1.5rem', fontWeight: 800, color: '#f59e0b' }}>{userData.nivel}</p>
                             </div>
                         </div>
 
                         <div className="stat-card animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
-                            <div className="stat-card-icon" style={{ background: 'rgba(0, 212, 255, 0.1)' }}>⚡</div>
+                            <div className="stat-card-icon" style={{ background: 'rgba(0, 212, 255, 0.08)' }}>
+                                <Zap size={20} style={{ color: '#00d4ff' }} />
+                            </div>
                             <div>
-                                <p style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                    Experiência
+                                <p style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                    Experiencia
                                 </p>
-                                <p className="neon-text" style={{ fontSize: '1.5rem', fontWeight: 900 }}>{userData.xp} XP</p>
+                                <p className="neon-text" style={{ fontSize: '1.5rem', fontWeight: 800 }}>{userData.xp} XP</p>
                             </div>
                         </div>
 
                         <div className="stat-card animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                            <div className="stat-card-icon" style={{ background: 'rgba(255, 71, 87, 0.1)' }}>🔥</div>
+                            <div className="stat-card-icon" style={{ background: 'rgba(239, 68, 68, 0.08)' }}>
+                                <Flame size={20} style={{ color: '#ef4444' }} />
+                            </div>
                             <div>
-                                <p style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                <p style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                                     Ofensiva
                                 </p>
-                                <p style={{ fontSize: '1.5rem', fontWeight: 900, color: '#ff4757' }}>
+                                <p style={{ fontSize: '1.5rem', fontWeight: 800, color: '#ef4444' }}>
                                     {userData.ofensiva} {userData.ofensiva === 1 ? 'dia' : 'dias'}
                                 </p>
                             </div>
                         </div>
 
                         <div className="stat-card animate-fade-in-up" style={{ animationDelay: '0.25s' }}>
-                            <div className="stat-card-icon" style={{ background: 'rgba(0, 255, 136, 0.1)' }}>📚</div>
+                            <div className="stat-card-icon" style={{ background: 'rgba(16, 185, 129, 0.08)' }}>
+                                <BookOpen size={20} style={{ color: '#10b981' }} />
+                            </div>
                             <div>
-                                <p style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                    Quizzes Concluídos
+                                <p style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                    Quizzes Concluidos
                                 </p>
-                                <p style={{ fontSize: '1.5rem', fontWeight: 900, color: '#00ff88' }}>{quizzesCompletos}</p>
+                                <p style={{ fontSize: '1.5rem', fontWeight: 800, color: '#10b981' }}>{quizzesCompletos}</p>
                             </div>
                         </div>
                     </div>
@@ -184,27 +198,34 @@ export default function PerfilPage() {
                     {/* Quiz History */}
                     <div className="animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
                         <h2 style={{
-                            fontSize: '1.2rem',
-                            fontWeight: 800,
+                            fontSize: '1.15rem',
+                            fontWeight: 700,
                             color: 'var(--text-primary)',
                             marginBottom: '16px',
+                            letterSpacing: '-0.01em',
                         }}>
-                            Histórico de Quizzes
+                            Historico de Quizzes
                         </h2>
 
                         <div className="card" style={{ padding: '24px' }}>
                             {quizzesCompletos === 0 ? (
                                 <div style={{ textAlign: 'center', padding: '32px 0' }}>
-                                    <div style={{ fontSize: '3rem', marginBottom: '12px', opacity: 0.5 }}>📚</div>
-                                    <p style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>
+                                    <div style={{
+                                        width: '56px', height: '56px', borderRadius: '14px',
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        background: 'rgba(0, 212, 255, 0.06)', margin: '0 auto 12px',
+                                    }}>
+                                        <BookOpen size={24} style={{ color: 'var(--text-muted)' }} />
+                                    </div>
+                                    <p style={{ color: 'var(--text-secondary)', fontWeight: 600, fontSize: '0.95rem' }}>
                                         Nenhum quiz completado ainda
                                     </p>
-                                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', marginTop: '4px' }}>
-                                        Comece um quiz para ver seu histórico aqui!
+                                    <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '4px' }}>
+                                        Comece um quiz para ver seu historico aqui!
                                     </p>
                                 </div>
                             ) : (
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                                     {categorias.map((cat) => {
                                         const completado = userData.quizzesCompletos[cat.id];
                                         if (!completado) return null;
@@ -214,32 +235,33 @@ export default function PerfilPage() {
                                                 display: 'flex',
                                                 alignItems: 'center',
                                                 gap: '16px',
-                                                padding: '16px',
+                                                padding: '14px',
                                                 borderRadius: '12px',
                                                 background: 'var(--bg-surface)',
                                                 border: '1px solid var(--card-border)',
                                             }}>
                                                 <div style={{
-                                                    width: '44px', height: '44px', borderRadius: '10px',
+                                                    width: '40px', height: '40px', borderRadius: '10px',
                                                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                                    fontSize: '1.3rem', flexShrink: 0,
-                                                    backgroundColor: `${cat.cor}20`,
+                                                    flexShrink: 0,
+                                                    backgroundColor: `${cat.cor}15`,
+                                                    color: cat.cor,
                                                 }}>
-                                                    {cat.icone}
+                                                    <Code2 size={18} />
                                                 </div>
                                                 <div style={{ flex: 1, minWidth: 0 }}>
-                                                    <p style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-primary)' }}>
+                                                    <p style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--text-primary)' }}>
                                                         {cat.nome}
                                                     </p>
-                                                    <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                                                    <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
                                                         {completado.tentativas}x jogado
                                                     </p>
                                                 </div>
                                                 <div style={{ textAlign: 'right' }}>
-                                                    <p className="neon-text" style={{ fontWeight: 800, fontSize: '0.95rem' }}>
+                                                    <p className="neon-text" style={{ fontWeight: 700, fontSize: '0.9rem' }}>
                                                         {completado.melhorScore}/{cat.perguntas.length}
                                                     </p>
-                                                    <p style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>
+                                                    <p style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
                                                         melhor score
                                                     </p>
                                                 </div>

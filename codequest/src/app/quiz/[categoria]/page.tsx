@@ -6,6 +6,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { categorias } from '@/lib/quizzes';
 import { saveQuizResult } from '@/lib/firestore';
 import Link from 'next/link';
+import { X, Code2, Zap, RefreshCw, ArrowLeft, CheckCircle2, XCircle, CircleDot, ChevronRight, Award, AlertCircle } from 'lucide-react';
 
 export default function QuizPage() {
     const { user, loading: authLoading } = useAuth();
@@ -77,7 +78,7 @@ export default function QuizPage() {
         return (
             <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0a0f' }}>
                 <div style={{ textAlign: 'center' }}>
-                    <p style={{ fontSize: '3.5rem', marginBottom: '16px' }}>🤔</p>
+                    <AlertCircle size={48} style={{ color: '#7a8ba7', marginBottom: '16px' }} />
                     <h1 style={{ fontSize: '1.5rem', fontWeight: 900, marginBottom: '8px', color: '#e2e8f0' }}>Categoria não encontrada</h1>
                     <Link href="/dashboard" style={{ color: '#00d4ff', fontWeight: 600, textDecoration: 'none' }}>
                         Voltar ao dashboard
@@ -90,7 +91,7 @@ export default function QuizPage() {
     // Resultado final
     if (finalizado) {
         const pct = Math.round((acertos / categoria.perguntas.length) * 100);
-        const emoji = pct >= 80 ? '🎉' : pct >= 60 ? '👏' : pct >= 40 ? '💪' : '📚';
+        const ResultIcon = Award;
         const mensagem =
             pct >= 80 ? 'Incrível! Você domina esse assunto!'
                 : pct >= 60 ? 'Muito bom! Continue praticando!'
@@ -101,7 +102,9 @@ export default function QuizPage() {
             <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px', background: '#0a0a0f' }}>
                 <div className="animate-scale-in" style={{ maxWidth: '460px', width: '100%' }}>
                     <div className="card" style={{ padding: '32px', textAlign: 'center' }}>
-                        <div style={{ fontSize: '3.5rem', marginBottom: '16px' }}>{emoji}</div>
+                        <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'center' }}>
+                            <ResultIcon size={48} style={{ color: pct >= 60 ? '#10b981' : '#f59e0b' }} />
+                        </div>
                         <h1 style={{ fontSize: '1.875rem', fontWeight: 900, marginBottom: '8px', color: '#e2e8f0' }}>Quiz Finalizado!</h1>
                         <p style={{ color: '#7a8ba7', marginBottom: '24px' }}>{mensagem}</p>
 
@@ -117,7 +120,7 @@ export default function QuizPage() {
                         </div>
 
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '32px' }}>
-                            <span style={{ fontSize: '1.5rem' }}>⚡</span>
+                            <Zap size={24} style={{ color: '#00d4ff' }} />
                             <span className="neon-text" style={{ fontSize: '1.5rem', fontWeight: 900 }}>+{xpGanho} XP</span>
                         </div>
 
@@ -134,9 +137,9 @@ export default function QuizPage() {
                                     setXpGanho(0);
                                 }}
                                 className="btn-3d"
-                                style={{ width: '100%', padding: '16px', borderRadius: '12px', fontSize: '1rem', textAlign: 'center', textDecoration: 'none' }}
+                                style={{ width: '100%', padding: '16px', borderRadius: '12px', fontSize: '1rem', textAlign: 'center', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                             >
-                                JOGAR NOVAMENTE
+                                <RefreshCw size={16} /> JOGAR NOVAMENTE
                             </Link>
                             <Link
                                 href="/dashboard"
@@ -172,11 +175,11 @@ export default function QuizPage() {
             <div style={{ maxWidth: '700px', margin: '0 auto' }}>
                 {/* Header */}
                 <div className="animate-fade-in" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
-                    <Link href="/dashboard" style={{ color: '#7a8ba7', fontWeight: 600, fontSize: '14px', textDecoration: 'none' }}>
-                        ✕ Sair
+                    <Link href="/dashboard" style={{ color: '#7a8ba7', fontWeight: 600, fontSize: '14px', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <X size={16} /> Sair
                     </Link>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span style={{ fontSize: '1.5rem' }}>{categoria.icone}</span>
+                        <Code2 size={20} style={{ color: '#00d4ff' }} />
                         <span style={{ fontWeight: 700, fontSize: '14px', color: '#e2e8f0' }}>{categoria.nome}</span>
                     </div>
                     <span style={{ fontSize: '14px', fontWeight: 700, color: '#7a8ba7' }}>
@@ -196,7 +199,10 @@ export default function QuizPage() {
                         padding: '4px 12px', borderRadius: '8px', marginBottom: '16px',
                         background: diff.bg, color: diff.color, border: `1px solid ${diff.border}`,
                     }}>
-                        {pergunta.dificuldade === 'facil' ? '🟢 Fácil' : pergunta.dificuldade === 'medio' ? '🟡 Médio' : '🔴 Difícil'}
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                            <CircleDot size={12} />
+                            {pergunta.dificuldade === 'facil' ? 'Fácil' : pergunta.dificuldade === 'medio' ? 'Médio' : 'Difícil'}
+                        </span>
                     </span>
 
                     <h2 style={{ fontSize: '1.25rem', fontWeight: 900, lineHeight: 1.4, color: '#e2e8f0' }}>
@@ -272,9 +278,11 @@ export default function QuizPage() {
                             color: respostaSelecionada === pergunta.respostaCorreta ? '#00ff88' : '#ff4757',
                         }}>
                             <p style={{ fontWeight: 700 }}>
-                                {respostaSelecionada === pergunta.respostaCorreta
-                                    ? '✅ Correto! +10 XP'
-                                    : `❌ Errado! A resposta certa era: ${pergunta.alternativas[pergunta.respostaCorreta]}`}
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                                    {respostaSelecionada === pergunta.respostaCorreta
+                                        ? <><CheckCircle2 size={16} /> Correto! +10 XP</>
+                                        : <><XCircle size={16} /> Errado! A resposta certa era: {pergunta.alternativas[pergunta.respostaCorreta]}</>}
+                                </span>
                             </p>
                         </div>
 
@@ -287,7 +295,7 @@ export default function QuizPage() {
                                 opacity: salvando ? 0.5 : 1,
                             }}
                         >
-                            {salvando ? 'SALVANDO...' : perguntaAtual < categoria.perguntas.length - 1 ? 'PRÓXIMA PERGUNTA' : 'VER RESULTADO'}
+                            {salvando ? 'SALVANDO...' : perguntaAtual < categoria.perguntas.length - 1 ? <><ChevronRight size={16} style={{ marginRight: '4px' }} /> PRÓXIMA PERGUNTA</> : <><Award size={16} style={{ marginRight: '4px' }} /> VER RESULTADO</>}
                         </button>
                     </div>
                 )}

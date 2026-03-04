@@ -6,12 +6,14 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getUserData } from '@/lib/firestore';
+import { Sun, Moon, LogOut, User, Menu, X } from 'lucide-react';
 
 export default function Navbar() {
     const { user, logout } = useAuth();
     const { theme, toggleTheme } = useTheme();
     const router = useRouter();
     const [userName, setUserName] = useState('');
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         if (user) {
@@ -37,7 +39,7 @@ export default function Navbar() {
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
             borderBottom: '1px solid var(--border-color)',
-            transition: 'background 0.3s ease',
+            transition: 'all 0.3s ease',
         }}>
             <div style={{
                 maxWidth: '1280px',
@@ -50,39 +52,45 @@ export default function Navbar() {
             }}>
                 {/* Logo */}
                 <Link
-                    href={user ? '/dashboard' : '/'}
+                    href={user ? '/' : '/'}
                     style={{
-                        fontSize: '1.5rem',
-                        fontWeight: 900,
-                        letterSpacing: '-0.02em',
+                        fontSize: '1.35rem',
+                        fontWeight: 800,
+                        letterSpacing: '-0.03em',
                         textDecoration: 'none',
                         color: '#00d4ff',
-                        textShadow: '0 0 10px rgba(0, 212, 255, 0.5), 0 0 30px rgba(0, 212, 255, 0.2)',
                         transition: 'all 0.3s ease',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '2px',
                     }}
                 >
                     {'<'}Code<span style={{ color: '#a78bfa' }}>Quest</span>{' />'}
                 </Link>
 
                 {/* Right side */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     {/* Theme toggle */}
                     <button
                         onClick={toggleTheme}
                         className="theme-toggle"
                         aria-label="Alternar tema"
                     >
-                        {theme === 'dark' ? '🌙' : '☀️'}
+                        {theme === 'dark' ? (
+                            <Moon size={18} strokeWidth={2} />
+                        ) : (
+                            <Sun size={18} strokeWidth={2} />
+                        )}
                     </button>
 
                     {user ? (
                         <>
                             <span style={{
-                                fontSize: '0.9rem',
+                                fontSize: '0.875rem',
                                 color: 'var(--text-secondary)',
                                 fontWeight: 500,
                             }}>
-                                Olá, <span style={{ color: '#00d4ff', fontWeight: 700 }}>
+                                Ola, <span style={{ color: '#00d4ff', fontWeight: 600 }}>
                                     {userName || 'jogador'}
                                 </span>
                             </span>
@@ -90,42 +98,40 @@ export default function Navbar() {
                             <button
                                 onClick={handleLogout}
                                 style={{
-                                    fontSize: '0.85rem',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '6px',
+                                    fontSize: '0.8rem',
                                     fontWeight: 600,
                                     color: 'var(--text-secondary)',
                                     background: 'none',
                                     border: 'none',
                                     cursor: 'pointer',
-                                    transition: 'color 0.2s',
-                                    textTransform: 'uppercase',
+                                    transition: 'all 0.2s ease',
+                                    padding: '6px 10px',
+                                    borderRadius: '8px',
+                                    fontFamily: 'inherit',
                                 }}
-                                onMouseEnter={(e) => (e.currentTarget.style.color = '#ff4757')}
-                                onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.color = '#ef4444';
+                                    e.currentTarget.style.background = 'rgba(239, 68, 68, 0.08)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.color = 'var(--text-secondary)';
+                                    e.currentTarget.style.background = 'none';
+                                }}
                             >
+                                <LogOut size={15} />
                                 SAIR
                             </button>
 
-                            <Link href="/perfil" className="btn-neon">
+                            <Link href="/perfil" className="btn-neon" style={{ fontSize: '0.8rem', padding: '8px 18px' }}>
+                                <User size={15} />
                                 MEU PERFIL
                             </Link>
                         </>
                     ) : (
                         <>
-                            <Link
-                                href="/#como-funciona"
-                                style={{
-                                    fontSize: '0.85rem',
-                                    fontWeight: 600,
-                                    color: 'var(--text-primary)',
-                                    textDecoration: 'none',
-                                    textTransform: 'uppercase',
-                                    transition: 'color 0.2s',
-                                }}
-                                onMouseEnter={(e) => (e.currentTarget.style.color = '#00d4ff')}
-                                onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
-                            >
-                                COMO FUNCIONA
-                            </Link>
                             <Link
                                 href="/login"
                                 style={{
@@ -133,20 +139,27 @@ export default function Navbar() {
                                     fontWeight: 600,
                                     color: 'var(--text-primary)',
                                     textDecoration: 'none',
-                                    textTransform: 'uppercase',
-                                    transition: 'color 0.2s',
+                                    padding: '8px 16px',
+                                    borderRadius: '10px',
+                                    transition: 'all 0.2s ease',
                                 }}
-                                onMouseEnter={(e) => (e.currentTarget.style.color = '#00d4ff')}
-                                onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.color = '#00d4ff';
+                                    e.currentTarget.style.background = 'var(--hover-bg)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.color = 'var(--text-primary)';
+                                    e.currentTarget.style.background = 'transparent';
+                                }}
                             >
-                                ENTRAR
+                                Entrar
                             </Link>
                             <Link href="/cadastro" className="btn-3d" style={{
                                 fontSize: '0.85rem',
                                 padding: '8px 20px',
-                                borderRadius: '12px',
+                                borderRadius: '10px',
                             }}>
-                                COMEÇAR
+                                Comecar
                             </Link>
                         </>
                     )}

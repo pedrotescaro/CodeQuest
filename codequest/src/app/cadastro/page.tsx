@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import CatMascot from '@/components/CatMascot';
+import { ArrowLeft, Rocket } from 'lucide-react';
 
 export default function CadastroPage() {
     const [nome, setNome] = useState('');
@@ -35,57 +36,62 @@ export default function CadastroPage() {
     };
 
     return (
-        <div style={{ minHeight: '100vh', display: 'flex', background: '#0a0a0f' }}>
-            {/* Left – Form */}
+        <div style={{ minHeight: '100vh', display: 'flex', background: 'var(--background)' }}>
+            {/* Left - Form */}
             <div style={{
                 flex: 1,
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
-                padding: '48px 96px',
-                background: 'var(--color-surface)',
+                padding: '48px 72px',
+                background: 'var(--bg-surface)',
             }}>
                 <Link
                     href="/"
                     style={{
-                        fontSize: '14px',
-                        color: '#7a8ba7',
+                        fontSize: '0.85rem',
+                        color: 'var(--text-muted)',
                         marginBottom: '48px',
-                        display: 'flex',
+                        display: 'inline-flex',
                         alignItems: 'center',
-                        gap: '8px',
+                        gap: '6px',
                         textDecoration: 'none',
+                        transition: 'color 0.2s ease',
+                        width: 'fit-content',
                     }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = '#00d4ff')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
                 >
-                    ← Voltar ao início
+                    <ArrowLeft size={16} />
+                    Voltar ao inicio
                 </Link>
 
-                <div style={{ maxWidth: '420px', width: '100%' }}>
-                    <h1 style={{ fontSize: '2.25rem', fontWeight: 900, marginBottom: '8px', color: '#e2e8f0' }}>
+                <div style={{ maxWidth: '400px', width: '100%' }}>
+                    <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '8px', color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
                         Crie sua conta
                     </h1>
-                    <p style={{ color: '#7a8ba7', marginBottom: '32px' }}>
-                        Comece a ganhar XP e subir de nível agora mesmo.
+                    <p style={{ color: 'var(--text-secondary)', marginBottom: '32px', fontSize: '0.95rem' }}>
+                        Comece a ganhar XP e subir de nivel agora mesmo.
                     </p>
 
                     {erro && (
                         <div style={{
-                            background: 'rgba(255, 71, 87, 0.1)',
-                            border: '1px solid rgba(255, 71, 87, 0.3)',
-                            color: '#ff4757',
+                            background: 'rgba(239, 68, 68, 0.08)',
+                            border: '1px solid rgba(239, 68, 68, 0.15)',
+                            color: '#ef4444',
                             padding: '12px 16px',
-                            borderRadius: '12px',
+                            borderRadius: '10px',
                             marginBottom: '24px',
-                            fontSize: '14px',
+                            fontSize: '0.85rem',
                             fontWeight: 500,
                         }}>
                             {erro}
                         </div>
                     )}
 
-                    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
                         <div>
-                            <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: '#e2e8f0' }}>
+                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '8px', color: 'var(--text-primary)' }}>
                                 Nome
                             </label>
                             <input
@@ -100,7 +106,7 @@ export default function CadastroPage() {
                         </div>
 
                         <div>
-                            <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: '#e2e8f0' }}>
+                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '8px', color: 'var(--text-primary)' }}>
                                 E-mail
                             </label>
                             <input
@@ -115,7 +121,7 @@ export default function CadastroPage() {
                         </div>
 
                         <div>
-                            <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: '#e2e8f0' }}>
+                            <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '8px', color: 'var(--text-primary)' }}>
                                 Senha
                             </label>
                             <input
@@ -123,7 +129,7 @@ export default function CadastroPage() {
                                 type="password"
                                 value={senha}
                                 onChange={(e) => setSenha(e.target.value)}
-                                placeholder="Mínimo 6 caracteres"
+                                placeholder="Minimo 6 caracteres"
                                 required
                                 className="input-dark"
                             />
@@ -135,19 +141,19 @@ export default function CadastroPage() {
                             className="btn-3d"
                             style={{
                                 width: '100%',
-                                padding: '16px',
-                                borderRadius: '12px',
-                                fontSize: '1.1rem',
-                                opacity: loading ? 0.5 : 1,
+                                padding: '14px',
+                                borderRadius: '10px',
+                                fontSize: '0.95rem',
+                                opacity: loading ? 0.6 : 1,
                                 cursor: loading ? 'not-allowed' : 'pointer',
                             }}
                         >
-                            {loading ? 'CRIANDO...' : 'COMEÇAR AGORA'}
+                            {loading ? 'Criando...' : 'Comecar Agora'}
                         </button>
                     </form>
 
-                    <p style={{ textAlign: 'center', color: '#7a8ba7', marginTop: '32px', fontSize: '14px' }}>
-                        Já tem uma conta?{' '}
+                    <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginTop: '32px', fontSize: '0.85rem' }}>
+                        Ja tem uma conta?{' '}
                         <Link href="/login" style={{ color: '#00d4ff', fontWeight: 600, textDecoration: 'none' }}>
                             Entrar
                         </Link>
@@ -155,7 +161,7 @@ export default function CadastroPage() {
                 </div>
             </div>
 
-            {/* Right – Dark Neon Panel */}
+            {/* Right - Decorative Panel */}
             <div style={{
                 flex: 1,
                 display: 'flex',
@@ -164,14 +170,14 @@ export default function CadastroPage() {
                 padding: '48px',
                 position: 'relative',
                 overflow: 'hidden',
-                background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.05), rgba(0, 212, 255, 0.08))',
+                background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.03), rgba(0, 212, 255, 0.05))',
             }}
                 className="hidden lg:flex"
             >
-                <div className="dot-pattern" style={{ position: 'absolute', inset: 0, opacity: 0.3 }} />
+                <div className="dot-pattern" style={{ position: 'absolute', inset: 0, opacity: 0.2 }} />
                 <div style={{
                     position: 'absolute', inset: 0,
-                    background: 'radial-gradient(circle at 50% 50%, rgba(124, 58, 237, 0.08), transparent 70%)',
+                    background: 'radial-gradient(circle at 50% 50%, rgba(124, 58, 237, 0.04), transparent 70%)',
                 }} />
 
                 <div style={{ textAlign: 'center', position: 'relative', zIndex: 10 }}>
@@ -180,13 +186,13 @@ export default function CadastroPage() {
                             <CatMascot size={160} />
                         </div>
                     </div>
-                    <h2 className="gradient-text" style={{ fontSize: '2.25rem', fontWeight: 900, marginBottom: '16px' }}>
+                    <h2 className="gradient-text" style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '16px', letterSpacing: '-0.02em' }}>
                         Level up
                         <br />
-                        seu código.
+                        seu codigo.
                     </h2>
-                    <p style={{ fontSize: '1.1rem', maxWidth: '360px', color: '#7a8ba7' }}>
-                        JavaScript, Python, SQL, React... Domine tudo com quizzes interativos e um sistema de progressão viciante.
+                    <p style={{ fontSize: '1rem', maxWidth: '340px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                        JavaScript, Python, SQL, React... Domine tudo com quizzes interativos e um sistema de progressao viciante.
                     </p>
                 </div>
             </div>
