@@ -12,9 +12,20 @@ import {
   Trophy, Flame, Zap, BookOpen, Play, ArrowRight,
   Code2, Terminal, Braces, ChevronRight, Target,
   TrendingUp, Calendar, Sparkles, Shield, Gamepad2,
+  Search, Database, Cpu, FileCode, Palette, Atom,
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 const codeSymbols = ['{ }', '</ >', 'const', '( )', '=>', '[ ]', '===', '&&', '||', '!=', 'if', '++', 'fn', '0x', '/**/', '#!'];
+
+const categoryIcons: Record<string, LucideIcon> = {
+  javascript: FileCode,
+  python: Terminal,
+  htmlcss: Palette,
+  logica: Cpu,
+  sql: Database,
+  react: Atom,
+};
 
 export default function Home() {
   const { user, loading: authLoading } = useAuth();
@@ -33,10 +44,16 @@ export default function Home() {
   // ===========================
   // AUTHENTICATED HOME
   // ===========================
+  const [searchQuery, setSearchQuery] = useState('');
+
   if (!authLoading && user && userData) {
     const xpProgress = getXpParaProximoNivel(userData.xp);
     const progressPercent = (xpProgress.atual / xpProgress.necessario) * 100;
     const quizzesCompletos = Object.keys(userData.quizzesCompletos).length;
+    const filteredCategorias = categorias.filter((cat) =>
+      cat.nome.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      cat.descricao.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     return (
       <>
@@ -85,6 +102,33 @@ export default function Home() {
                 <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginBottom: '24px', lineHeight: 1.6 }}>
                   Continue sua jornada de programacao e ganhe recompensas.
                 </p>
+
+                {/* Search Bar */}
+                <div style={{
+                  position: 'relative',
+                  marginBottom: '24px',
+                  maxWidth: '480px',
+                }}>
+                  <Search size={18} style={{
+                    position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)',
+                    color: 'var(--text-muted)', pointerEvents: 'none',
+                  }} />
+                  <input
+                    type="text"
+                    placeholder="Buscar quizzes, linguagens ou temas..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="input-dark"
+                    style={{
+                      paddingLeft: '42px',
+                      paddingRight: '16px',
+                      height: '46px',
+                      width: '100%',
+                      borderRadius: '12px',
+                      fontSize: '0.9rem',
+                    }}
+                  />
+                </div>
 
                 {/* XP Progress Card */}
                 <div style={{
@@ -196,8 +240,9 @@ export default function Home() {
               </h2>
 
               <div className="horizontal-scroll">
-                {categorias.map((cat, i) => {
+                {filteredCategorias.map((cat, i) => {
                   const completado = userData.quizzesCompletos[cat.id];
+                  const CatIcon = categoryIcons[cat.id] || Code2;
                   return (
                     <Link
                       key={cat.id}
@@ -231,7 +276,7 @@ export default function Home() {
                         backgroundColor: `${cat.cor}15`,
                         color: cat.cor,
                       }}>
-                        <Code2 size={20} />
+                        <CatIcon size={20} />
                       </div>
                       <h3 style={{
                         fontSize: '0.95rem', fontWeight: 700,
@@ -261,6 +306,15 @@ export default function Home() {
                   );
                 })}
               </div>
+              {filteredCategorias.length === 0 && (
+                <div style={{
+                  textAlign: 'center', padding: '40px 20px',
+                  color: 'var(--text-muted)', fontSize: '0.9rem',
+                }}>
+                  <Search size={32} style={{ marginBottom: '12px', opacity: 0.4 }} />
+                  <p>Nenhum quiz encontrado para &ldquo;{searchQuery}&rdquo;</p>
+                </div>
+              )}
             </div>
           </section>
 

@@ -8,7 +8,18 @@ import { categorias } from '@/lib/quizzes';
 import Navbar from '@/components/Navbar';
 import {
     Trophy, Zap, Flame, BookOpen, Settings, LogOut, Code2, User,
+    Database, Cpu, FileCode, Palette, Atom, Terminal,
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+
+const categoryIcons: Record<string, LucideIcon> = {
+    javascript: FileCode,
+    python: Terminal,
+    htmlcss: Palette,
+    logica: Cpu,
+    sql: Database,
+    react: Atom,
+};
 
 export default function PerfilPage() {
     const { user, logout, loading: authLoading } = useAuth();
@@ -229,6 +240,7 @@ export default function PerfilPage() {
                                     {categorias.map((cat) => {
                                         const completado = userData.quizzesCompletos[cat.id];
                                         if (!completado) return null;
+                                        const CatIcon = categoryIcons[cat.id] || Code2;
 
                                         return (
                                             <div key={cat.id} style={{
@@ -247,7 +259,7 @@ export default function PerfilPage() {
                                                     backgroundColor: `${cat.cor}15`,
                                                     color: cat.cor,
                                                 }}>
-                                                    <Code2 size={18} />
+                                                    <CatIcon size={18} />
                                                 </div>
                                                 <div style={{ flex: 1, minWidth: 0 }}>
                                                     <p style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--text-primary)' }}>

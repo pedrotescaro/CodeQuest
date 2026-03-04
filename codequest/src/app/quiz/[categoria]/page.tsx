@@ -6,7 +6,17 @@ import { useEffect, useState, useCallback } from 'react';
 import { categorias } from '@/lib/quizzes';
 import { saveQuizResult } from '@/lib/firestore';
 import Link from 'next/link';
-import { X, Code2, Zap, RefreshCw, ArrowLeft, CheckCircle2, XCircle, CircleDot, ChevronRight, Award, AlertCircle } from 'lucide-react';
+import { X, Code2, Zap, RefreshCw, ArrowLeft, CheckCircle2, XCircle, CircleDot, ChevronRight, Award, AlertCircle, Database, Cpu, FileCode, Palette, Atom, Terminal } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+
+const categoryIcons: Record<string, LucideIcon> = {
+    javascript: FileCode,
+    python: Terminal,
+    htmlcss: Palette,
+    logica: Cpu,
+    sql: Database,
+    react: Atom,
+};
 
 export default function QuizPage() {
     const { user, loading: authLoading } = useAuth();
@@ -15,6 +25,8 @@ export default function QuizPage() {
     const categoriaId = params.categoria as string;
 
     const categoria = categorias.find((c) => c.id === categoriaId);
+
+    const CatIcon = categoryIcons[categoriaId] || Code2;
 
     const [perguntaAtual, setPerguntaAtual] = useState(0);
     const [respostaSelecionada, setRespostaSelecionada] = useState<number | null>(null);
@@ -65,7 +77,7 @@ export default function QuizPage() {
 
     if (authLoading) {
         return (
-            <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0a0f' }}>
+            <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--background)' }}>
                 <div style={{
                     width: '48px', height: '48px', borderRadius: '50%',
                     border: '4px solid #00d4ff', borderTopColor: 'transparent',
@@ -76,10 +88,10 @@ export default function QuizPage() {
 
     if (!categoria) {
         return (
-            <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0a0f' }}>
+            <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--background)' }}>
                 <div style={{ textAlign: 'center' }}>
-                    <AlertCircle size={48} style={{ color: '#7a8ba7', marginBottom: '16px' }} />
-                    <h1 style={{ fontSize: '1.5rem', fontWeight: 900, marginBottom: '8px', color: '#e2e8f0' }}>Categoria não encontrada</h1>
+                    <AlertCircle size={48} style={{ color: 'var(--text-muted)', marginBottom: '16px' }} />
+                    <h1 style={{ fontSize: '1.5rem', fontWeight: 900, marginBottom: '8px', color: 'var(--text-primary)' }}>Categoria não encontrada</h1>
                     <Link href="/dashboard" style={{ color: '#00d4ff', fontWeight: 600, textDecoration: 'none' }}>
                         Voltar ao dashboard
                     </Link>
@@ -99,14 +111,14 @@ export default function QuizPage() {
                         : 'Continue estudando! A prática leva à perfeição.';
 
         return (
-            <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px', background: '#0a0a0f' }}>
+            <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px', background: 'var(--background)' }}>
                 <div className="animate-scale-in" style={{ maxWidth: '460px', width: '100%' }}>
                     <div className="card" style={{ padding: '32px', textAlign: 'center' }}>
                         <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'center' }}>
                             <ResultIcon size={48} style={{ color: pct >= 60 ? '#10b981' : '#f59e0b' }} />
                         </div>
-                        <h1 style={{ fontSize: '1.875rem', fontWeight: 900, marginBottom: '8px', color: '#e2e8f0' }}>Quiz Finalizado!</h1>
-                        <p style={{ color: '#7a8ba7', marginBottom: '24px' }}>{mensagem}</p>
+                        <h1 style={{ fontSize: '1.875rem', fontWeight: 900, marginBottom: '8px', color: 'var(--text-primary)' }}>Quiz Finalizado!</h1>
+                        <p style={{ color: 'var(--text-muted)', marginBottom: '24px' }}>{mensagem}</p>
 
                         <div style={{
                             borderRadius: '16px', padding: '24px', marginBottom: '24px',
@@ -116,7 +128,7 @@ export default function QuizPage() {
                             <div className="neon-text" style={{ fontSize: '3rem', fontWeight: 900, marginBottom: '4px' }}>
                                 {acertos}/{categoria.perguntas.length}
                             </div>
-                            <p style={{ fontSize: '14px', color: '#7a8ba7' }}>respostas corretas</p>
+                            <p style={{ fontSize: '14px', color: 'var(--text-muted)' }}>respostas corretas</p>
                         </div>
 
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '32px' }}>
@@ -163,26 +175,26 @@ export default function QuizPage() {
     const progresso = ((perguntaAtual) / categoria.perguntas.length) * 100;
 
     const getDifficultyStyle = () => {
-        if (pergunta.dificuldade === 'facil') return { bg: 'rgba(0, 255, 136, 0.1)', color: '#00ff88', border: 'rgba(0, 255, 136, 0.2)' };
-        if (pergunta.dificuldade === 'medio') return { bg: 'rgba(255, 165, 2, 0.1)', color: '#ffa502', border: 'rgba(255, 165, 2, 0.2)' };
-        return { bg: 'rgba(255, 71, 87, 0.1)', color: '#ff4757', border: 'rgba(255, 71, 87, 0.2)' };
+        if (pergunta.dificuldade === 'facil') return { bg: 'rgba(16, 185, 129, 0.1)', color: '#10b981', border: 'rgba(16, 185, 129, 0.25)' };
+        if (pergunta.dificuldade === 'medio') return { bg: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b', border: 'rgba(245, 158, 11, 0.25)' };
+        return { bg: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: 'rgba(239, 68, 68, 0.25)' };
     };
 
     const diff = getDifficultyStyle();
 
     return (
-        <div style={{ minHeight: '100vh', padding: '24px 16px', background: '#0a0a0f' }}>
+        <div style={{ minHeight: '100vh', padding: '24px 16px', background: 'var(--background)' }}>
             <div style={{ maxWidth: '700px', margin: '0 auto' }}>
                 {/* Header */}
                 <div className="animate-fade-in" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
-                    <Link href="/dashboard" style={{ color: '#7a8ba7', fontWeight: 600, fontSize: '14px', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <Link href="/dashboard" style={{ color: 'var(--text-muted)', fontWeight: 600, fontSize: '14px', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}>
                         <X size={16} /> Sair
                     </Link>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <Code2 size={20} style={{ color: '#00d4ff' }} />
-                        <span style={{ fontWeight: 700, fontSize: '14px', color: '#e2e8f0' }}>{categoria.nome}</span>
+                        <CatIcon size={20} style={{ color: '#00d4ff' }} />
+                        <span style={{ fontWeight: 700, fontSize: '14px', color: 'var(--text-primary)' }}>{categoria.nome}</span>
                     </div>
-                    <span style={{ fontSize: '14px', fontWeight: 700, color: '#7a8ba7' }}>
+                    <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-muted)' }}>
                         {perguntaAtual + 1}/{categoria.perguntas.length}
                     </span>
                 </div>
@@ -205,7 +217,7 @@ export default function QuizPage() {
                         </span>
                     </span>
 
-                    <h2 style={{ fontSize: '1.25rem', fontWeight: 900, lineHeight: 1.4, color: '#e2e8f0' }}>
+                    <h2 style={{ fontSize: '1.25rem', fontWeight: 900, lineHeight: 1.4, color: 'var(--text-primary)' }}>
                         {pergunta.pergunta}
                     </h2>
                 </div>
@@ -217,22 +229,22 @@ export default function QuizPage() {
                         const isSelected = index === respostaSelecionada;
 
                         let bg = 'var(--color-card)';
-                        let border = 'rgba(0, 212, 255, 0.1)';
-                        let textColor = '#e2e8f0';
+                        let border = 'var(--card-border)';
+                        let textColor = 'var(--text-primary)';
                         let shadow = 'none';
                         let badgeBg = 'var(--color-surface-lighter)';
-                        let badgeColor = '#7a8ba7';
+                        let badgeColor = 'var(--text-muted)';
                         let opacity = 1;
 
                         if (respondida) {
                             if (isCorrect) {
-                                bg = 'rgba(0, 255, 136, 0.08)'; border = 'rgba(0, 255, 136, 0.4)';
-                                textColor = '#00ff88'; shadow = '0 0 15px rgba(0, 255, 136, 0.15)';
-                                badgeBg = '#00ff88'; badgeColor = '#0a0a0f';
+                                bg = 'rgba(16, 185, 129, 0.08)'; border = 'rgba(16, 185, 129, 0.4)';
+                                textColor = '#10b981'; shadow = '0 0 15px rgba(16, 185, 129, 0.1)';
+                                badgeBg = '#10b981'; badgeColor = '#ffffff';
                             } else if (isSelected) {
-                                bg = 'rgba(255, 71, 87, 0.08)'; border = 'rgba(255, 71, 87, 0.4)';
-                                textColor = '#ff4757'; shadow = '0 0 15px rgba(255, 71, 87, 0.15)';
-                                badgeBg = '#ff4757'; badgeColor = 'white';
+                                bg = 'rgba(239, 68, 68, 0.08)'; border = 'rgba(239, 68, 68, 0.4)';
+                                textColor = '#ef4444'; shadow = '0 0 15px rgba(239, 68, 68, 0.1)';
+                                badgeBg = '#ef4444'; badgeColor = 'white';
                             } else {
                                 opacity = 0.4;
                             }
@@ -273,9 +285,9 @@ export default function QuizPage() {
                     <div className="animate-fade-in-up">
                         <div style={{
                             padding: '16px', borderRadius: '12px', marginBottom: '16px',
-                            background: respostaSelecionada === pergunta.respostaCorreta ? 'rgba(0, 255, 136, 0.08)' : 'rgba(255, 71, 87, 0.08)',
-                            border: `1px solid ${respostaSelecionada === pergunta.respostaCorreta ? 'rgba(0, 255, 136, 0.3)' : 'rgba(255, 71, 87, 0.3)'}`,
-                            color: respostaSelecionada === pergunta.respostaCorreta ? '#00ff88' : '#ff4757',
+                            background: respostaSelecionada === pergunta.respostaCorreta ? 'rgba(16, 185, 129, 0.08)' : 'rgba(239, 68, 68, 0.08)',
+                            border: `1px solid ${respostaSelecionada === pergunta.respostaCorreta ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
+                            color: respostaSelecionada === pergunta.respostaCorreta ? '#10b981' : '#ef4444',
                         }}>
                             <p style={{ fontWeight: 700 }}>
                                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
