@@ -33,14 +33,20 @@ export function PythonIcon({ size = 24 }: IconProps) {
     );
 }
 
-export function HtmlCssIcon({ size = 24 }: IconProps) {
+export function HtmlIcon({ size = 24 }: IconProps) {
     return (
-        <svg width={size} height={size} viewBox="0 0 256 361" xmlns="http://www.w3.org/2000/svg">
-            <path d="M255.555 70.766l-23.241 260.36-104.47 28.962-104.182-28.922L.445 70.766h255.11z" fill="#E44D26" />
-            <path d="M128 337.95l84.417-23.403 19.86-222.49H128V337.95z" fill="#F16529" />
-            <path d="M82.82 155.932H128v-31.937H47.917l.764 8.568 7.85 88.01H128v-31.937H85.739l-2.919-32.704zM90.018 236.542h-32.06l4.474 50.146 65.421 18.16.147-.04V271.58l-.14.037-35.568-9.604-2.274-25.471z" fill="#EBEBEB" />
-            <path d="M24.18 0h45.98v17.29H41.47V34.58h28.69v17.29H24.18V0zM84.2 0h45.98v14.99h-28.69v5.77h28.69v34.58H84.2V40.35h28.69v-5.77H84.2V0zM144.22 0h45.98v14.99h-28.69v5.77h28.69v34.58h-45.98V40.35h28.69v-5.77h-28.69V0z" fill="#fff" />
-            <path d="M128 155.932h43.568l-4.568 51.084L128 218.36v33.232l65.567-18.17.48-5.397 7.506-84.066.776-8.568.474-5.32H128v31.937zM128 236.542v33.27l65.396-18.12 3.366-37.65h-31.86l-1.752 19.61L128 243.937v-7.395z" fill="#fff" />
+        <svg width={size} height={size} viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+            <rect width="256" height="256" rx="12" fill="#E44D26" />
+            <path d="M48 48l14.4 160L128 224l65.6-16L208 48H48zm130.2 48H96.8l2.4 28h76.8l-5.6 64-42.4 12-42.4-12-2.8-32h26.4l1.6 16 17.2 4.8 17.2-4.8 2-20H93.2L88 80h80l-2.4 16h12.6z" fill="#fff" />
+        </svg>
+    );
+}
+
+export function CssIcon({ size = 24 }: IconProps) {
+    return (
+        <svg width={size} height={size} viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+            <rect width="256" height="256" rx="12" fill="#1572B6" />
+            <path d="M48 48l14.4 160L128 224l65.6-16L208 48H48zm130.2 48H96.8l2.4 28h76.8l-5.6 64-42.4 12-42.4-12-2.8-32h26.4l1.6 16 17.2 4.8 17.2-4.8 2-20H93.2L88 80h80l-2.4 16h12.6z" fill="#fff" />
         </svg>
     );
 }
@@ -87,7 +93,8 @@ export function ReactIcon({ size = 24 }: IconProps) {
 export const languageIconMap: Record<string, React.FC<IconProps>> = {
     javascript: JavaScriptIcon,
     python: PythonIcon,
-    htmlcss: HtmlCssIcon,
+    html: HtmlIcon,
+    css: CssIcon,
     logica: LogicIcon,
     sql: SqlIcon,
     react: ReactIcon,

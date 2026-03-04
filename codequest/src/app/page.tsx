@@ -12,20 +12,11 @@ import {
   Trophy, Flame, Zap, BookOpen, Play, ArrowRight,
   Code2, Terminal, Braces, ChevronRight, Target,
   TrendingUp, Calendar, Sparkles, Shield, Gamepad2,
-  Search, Database, Cpu, FileCode, Palette, Atom,
+  Search,
 } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+import { languageIconMap } from '@/components/LanguageIcons';
 
 const codeSymbols = ['{ }', '</ >', 'const', '( )', '=>', '[ ]', '===', '&&', '||', '!=', 'if', '++', 'fn', '0x', '/**/', '#!'];
-
-const categoryIcons: Record<string, LucideIcon> = {
-  javascript: FileCode,
-  python: Terminal,
-  htmlcss: Palette,
-  logica: Cpu,
-  sql: Database,
-  react: Atom,
-};
 
 export default function Home() {
   const { user, loading: authLoading } = useAuth();
@@ -57,7 +48,7 @@ export default function Home() {
 
     return (
       <>
-        <Navbar />
+        <Navbar searchQuery={searchQuery} onSearchChange={setSearchQuery} showSearch={true} />
         <div style={{ minHeight: '100vh', paddingTop: '64px', background: 'var(--background)' }}>
           {/* Hero Banner */}
           <section style={{
@@ -102,33 +93,6 @@ export default function Home() {
                 <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginBottom: '24px', lineHeight: 1.6 }}>
                   Continue sua jornada de programacao e ganhe recompensas.
                 </p>
-
-                {/* Search Bar */}
-                <div style={{
-                  position: 'relative',
-                  marginBottom: '24px',
-                  maxWidth: '480px',
-                }}>
-                  <Search size={18} style={{
-                    position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)',
-                    color: 'var(--text-muted)', pointerEvents: 'none',
-                  }} />
-                  <input
-                    type="text"
-                    placeholder="Buscar quizzes, linguagens ou temas..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="input-dark"
-                    style={{
-                      paddingLeft: '42px',
-                      paddingRight: '16px',
-                      height: '46px',
-                      width: '100%',
-                      borderRadius: '12px',
-                      fontSize: '0.9rem',
-                    }}
-                  />
-                </div>
 
                 {/* XP Progress Card */}
                 <div style={{
@@ -242,7 +206,7 @@ export default function Home() {
               <div className="horizontal-scroll">
                 {filteredCategorias.map((cat, i) => {
                   const completado = userData.quizzesCompletos[cat.id];
-                  const CatIcon = categoryIcons[cat.id] || Code2;
+                  const LangIcon = languageIconMap[cat.id];
                   return (
                     <Link
                       key={cat.id}
@@ -274,9 +238,9 @@ export default function Home() {
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         marginBottom: '12px',
                         backgroundColor: `${cat.cor}15`,
-                        color: cat.cor,
+                        overflow: 'hidden',
                       }}>
-                        <CatIcon size={20} />
+                        {LangIcon ? <LangIcon size={26} /> : <Code2 size={20} style={{ color: cat.cor }} />}
                       </div>
                       <h3 style={{
                         fontSize: '0.95rem', fontWeight: 700,

@@ -6,9 +6,15 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getUserData } from '@/lib/firestore';
-import { Sun, Moon, LogOut, User, Menu, X } from 'lucide-react';
+import { Sun, Moon, LogOut, User, Menu, X, Search } from 'lucide-react';
 
-export default function Navbar() {
+interface NavbarProps {
+    searchQuery?: string;
+    onSearchChange?: (query: string) => void;
+    showSearch?: boolean;
+}
+
+export default function Navbar({ searchQuery, onSearchChange, showSearch = false }: NavbarProps) {
     const { user, logout } = useAuth();
     const { theme, toggleTheme } = useTheme();
     const router = useRouter();
@@ -67,6 +73,36 @@ export default function Navbar() {
                 >
                     {'<'}Code<span style={{ color: '#a78bfa' }}>Quest</span>{' />'}
                 </Link>
+
+                {/* Search Bar (center) */}
+                {showSearch && user && (
+                    <div style={{
+                        flex: '0 1 400px',
+                        position: 'relative',
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}>
+                        <Search size={16} style={{
+                            position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)',
+                            color: 'var(--text-muted)', pointerEvents: 'none',
+                        }} />
+                        <input
+                            type="text"
+                            placeholder="Buscar quizzes..."
+                            value={searchQuery || ''}
+                            onChange={(e) => onSearchChange?.(e.target.value)}
+                            className="input-dark"
+                            style={{
+                                paddingLeft: '36px',
+                                paddingRight: '12px',
+                                height: '38px',
+                                width: '100%',
+                                borderRadius: '10px',
+                                fontSize: '0.85rem',
+                            }}
+                        />
+                    </div>
+                )}
 
                 {/* Right side */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>

@@ -8,18 +8,8 @@ import { categorias } from '@/lib/quizzes';
 import Navbar from '@/components/Navbar';
 import {
     Trophy, Zap, Flame, BookOpen, Settings, LogOut, Code2, User,
-    Database, Cpu, FileCode, Palette, Atom, Terminal,
 } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
-
-const categoryIcons: Record<string, LucideIcon> = {
-    javascript: FileCode,
-    python: Terminal,
-    htmlcss: Palette,
-    logica: Cpu,
-    sql: Database,
-    react: Atom,
-};
+import { languageIconMap } from '@/components/LanguageIcons';
 
 export default function PerfilPage() {
     const { user, logout, loading: authLoading } = useAuth();
@@ -240,7 +230,7 @@ export default function PerfilPage() {
                                     {categorias.map((cat) => {
                                         const completado = userData.quizzesCompletos[cat.id];
                                         if (!completado) return null;
-                                        const CatIcon = categoryIcons[cat.id] || Code2;
+                                        const LangIcon = languageIconMap[cat.id];
 
                                         return (
                                             <div key={cat.id} style={{
@@ -257,9 +247,9 @@ export default function PerfilPage() {
                                                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                                                     flexShrink: 0,
                                                     backgroundColor: `${cat.cor}15`,
-                                                    color: cat.cor,
+                                                    overflow: 'hidden',
                                                 }}>
-                                                    <CatIcon size={18} />
+                                                    {LangIcon ? <LangIcon size={24} /> : <Code2 size={18} style={{ color: cat.cor }} />}
                                                 </div>
                                                 <div style={{ flex: 1, minWidth: 0 }}>
                                                     <p style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--text-primary)' }}>
