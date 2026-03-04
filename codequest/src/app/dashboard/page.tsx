@@ -43,14 +43,14 @@ export default function DashboardPage() {
 
     if (authLoading || loading) {
         return (
-            <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0a0f' }}>
+            <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--background)' }}>
                 <div style={{ textAlign: 'center' }}>
                     <div style={{
                         width: '64px', height: '64px', borderRadius: '50%',
                         border: '4px solid #00d4ff', borderTopColor: 'transparent',
                         margin: '0 auto 16px',
                     }} className="animate-spin" />
-                    <p style={{ color: '#7a8ba7', fontWeight: 600 }}>Carregando...</p>
+                    <p style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>Carregando...</p>
                 </div>
             </div>
         );
@@ -58,8 +58,8 @@ export default function DashboardPage() {
 
     if (!userData) {
         return (
-            <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0a0a0f' }}>
-                <p style={{ color: '#7a8ba7' }}>Erro ao carregar dados do perfil.</p>
+            <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--background)' }}>
+                <p style={{ color: 'var(--text-secondary)' }}>Erro ao carregar dados do perfil.</p>
             </div>
         );
     }
@@ -70,14 +70,14 @@ export default function DashboardPage() {
     return (
         <>
             <Navbar />
-            <div style={{ minHeight: '100vh', paddingTop: '80px', paddingBottom: '48px', paddingLeft: '24px', paddingRight: '24px', background: '#0a0a0f' }}>
+            <div style={{ minHeight: '100vh', paddingTop: '80px', paddingBottom: '48px', paddingLeft: '24px', paddingRight: '24px', background: 'var(--background)' }}>
                 <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
                     {/* Welcome Header */}
                     <div className="animate-fade-in-up" style={{ marginBottom: '32px' }}>
-                        <h1 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.25rem)', fontWeight: 900, color: '#e2e8f0' }}>
+                        <h1 style={{ fontSize: 'clamp(1.5rem, 4vw, 2.25rem)', fontWeight: 900, color: 'var(--text-primary)' }}>
                             Olá, <span className="gradient-text">{userData.nome}</span>! 👋
                         </h1>
-                        <p style={{ marginTop: '4px', color: '#7a8ba7' }}>Continue sua jornada de programação.</p>
+                        <p style={{ marginTop: '4px', color: 'var(--text-secondary)' }}>Continue sua jornada de programação.</p>
                     </div>
 
                     {/* Stats Cards */}
@@ -93,14 +93,14 @@ export default function DashboardPage() {
                                     <span style={{ fontSize: '1.5rem' }}>⚡</span>
                                 </div>
                                 <div>
-                                    <p style={{ fontSize: '14px', fontWeight: 500, color: '#7a8ba7' }}>XP Total</p>
+                                    <p style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-secondary)' }}>XP Total</p>
                                     <p className="neon-text" style={{ fontSize: '1.5rem', fontWeight: 900 }}>{userData.xp}</p>
                                 </div>
                             </div>
                             <div className="progress-bar-bg" style={{ height: '12px' }}>
                                 <div className="progress-bar-fill" style={{ width: `${progressPercent}%` }} />
                             </div>
-                            <p style={{ fontSize: '12px', marginTop: '4px', color: '#7a8ba7' }}>
+                            <p style={{ fontSize: '12px', marginTop: '4px', color: 'var(--text-secondary)' }}>
                                 {xpProgress.atual}/{xpProgress.necessario} XP para o nível {userData.nivel + 1}
                             </p>
                         </div>
@@ -116,7 +116,7 @@ export default function DashboardPage() {
                                     <span style={{ fontSize: '1.5rem' }}>🏆</span>
                                 </div>
                                 <div>
-                                    <p style={{ fontSize: '14px', fontWeight: 500, color: '#7a8ba7' }}>Nível</p>
+                                    <p style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-secondary)' }}>Nível</p>
                                     <p style={{ fontSize: '1.5rem', fontWeight: 900, color: '#ffa502' }}>{userData.nivel}</p>
                                 </div>
                             </div>
@@ -133,7 +133,7 @@ export default function DashboardPage() {
                                     <span style={{ fontSize: '1.5rem' }}>🔥</span>
                                 </div>
                                 <div>
-                                    <p style={{ fontSize: '14px', fontWeight: 500, color: '#7a8ba7' }}>Ofensiva</p>
+                                    <p style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-secondary)' }}>Ofensiva</p>
                                     <p style={{ fontSize: '1.5rem', fontWeight: 900, color: '#ff4757' }}>
                                         {userData.ofensiva} {userData.ofensiva === 1 ? 'dia' : 'dias'}
                                     </p>
@@ -145,7 +145,7 @@ export default function DashboardPage() {
                     <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '32px' }}>
                         {/* Quiz Categories */}
                         <div>
-                            <h2 style={{ fontSize: '1.5rem', fontWeight: 900, marginBottom: '16px', color: '#e2e8f0' }}>Escolha um Quiz</h2>
+                            <h2 style={{ fontSize: '1.5rem', fontWeight: 900, marginBottom: '16px', color: 'var(--text-primary)' }}>Escolha um Quiz</h2>
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px' }}>
                                 {categorias.map((cat, i) => {
                                     const completado = userData.quizzesCompletos[cat.id];
@@ -170,10 +170,10 @@ export default function DashboardPage() {
                                                     {cat.icone}
                                                 </div>
                                                 <div style={{ flex: 1, minWidth: 0 }}>
-                                                    <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#e2e8f0', marginBottom: '4px' }}>
+                                                    <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>
                                                         {cat.nome}
                                                     </h3>
-                                                    <p style={{ fontSize: '14px', color: '#7a8ba7', marginBottom: '8px' }}>{cat.descricao}</p>
+                                                    <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginBottom: '8px' }}>{cat.descricao}</p>
                                                     {completado && (
                                                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                                             <span style={{
@@ -182,7 +182,7 @@ export default function DashboardPage() {
                                                             }}>
                                                                 Melhor: {completado.melhorScore}/{cat.perguntas.length}
                                                             </span>
-                                                            <span style={{ fontSize: '12px', color: '#7a8ba7' }}>
+                                                            <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
                                                                 {completado.tentativas}x jogado
                                                             </span>
                                                         </div>
@@ -205,10 +205,10 @@ export default function DashboardPage() {
 
                         {/* Leaderboard */}
                         <div>
-                            <h2 style={{ fontSize: '1.5rem', fontWeight: 900, marginBottom: '16px', color: '#e2e8f0' }}>🏅 Ranking</h2>
+                            <h2 style={{ fontSize: '1.5rem', fontWeight: 900, marginBottom: '16px', color: 'var(--text-primary)' }}>🏅 Ranking</h2>
                             <div className="card" style={{ padding: '20px' }}>
                                 {leaderboard.length === 0 ? (
-                                    <p style={{ fontSize: '14px', textAlign: 'center', padding: '16px 0', color: '#7a8ba7' }}>
+                                    <p style={{ fontSize: '14px', textAlign: 'center', padding: '16px 0', color: 'var(--text-secondary)' }}>
                                         Nenhum jogador ainda. Seja o primeiro!
                                     </p>
                                 ) : (
@@ -231,16 +231,16 @@ export default function DashboardPage() {
                                                     width: '32px', height: '32px', borderRadius: '50%',
                                                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                                                     fontSize: '14px', fontWeight: 900,
-                                                    background: index === 0 ? '#ffa502' : index === 1 ? '#c0c0c0' : index === 2 ? '#CD7F32' : 'var(--color-surface-lighter)',
-                                                    color: index < 3 ? '#0a0a0f' : '#7a8ba7',
+                                                    background: index === 0 ? '#ffa502' : index === 1 ? '#c0c0c0' : index === 2 ? '#CD7F32' : 'var(--bg-surface-lighter)',
+                                                    color: index < 3 ? '#0a0a0f' : 'var(--text-secondary)',
                                                 }}>
                                                     {index + 1}
                                                 </span>
                                                 <div style={{ flex: 1, minWidth: 0 }}>
-                                                    <p style={{ fontWeight: 700, fontSize: '14px', color: '#e2e8f0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                                    <p style={{ fontWeight: 700, fontSize: '14px', color: 'var(--text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                                         {player.nome}
                                                     </p>
-                                                    <p style={{ fontSize: '12px', color: '#7a8ba7' }}>
+                                                    <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
                                                         Nível {player.nivel} · 🔥 {player.ofensiva}
                                                     </p>
                                                 </div>
