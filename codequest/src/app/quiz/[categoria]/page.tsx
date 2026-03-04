@@ -364,11 +364,11 @@ export default function QuizPage() {
                         const isCorrect = index === pergunta.respostaCorreta;
                         const isSelected = index === respostaSelecionada;
 
-                        let bg = 'var(--color-card)';
+                        let bg = 'var(--bg-card)';
                         let border = 'var(--card-border)';
                         let textColor = 'var(--text-primary)';
                         let shadow = 'none';
-                        let badgeBg = 'var(--color-surface-lighter)';
+                        let badgeBg = 'var(--bg-surface-lighter)';
                         let badgeColor = 'var(--text-muted)';
                         let opacity = 1;
 

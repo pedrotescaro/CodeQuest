@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { getUserData, getXpParaProximoNivel, UserData } from '@/lib/firestore';
 import { categorias } from '@/lib/quizzes';
 import Navbar from '@/components/Navbar';
@@ -10,7 +10,7 @@ import Footer from '@/components/Footer';
 import CatMascot from '@/components/CatMascot';
 import {
   Trophy, Flame, Zap, BookOpen, Play, ArrowRight,
-  Code2, Terminal, Braces, ChevronRight, Target,
+  Code2, Terminal, Braces, ChevronRight, ChevronLeft, Target,
   TrendingUp, Calendar, Sparkles, Shield, Gamepad2,
   Search,
 } from 'lucide-react';
@@ -36,6 +36,59 @@ export default function Home() {
   // AUTHENTICATED HOME
   // ===========================
   const [searchQuery, setSearchQuery] = useState('');
+
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const updateScrollButtons = useCallback(() => {
+    const el = carouselRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 5);
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 5);
+  }, []);
+
+  const scrollCarousel = useCallback((direction: 'left' | 'right') => {
+    const el = carouselRef.current;
+    if (!el) return;
+    const scrollAmount = 240;
+    el.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+  }, []);
+
+  // Auto-scroll carousel
+  useEffect(() => {
+    const el = carouselRef.current;
+    if (!el) return;
+    let autoScrollInterval: NodeJS.Timeout;
+    let isPaused = false;
+
+    const startAutoScroll = () => {
+      autoScrollInterval = setInterval(() => {
+        if (isPaused) return;
+        if (el.scrollLeft >= el.scrollWidth - el.clientWidth - 5) {
+          el.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          el.scrollBy({ left: 240, behavior: 'smooth' });
+        }
+      }, 4000);
+    };
+
+    const handleMouseEnter = () => { isPaused = true; };
+    const handleMouseLeave = () => { isPaused = false; };
+
+    el.addEventListener('mouseenter', handleMouseEnter);
+    el.addEventListener('mouseleave', handleMouseLeave);
+    el.addEventListener('scroll', updateScrollButtons);
+    updateScrollButtons();
+    startAutoScroll();
+
+    return () => {
+      clearInterval(autoScrollInterval);
+      el.removeEventListener('mouseenter', handleMouseEnter);
+      el.removeEventListener('mouseleave', handleMouseLeave);
+      el.removeEventListener('scroll', updateScrollButtons);
+    };
+  }, [updateScrollButtons]);
 
   if (!authLoading && user && userData) {
     const xpProgress = getXpParaProximoNivel(userData.xp);
@@ -189,22 +242,74 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Quiz Categories - Horizontal Scroll */}
+          {/* Quiz Categories - Carousel */}
           <section style={{ padding: '48px 24px' }}>
             <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-              <h2 style={{
-                fontSize: '0.8rem',
-                fontWeight: 700,
-                textTransform: 'uppercase' as const,
-                letterSpacing: '0.08em',
-                color: 'var(--text-muted)',
-                marginBottom: '20px',
-              }}>
-                Destaques da Semana
-              </h2>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+                <h2 style={{
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  textTransform: 'uppercase' as const,
+                  letterSpacing: '0.08em',
+                  color: 'var(--text-muted)',
+                }}>
+                  Destaques da Semana
+                </h2>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button
+                    onClick={() => scrollCarousel('left')}
+                    aria-label="Anterior"
+                    style={{
+                      width: '36px', height: '36px', borderRadius: '10px',
+                      border: '1px solid var(--border-color)',
+                      background: canScrollLeft ? 'var(--bg-card)' : 'transparent',
+                      color: canScrollLeft ? 'var(--text-primary)' : 'var(--text-muted)',
+                      cursor: canScrollLeft ? 'pointer' : 'default',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      transition: 'all 0.2s ease',
+                      opacity: canScrollLeft ? 1 : 0.4,
+                    }}
+                  >
+                    <ChevronLeft size={18} />
+                  </button>
+                  <button
+                    onClick={() => scrollCarousel('right')}
+                    aria-label="Próximo"
+                    style={{
+                      width: '36px', height: '36px', borderRadius: '10px',
+                      border: '1px solid var(--border-color)',
+                      background: canScrollRight ? 'var(--bg-card)' : 'transparent',
+                      color: canScrollRight ? 'var(--text-primary)' : 'var(--text-muted)',
+                      cursor: canScrollRight ? 'pointer' : 'default',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      transition: 'all 0.2s ease',
+                      opacity: canScrollRight ? 1 : 0.4,
+                    }}
+                  >
+                    <ChevronRight size={18} />
+                  </button>
+                </div>
+              </div>
 
-              <div className="horizontal-scroll">
-                {filteredCategorias.map((cat, i) => {
+              <div style={{ position: 'relative' }}>
+                {/* Fade edges */}
+                {canScrollLeft && (
+                  <div style={{
+                    position: 'absolute', left: 0, top: 0, bottom: 0, width: '40px',
+                    background: 'linear-gradient(to right, var(--background), transparent)',
+                    zIndex: 2, pointerEvents: 'none',
+                  }} />
+                )}
+                {canScrollRight && (
+                  <div style={{
+                    position: 'absolute', right: 0, top: 0, bottom: 0, width: '40px',
+                    background: 'linear-gradient(to left, var(--background), transparent)',
+                    zIndex: 2, pointerEvents: 'none',
+                  }} />
+                )}
+
+                <div ref={carouselRef} className="horizontal-scroll">
+                  {filteredCategorias.map((cat, i) => {
                   const completado = userData.quizzesCompletos[cat.id];
                   const LangIcon = languageIconMap[cat.id];
                   return (
@@ -269,6 +374,7 @@ export default function Home() {
                     </Link>
                   );
                 })}
+              </div>
               </div>
               {filteredCategorias.length === 0 && (
                 <div style={{
