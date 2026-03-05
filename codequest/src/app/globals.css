@@ -609,3 +609,13 @@ body {
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-color);
 }
+
+/* Carousel arrow glow pulse */
+@keyframes arrowGlow {
+  0%, 100% { box-shadow: 0 4px 20px rgba(0, 212, 255, 0.2), 0 0 40px rgba(0, 212, 255, 0.05); }
+  50% { box-shadow: 0 4px 24px rgba(0, 212, 255, 0.35), 0 0 50px rgba(0, 212, 255, 0.12); }
+}
+
+.carousel-arrow-active {
+  animation: arrowGlow 2.5s ease-in-out infinite;
+}

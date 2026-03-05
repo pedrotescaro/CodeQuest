@@ -68,9 +68,9 @@ export default function Home() {
         if (el.scrollLeft >= el.scrollWidth - el.clientWidth - 5) {
           el.scrollTo({ left: 0, behavior: 'smooth' });
         } else {
-          el.scrollBy({ left: 240, behavior: 'smooth' });
+          el.scrollBy({ left: 220, behavior: 'smooth' });
         }
-      }, 4000);
+      }, 3000);
     };
 
     const handleMouseEnter = () => { isPaused = true; };
@@ -147,42 +147,59 @@ export default function Home() {
                   Continue sua jornada de programacao e ganhe recompensas.
                 </p>
 
-                {/* XP Progress Card - glass style */}
+                {/* XP Progress Card - Bookadex-style glass card */}
                 <div style={{
-                  background: 'rgba(255, 255, 255, 0.12)',
-                  backdropFilter: 'blur(16px)',
-                  WebkitBackdropFilter: 'blur(16px)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  background: 'rgba(255, 255, 255, 0.10)',
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                  border: '1px solid rgba(255, 255, 255, 0.20)',
                   borderRadius: '16px',
-                  padding: '20px 24px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '16px',
-                  flexWrap: 'wrap',
+                  padding: '20px',
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.15)',
                 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Trophy size={18} style={{ color: '#fbbf24' }} />
-                    <span style={{ fontWeight: 700, color: '#ffffff', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                      NIVEL {userData.nivel}
-                    </span>
-                  </div>
-                  <div style={{ flex: 1, minWidth: '150px' }}>
-                    <div style={{ height: '10px', background: 'rgba(255, 255, 255, 0.2)', borderRadius: '999px', overflow: 'hidden' }}>
-                      <div style={{
-                        width: `${progressPercent}%`, height: '100%', borderRadius: '999px',
-                        background: 'linear-gradient(90deg, #fbbf24, #f59e0b)',
-                        transition: 'width 1s ease-out',
-                      }} />
+                  {/* Top row: level info left, streak right */}
+                  <div style={{
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end',
+                    marginBottom: '16px',
+                  }}>
+                    {/* Left: Level + XP */}
+                    <div>
+                      <p style={{
+                        fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase',
+                        letterSpacing: '0.08em', color: 'rgba(255, 255, 255, 0.7)',
+                        marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px',
+                      }}>
+                        <Trophy size={16} style={{ color: '#00d4ff' }} />
+                        Nível {userData.nivel}
+                      </p>
+                      <p style={{
+                        fontWeight: 900, fontSize: '1.5rem', color: '#ffffff',
+                        display: 'flex', alignItems: 'center', gap: '8px', lineHeight: 1,
+                      }}>
+                        {xpProgress.atual}
+                        <span style={{ fontSize: '1rem', fontWeight: 500, color: 'rgba(255, 255, 255, 0.7)' }}>
+                          / {xpProgress.necessario} XP
+                        </span>
+                      </p>
                     </div>
-                    <p style={{ fontSize: '0.8rem', marginTop: '6px', color: 'rgba(255, 255, 255, 0.7)', fontWeight: 600 }}>
-                      <span style={{ color: '#ffffff', fontWeight: 800 }}>{xpProgress.atual}</span> / {xpProgress.necessario} XP
-                    </p>
+                    {/* Right: Streak */}
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                      <Flame size={24} style={{ color: userData.ofensiva > 0 ? '#00d4ff' : 'rgba(255,255,255,0.4)' }} />
+                      <span style={{ fontSize: '0.85rem', fontWeight: 700, marginTop: '4px', color: '#ffffff' }}>
+                        {userData.ofensiva} {userData.ofensiva === 1 ? 'dia' : 'dias'}
+                      </span>
+                    </div>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Flame size={18} style={{ color: '#fbbf24' }} />
-                    <span style={{ fontWeight: 700, color: '#ffffff', fontSize: '0.875rem' }}>
-                      {userData.ofensiva} {userData.ofensiva === 1 ? 'dia' : 'dias'}
-                    </span>
+                  {/* Progress bar */}
+                  <div style={{
+                    width: '100%', background: 'rgba(0, 0, 0, 0.20)',
+                    borderRadius: '999px', height: '12px', overflow: 'hidden',
+                  }}>
+                    <div style={{
+                      width: `${progressPercent}%`, height: '12px', borderRadius: '999px',
+                      background: 'linear-gradient(90deg, #00d4ff, #a78bfa)',
+                      transition: 'width 1s ease-out',
+                    }} />
                   </div>
                 </div>
               </div>
@@ -250,17 +267,21 @@ export default function Home() {
           </section>
 
           {/* Quiz Categories - Improved Carousel */}
-          <section style={{ padding: '56px 24px' }}>
+          <section style={{
+            padding: '56px 24px',
+            background: 'var(--bg-card)',
+            border: '1px solid var(--card-border)',
+            borderRadius: '24px',
+            margin: '0 16px',
+            position: 'relative',
+          }}>
             <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+              {/* Section header */}
               <div style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px',
-                background: 'var(--bg-card)',
-                border: '1px solid var(--card-border)',
-                borderRadius: '16px',
-                padding: '20px 28px',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px',
               }}>
                 <h2 style={{
-                  fontSize: '1.1rem',
+                  fontSize: '1.2rem',
                   fontWeight: 800,
                   textTransform: 'uppercase' as const,
                   letterSpacing: '0.08em',
@@ -268,60 +289,100 @@ export default function Home() {
                 }}>
                   Destaques da Semana
                 </h2>
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <button
-                    onClick={() => scrollCarousel('left')}
-                    aria-label="Anterior"
-                    style={{
-                      width: '40px', height: '40px', borderRadius: '12px',
-                      border: '1px solid var(--border-color)',
-                      background: canScrollLeft ? 'var(--bg-card)' : 'transparent',
-                      color: canScrollLeft ? 'var(--text-primary)' : 'var(--text-muted)',
-                      cursor: canScrollLeft ? 'pointer' : 'default',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      transition: 'all 0.2s ease',
-                      opacity: canScrollLeft ? 1 : 0.4,
-                    }}
-                  >
-                    <ChevronLeft size={20} />
-                  </button>
-                  <button
-                    onClick={() => scrollCarousel('right')}
-                    aria-label="Próximo"
-                    style={{
-                      width: '40px', height: '40px', borderRadius: '12px',
-                      border: '1px solid var(--border-color)',
-                      background: canScrollRight ? 'var(--bg-card)' : 'transparent',
-                      color: canScrollRight ? 'var(--text-primary)' : 'var(--text-muted)',
-                      cursor: canScrollRight ? 'pointer' : 'default',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      transition: 'all 0.2s ease',
-                      opacity: canScrollRight ? 1 : 0.4,
-                    }}
-                  >
-                    <ChevronRight size={20} />
-                  </button>
-                </div>
               </div>
 
               <div style={{ position: 'relative' }}>
+                {/* Floating arrow LEFT */}
+                <button
+                  onClick={() => scrollCarousel('left')}
+                  aria-label="Anterior"
+                  className={canScrollLeft ? 'carousel-arrow-active' : ''}
+                  style={{
+                    position: 'absolute', left: '-8px', top: '50%', transform: 'translateY(-50%)',
+                    zIndex: 10,
+                    width: '48px', height: '48px', borderRadius: '50%',
+                    border: '2px solid',
+                    borderColor: canScrollLeft ? 'rgba(0, 212, 255, 0.4)' : 'var(--border-color)',
+                    background: canScrollLeft ? 'linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(124, 58, 237, 0.10))' : 'var(--bg-surface)',
+                    color: canScrollLeft ? '#00d4ff' : 'var(--text-muted)',
+                    cursor: canScrollLeft ? 'pointer' : 'default',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    transition: 'all 0.3s ease',
+                    opacity: canScrollLeft ? 1 : 0.3,
+                    boxShadow: canScrollLeft ? '0 4px 20px rgba(0, 212, 255, 0.2), 0 0 40px rgba(0, 212, 255, 0.05)' : 'none',
+                    backdropFilter: 'blur(8px)',
+                    WebkitBackdropFilter: 'blur(8px)',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (canScrollLeft) {
+                      e.currentTarget.style.borderColor = '#00d4ff';
+                      e.currentTarget.style.boxShadow = '0 6px 28px rgba(0, 212, 255, 0.35), 0 0 60px rgba(0, 212, 255, 0.1)';
+                      e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = canScrollLeft ? 'rgba(0, 212, 255, 0.4)' : 'var(--border-color)';
+                    e.currentTarget.style.boxShadow = canScrollLeft ? '0 4px 20px rgba(0, 212, 255, 0.2), 0 0 40px rgba(0, 212, 255, 0.05)' : 'none';
+                    e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
+                  }}
+                >
+                  <ChevronLeft size={24} strokeWidth={2.5} />
+                </button>
+
+                {/* Floating arrow RIGHT */}
+                <button
+                  onClick={() => scrollCarousel('right')}
+                  aria-label="Próximo"
+                  className={canScrollRight ? 'carousel-arrow-active' : ''}
+                  style={{
+                    position: 'absolute', right: '-8px', top: '50%', transform: 'translateY(-50%)',
+                    zIndex: 10,
+                    width: '48px', height: '48px', borderRadius: '50%',
+                    border: '2px solid',
+                    borderColor: canScrollRight ? 'rgba(0, 212, 255, 0.4)' : 'var(--border-color)',
+                    background: canScrollRight ? 'linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(124, 58, 237, 0.10))' : 'var(--bg-surface)',
+                    color: canScrollRight ? '#00d4ff' : 'var(--text-muted)',
+                    cursor: canScrollRight ? 'pointer' : 'default',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    transition: 'all 0.3s ease',
+                    opacity: canScrollRight ? 1 : 0.3,
+                    boxShadow: canScrollRight ? '0 4px 20px rgba(0, 212, 255, 0.2), 0 0 40px rgba(0, 212, 255, 0.05)' : 'none',
+                    backdropFilter: 'blur(8px)',
+                    WebkitBackdropFilter: 'blur(8px)',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (canScrollRight) {
+                      e.currentTarget.style.borderColor = '#00d4ff';
+                      e.currentTarget.style.boxShadow = '0 6px 28px rgba(0, 212, 255, 0.35), 0 0 60px rgba(0, 212, 255, 0.1)';
+                      e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = canScrollRight ? 'rgba(0, 212, 255, 0.4)' : 'var(--border-color)';
+                    e.currentTarget.style.boxShadow = canScrollRight ? '0 4px 20px rgba(0, 212, 255, 0.2), 0 0 40px rgba(0, 212, 255, 0.05)' : 'none';
+                    e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
+                  }}
+                >
+                  <ChevronRight size={24} strokeWidth={2.5} />
+                </button>
+
                 {/* Fade edges */}
                 {canScrollLeft && (
                   <div style={{
-                    position: 'absolute', left: 0, top: 0, bottom: 0, width: '60px',
-                    background: 'linear-gradient(to right, var(--background), transparent)',
-                    zIndex: 2, pointerEvents: 'none',
+                    position: 'absolute', left: 0, top: 0, bottom: 0, width: '50px',
+                    background: 'linear-gradient(to right, var(--bg-card), transparent)',
+                    zIndex: 3, pointerEvents: 'none', borderRadius: '12px 0 0 12px',
                   }} />
                 )}
                 {canScrollRight && (
                   <div style={{
-                    position: 'absolute', right: 0, top: 0, bottom: 0, width: '60px',
-                    background: 'linear-gradient(to left, var(--background), transparent)',
-                    zIndex: 2, pointerEvents: 'none',
+                    position: 'absolute', right: 0, top: 0, bottom: 0, width: '50px',
+                    background: 'linear-gradient(to left, var(--bg-card), transparent)',
+                    zIndex: 3, pointerEvents: 'none', borderRadius: '0 12px 12px 0',
                   }} />
                 )}
 
-                <div ref={carouselRef} className="horizontal-scroll" style={{ gap: '20px', paddingBottom: '12px' }}>
+                <div ref={carouselRef} className="horizontal-scroll" style={{ gap: '20px', paddingBottom: '12px', paddingLeft: '28px', paddingRight: '28px' }}>
                   {filteredCategorias.map((cat, i) => {
                   const completado = userData.quizzesCompletos[cat.id];
                   const LangIcon = languageIconMap[cat.id];
