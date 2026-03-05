@@ -18,16 +18,31 @@ export async function gerarPerguntasComIA(
     categoriaId: string,
     quantidade: number = 10
 ): Promise<Pergunta[]> {
-    const prompt = `Você é um gerador de quiz de programação. Gere exatamente ${quantidade} perguntas sobre ${categoriaNome} para um quiz educativo de programação.
+    // Use timestamp + random seed to ensure unique questions every time
+    const seed = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+    const topics = [
+        'sintaxe básica', 'funções', 'estruturas de dados', 'orientação a objetos',
+        'tratamento de erros', 'boas práticas', 'performance', 'padrões de projeto',
+        'bibliotecas populares', 'conceitos avançados', 'debugging', 'testes',
+    ];
+    const randomTopics = topics.sort(() => Math.random() - 0.5).slice(0, 4).join(', ');
+
+    const prompt = `Você é um gerador de quiz de programação. Gere exatamente ${quantidade} perguntas NOVAS e ÚNICAS sobre ${categoriaNome} para um quiz educativo de programação.
+
+SEED DE ALEATORIEDADE: ${seed}
+TÓPICOS PARA FOCAR: ${randomTopics}
 
 REGRAS IMPORTANTES:
+- Gere perguntas DIFERENTES a cada chamada - use a seed acima como inspiração para variar
 - As perguntas devem ser variadas e cobrir diferentes aspectos de ${categoriaNome}
+- Foque nos tópicos sugeridos acima, mas inclua outros também
 - Cada pergunta deve ter exatamente 4 alternativas
 - Apenas UMA alternativa deve ser correta
 - Distribua as dificuldades: 4 fáceis, 4 médias, 2 difíceis
 - As perguntas devem ser em PORTUGUÊS (Brasil)
 - A resposta correta deve variar de posição (não sempre na mesma posição)
 - NÃO repita perguntas óbvias/genéricas demais
+- Inclua exemplos de código quando relevante
 
 Retorne APENAS um JSON válido, sem markdown, sem blocos de código, neste formato exato:
 [
@@ -59,9 +74,9 @@ Onde "respostaCorreta" é o índice (0-3) da alternativa correta e "dificuldade"
                     },
                 ],
                 generationConfig: {
-                    temperature: 0.8,
+                    temperature: 1.0,
                     topP: 0.95,
-                    topK: 40,
+                    topK: 64,
                     maxOutputTokens: 4096,
                 },
             }),

@@ -20,6 +20,7 @@ export default function Navbar({ searchQuery, onSearchChange, showSearch = false
     const router = useRouter();
     const [userName, setUserName] = useState('');
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [navSearch, setNavSearch] = useState(searchQuery || '');
 
     useEffect(() => {
         if (user) {
@@ -89,8 +90,16 @@ export default function Navbar({ searchQuery, onSearchChange, showSearch = false
                         <input
                             type="text"
                             placeholder="Buscar quizzes..."
-                            value={searchQuery || ''}
-                            onChange={(e) => onSearchChange?.(e.target.value)}
+                            value={navSearch}
+                            onChange={(e) => {
+                                setNavSearch(e.target.value);
+                                onSearchChange?.(e.target.value);
+                            }}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' && navSearch.trim()) {
+                                    router.push(`/busca?q=${encodeURIComponent(navSearch.trim())}`);
+                                }
+                            }}
                             className="input-dark"
                             style={{
                                 paddingLeft: '36px',
