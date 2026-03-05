@@ -103,25 +103,25 @@ export default function Home() {
       <>
         <Navbar searchQuery={searchQuery} onSearchChange={setSearchQuery} showSearch={true} />
         <div style={{ minHeight: '100vh', paddingTop: '64px', background: 'var(--background)' }}>
-          {/* Hero Banner */}
+          {/* Hero Banner - Bookadex-inspired with gradient and rounded bottom */}
           <section style={{
-            background: 'linear-gradient(135deg, rgba(0, 212, 255, 0.06) 0%, rgba(124, 58, 237, 0.08) 50%, rgba(0, 212, 255, 0.04) 100%)',
-            borderBottom: '1px solid var(--border-color)',
-            padding: '48px 24px 40px',
+            background: 'linear-gradient(135deg, #00d4ff 0%, #7c3aed 50%, #a78bfa 100%)',
+            borderRadius: '0 0 32px 32px',
+            padding: '56px 24px 48px',
             position: 'relative',
             overflow: 'hidden',
           }}>
-            {/* Subtle glow */}
+            {/* Background decorative elements */}
             <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
               <div style={{
-                position: 'absolute', top: '-120px', right: '-120px', width: '400px', height: '400px',
-                borderRadius: '50%', filter: 'blur(140px)',
-                background: 'radial-gradient(circle, rgba(0, 212, 255, 0.06), transparent 70%)',
+                position: 'absolute', top: '-100px', right: '-100px', width: '350px', height: '350px',
+                borderRadius: '50%', filter: 'blur(120px)',
+                background: 'radial-gradient(circle, rgba(255, 255, 255, 0.12), transparent 70%)',
               }} />
               <div style={{
-                position: 'absolute', bottom: '-120px', left: '-120px', width: '400px', height: '400px',
-                borderRadius: '50%', filter: 'blur(140px)',
-                background: 'radial-gradient(circle, rgba(124, 58, 237, 0.06), transparent 70%)',
+                position: 'absolute', bottom: '-100px', left: '-100px', width: '350px', height: '350px',
+                borderRadius: '50%', filter: 'blur(120px)',
+                background: 'radial-gradient(circle, rgba(0, 0, 0, 0.1), transparent 70%)',
               }} />
             </div>
 
@@ -130,28 +130,30 @@ export default function Home() {
               display: 'flex', alignItems: 'center', gap: '40px',
               flexWrap: 'wrap',
             }}>
-              {/* Left: Greeting */}
-              <div className="animate-fade-in-up" style={{ flex: '1 1 400px' }}>
+              {/* Left: Greeting + XP Progress */}
+              <div className="animate-fade-in-up" style={{ flex: '1 1 420px' }}>
                 <h1 style={{
-                  fontSize: 'clamp(1.8rem, 4vw, 2.6rem)',
+                  fontSize: 'clamp(1.8rem, 4vw, 2.8rem)',
                   fontWeight: 800,
                   lineHeight: 1.15,
                   marginBottom: '12px',
-                  color: 'var(--text-primary)',
+                  color: '#ffffff',
                   letterSpacing: '-0.02em',
                 }}>
                   Pronto para jogar,{' '}
-                  <span className="gradient-text">{userData.nome}</span>?
+                  <span style={{ color: '#fbbf24' }}>{userData.nome}</span>?
                 </h1>
-                <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', marginBottom: '24px', lineHeight: 1.6 }}>
+                <p style={{ fontSize: '1rem', color: 'rgba(255, 255, 255, 0.8)', marginBottom: '28px', lineHeight: 1.6 }}>
                   Continue sua jornada de programacao e ganhe recompensas.
                 </p>
 
-                {/* XP Progress Card */}
+                {/* XP Progress Card - glass style */}
                 <div style={{
-                  background: 'var(--bg-card)',
-                  border: '1px solid var(--card-border)',
-                  borderRadius: '14px',
+                  background: 'rgba(255, 255, 255, 0.12)',
+                  backdropFilter: 'blur(16px)',
+                  WebkitBackdropFilter: 'blur(16px)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: '16px',
                   padding: '20px 24px',
                   display: 'flex',
                   alignItems: 'center',
@@ -159,48 +161,53 @@ export default function Home() {
                   flexWrap: 'wrap',
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Trophy size={18} style={{ color: '#f59e0b' }} />
-                    <span style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.9rem' }}>
+                    <Trophy size={18} style={{ color: '#fbbf24' }} />
+                    <span style={{ fontWeight: 700, color: '#ffffff', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                       NIVEL {userData.nivel}
                     </span>
                   </div>
                   <div style={{ flex: 1, minWidth: '150px' }}>
-                    <div className="progress-bar-bg" style={{ height: '10px' }}>
-                      <div className="progress-bar-fill" style={{ width: `${progressPercent}%` }} />
+                    <div style={{ height: '10px', background: 'rgba(255, 255, 255, 0.2)', borderRadius: '999px', overflow: 'hidden' }}>
+                      <div style={{
+                        width: `${progressPercent}%`, height: '100%', borderRadius: '999px',
+                        background: 'linear-gradient(90deg, #fbbf24, #f59e0b)',
+                        transition: 'width 1s ease-out',
+                      }} />
                     </div>
-                    <p style={{ fontSize: '0.75rem', marginTop: '4px', color: 'var(--text-muted)' }}>
-                      {xpProgress.atual} / {xpProgress.necessario} XP
+                    <p style={{ fontSize: '0.8rem', marginTop: '6px', color: 'rgba(255, 255, 255, 0.7)', fontWeight: 600 }}>
+                      <span style={{ color: '#ffffff', fontWeight: 800 }}>{xpProgress.atual}</span> / {xpProgress.necessario} XP
                     </p>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Flame size={18} style={{ color: '#f59e0b' }} />
-                    <span style={{ fontWeight: 700, color: '#f59e0b', fontSize: '0.875rem' }}>
+                    <Flame size={18} style={{ color: '#fbbf24' }} />
+                    <span style={{ fontWeight: 700, color: '#ffffff', fontSize: '0.875rem' }}>
                       {userData.ofensiva} {userData.ofensiva === 1 ? 'dia' : 'dias'}
                     </span>
                   </div>
                 </div>
               </div>
 
-              {/* Right: Daily Challenge Card */}
+              {/* Right: Daily Challenge Card - dark card */}
               <div className="animate-fade-in-up" style={{
-                flex: '0 1 340px',
+                flex: '0 1 360px',
                 background: 'var(--bg-card)',
-                border: '1px solid var(--card-border)',
-                borderRadius: '16px',
-                padding: '28px',
+                border: '2px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '20px',
+                padding: '32px',
                 animationDelay: '0.15s',
+                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
               }}>
                 <div style={{
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '6px',
-                  padding: '4px 12px',
+                  padding: '5px 14px',
                   borderRadius: '8px',
                   fontSize: '0.7rem',
                   fontWeight: 700,
                   textTransform: 'uppercase' as const,
                   letterSpacing: '0.06em',
-                  background: 'rgba(245, 158, 11, 0.1)',
+                  background: 'rgba(245, 158, 11, 0.15)',
                   color: '#f59e0b',
                   marginBottom: '16px',
                 }}>
@@ -208,10 +215,10 @@ export default function Home() {
                   Desafio do Dia
                 </div>
                 <h3 style={{
-                  fontSize: '1.25rem',
-                  fontWeight: 700,
+                  fontSize: '1.3rem',
+                  fontWeight: 800,
                   color: 'var(--text-primary)',
-                  marginBottom: '8px',
+                  marginBottom: '10px',
                   letterSpacing: '-0.01em',
                 }}>
                   {dailyChallenge.nome}
@@ -219,7 +226,7 @@ export default function Home() {
                 <p style={{
                   fontSize: '0.875rem',
                   color: 'var(--text-secondary)',
-                  marginBottom: '20px',
+                  marginBottom: '24px',
                   lineHeight: 1.6,
                 }}>
                   {dailyChallenge.descricao}. Prove seus conhecimentos e ganhe XP em dobro hoje.
@@ -228,9 +235,9 @@ export default function Home() {
                   href={`/quiz/${dailyChallenge.id}`}
                   className="btn-3d"
                   style={{
-                    padding: '12px 28px',
-                    borderRadius: '10px',
-                    fontSize: '0.875rem',
+                    padding: '14px 28px',
+                    borderRadius: '12px',
+                    fontSize: '0.9rem',
                     width: '100%',
                     textDecoration: 'none',
                   }}
@@ -242,16 +249,22 @@ export default function Home() {
             </div>
           </section>
 
-          {/* Quiz Categories - Carousel */}
-          <section style={{ padding: '48px 24px' }}>
+          {/* Quiz Categories - Improved Carousel */}
+          <section style={{ padding: '56px 24px' }}>
             <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+              <div style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px',
+                background: 'var(--bg-card)',
+                border: '1px solid var(--card-border)',
+                borderRadius: '16px',
+                padding: '20px 28px',
+              }}>
                 <h2 style={{
-                  fontSize: '0.8rem',
-                  fontWeight: 700,
+                  fontSize: '1.1rem',
+                  fontWeight: 800,
                   textTransform: 'uppercase' as const,
                   letterSpacing: '0.08em',
-                  color: 'var(--text-muted)',
+                  color: 'var(--text-primary)',
                 }}>
                   Destaques da Semana
                 </h2>
@@ -260,7 +273,7 @@ export default function Home() {
                     onClick={() => scrollCarousel('left')}
                     aria-label="Anterior"
                     style={{
-                      width: '36px', height: '36px', borderRadius: '10px',
+                      width: '40px', height: '40px', borderRadius: '12px',
                       border: '1px solid var(--border-color)',
                       background: canScrollLeft ? 'var(--bg-card)' : 'transparent',
                       color: canScrollLeft ? 'var(--text-primary)' : 'var(--text-muted)',
@@ -270,13 +283,13 @@ export default function Home() {
                       opacity: canScrollLeft ? 1 : 0.4,
                     }}
                   >
-                    <ChevronLeft size={18} />
+                    <ChevronLeft size={20} />
                   </button>
                   <button
                     onClick={() => scrollCarousel('right')}
                     aria-label="Próximo"
                     style={{
-                      width: '36px', height: '36px', borderRadius: '10px',
+                      width: '40px', height: '40px', borderRadius: '12px',
                       border: '1px solid var(--border-color)',
                       background: canScrollRight ? 'var(--bg-card)' : 'transparent',
                       color: canScrollRight ? 'var(--text-primary)' : 'var(--text-muted)',
@@ -286,7 +299,7 @@ export default function Home() {
                       opacity: canScrollRight ? 1 : 0.4,
                     }}
                   >
-                    <ChevronRight size={18} />
+                    <ChevronRight size={20} />
                   </button>
                 </div>
               </div>
@@ -295,20 +308,20 @@ export default function Home() {
                 {/* Fade edges */}
                 {canScrollLeft && (
                   <div style={{
-                    position: 'absolute', left: 0, top: 0, bottom: 0, width: '40px',
+                    position: 'absolute', left: 0, top: 0, bottom: 0, width: '60px',
                     background: 'linear-gradient(to right, var(--background), transparent)',
                     zIndex: 2, pointerEvents: 'none',
                   }} />
                 )}
                 {canScrollRight && (
                   <div style={{
-                    position: 'absolute', right: 0, top: 0, bottom: 0, width: '40px',
+                    position: 'absolute', right: 0, top: 0, bottom: 0, width: '60px',
                     background: 'linear-gradient(to left, var(--background), transparent)',
                     zIndex: 2, pointerEvents: 'none',
                   }} />
                 )}
 
-                <div ref={carouselRef} className="horizontal-scroll">
+                <div ref={carouselRef} className="horizontal-scroll" style={{ gap: '20px', paddingBottom: '12px' }}>
                   {filteredCategorias.map((cat, i) => {
                   const completado = userData.quizzesCompletos[cat.id];
                   const LangIcon = languageIconMap[cat.id];
@@ -318,59 +331,87 @@ export default function Home() {
                       href={`/quiz/${cat.id}`}
                       className="animate-fade-in-up"
                       style={{
-                        width: '220px',
-                        background: 'var(--bg-card)',
+                        width: '200px',
+                        minHeight: '280px',
+                        background: `linear-gradient(160deg, ${cat.cor}18, var(--bg-card) 40%)`,
                         border: '1px solid var(--card-border)',
-                        borderRadius: '14px',
-                        padding: '20px',
+                        borderRadius: '18px',
+                        padding: '0',
                         textDecoration: 'none',
-                        transition: 'all 0.25s ease',
+                        transition: 'all 0.3s ease',
                         animationDelay: `${i * 0.06}s`,
+                        overflow: 'hidden',
+                        display: 'flex',
+                        flexDirection: 'column' as const,
+                        position: 'relative' as const,
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'translateY(-3px)';
-                        e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.15)';
-                        e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.12)';
+                        e.currentTarget.style.transform = 'translateY(-6px) scale(1.02)';
+                        e.currentTarget.style.borderColor = `${cat.cor}40`;
+                        e.currentTarget.style.boxShadow = `0 16px 40px rgba(0, 0, 0, 0.2), 0 0 20px ${cat.cor}15`;
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.transform = 'translateY(0) scale(1)';
                         e.currentTarget.style.borderColor = 'var(--card-border)';
                         e.currentTarget.style.boxShadow = 'none';
                       }}
                     >
+                      {/* Top color band / "cover" area */}
                       <div style={{
-                        width: '44px', height: '44px', borderRadius: '12px',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        marginBottom: '12px',
-                        backgroundColor: `${cat.cor}15`,
-                        overflow: 'hidden',
+                        height: '140px',
+                        background: `linear-gradient(135deg, ${cat.cor}25, ${cat.cor}08)`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        position: 'relative',
+                        borderBottom: `1px solid ${cat.cor}15`,
                       }}>
-                        {LangIcon ? <LangIcon size={26} /> : <Code2 size={20} style={{ color: cat.cor }} />}
+                        <div style={{
+                          position: 'absolute', inset: 0, opacity: 0.05,
+                          backgroundImage: `radial-gradient(circle at 30% 40%, ${cat.cor}, transparent 50%), radial-gradient(circle at 70% 60%, ${cat.cor}, transparent 50%)`,
+                        }} />
+                        <div style={{
+                          width: '64px', height: '64px', borderRadius: '16px',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          backgroundColor: `${cat.cor}20`,
+                          border: `1px solid ${cat.cor}25`,
+                          overflow: 'hidden',
+                        }}>
+                          {LangIcon ? <LangIcon size={36} /> : <Code2 size={30} style={{ color: cat.cor }} />}
+                        </div>
                       </div>
-                      <h3 style={{
-                        fontSize: '0.95rem', fontWeight: 700,
-                        color: 'var(--text-primary)', marginBottom: '4px',
-                      }}>
-                        {cat.nome}
-                      </h3>
-                      <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '8px' }}>
-                        {cat.perguntas.length} perguntas
-                      </p>
-                      {completado ? (
-                        <span style={{
-                          fontSize: '0.7rem', padding: '3px 8px', borderRadius: '6px', fontWeight: 600,
-                          background: 'rgba(0, 212, 255, 0.08)', color: '#00d4ff',
+
+                      {/* Content area */}
+                      <div style={{ padding: '16px 18px 20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                        <h3 style={{
+                          fontSize: '1rem', fontWeight: 700,
+                          color: 'var(--text-primary)', marginBottom: '4px',
                         }}>
-                          Melhor: {completado.melhorScore}/{cat.perguntas.length}
-                        </span>
-                      ) : (
-                        <span style={{
-                          fontSize: '0.7rem', padding: '3px 8px', borderRadius: '6px', fontWeight: 600,
-                          background: 'rgba(16, 185, 129, 0.08)', color: '#10b981',
-                        }}>
-                          Novo!
-                        </span>
-                      )}
+                          {cat.nome}
+                        </h3>
+                        <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: 1.4 }}>
+                          {cat.perguntas.length} perguntas
+                        </p>
+                        <div style={{ marginTop: 'auto' }}>
+                          {completado ? (
+                            <span style={{
+                              fontSize: '0.72rem', padding: '4px 10px', borderRadius: '8px', fontWeight: 600,
+                              background: 'rgba(0, 212, 255, 0.1)', color: '#00d4ff',
+                              display: 'inline-block',
+                            }}>
+                              Melhor: {completado.melhorScore}/{cat.perguntas.length}
+                            </span>
+                          ) : (
+                            <span style={{
+                              fontSize: '0.72rem', padding: '4px 10px', borderRadius: '8px', fontWeight: 600,
+                              background: 'rgba(16, 185, 129, 0.1)', color: '#10b981',
+                              display: 'inline-block',
+                            }}>
+                              Novo!
+                            </span>
+                          )}
+                        </div>
+                      </div>
                     </Link>
                   );
                 })}

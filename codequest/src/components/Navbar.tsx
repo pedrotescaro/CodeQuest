@@ -6,7 +6,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getUserData } from '@/lib/firestore';
-import { Sun, Moon, LogOut, User, Menu, X, Search } from 'lucide-react';
+import { Sun, Moon, LogOut, User, Menu, X, Search, Home, LayoutDashboard } from 'lucide-react';
 
 interface NavbarProps {
     searchQuery?: string;
@@ -106,6 +106,54 @@ export default function Navbar({ searchQuery, onSearchChange, showSearch = false
 
                 {/* Right side */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    {/* Nav links for authenticated users */}
+                    {user && (
+                        <>
+                            <Link
+                                href="/"
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: '5px',
+                                    fontSize: '0.8rem', fontWeight: 600,
+                                    color: 'var(--text-secondary)', textDecoration: 'none',
+                                    padding: '6px 12px', borderRadius: '8px',
+                                    transition: 'all 0.2s ease',
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.color = '#00d4ff';
+                                    e.currentTarget.style.background = 'rgba(0, 212, 255, 0.06)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.color = 'var(--text-secondary)';
+                                    e.currentTarget.style.background = 'transparent';
+                                }}
+                            >
+                                <Home size={15} />
+                                Home
+                            </Link>
+                            <Link
+                                href="/dashboard"
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: '5px',
+                                    fontSize: '0.8rem', fontWeight: 600,
+                                    color: 'var(--text-secondary)', textDecoration: 'none',
+                                    padding: '6px 12px', borderRadius: '8px',
+                                    transition: 'all 0.2s ease',
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.color = '#00d4ff';
+                                    e.currentTarget.style.background = 'rgba(0, 212, 255, 0.06)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.color = 'var(--text-secondary)';
+                                    e.currentTarget.style.background = 'transparent';
+                                }}
+                            >
+                                <LayoutDashboard size={15} />
+                                Dashboard
+                            </Link>
+                        </>
+                    )}
+
                     {/* Theme toggle */}
                     <button
                         onClick={toggleTheme}
