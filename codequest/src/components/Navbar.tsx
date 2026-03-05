@@ -75,9 +75,9 @@ export default function Navbar({ searchQuery, onSearchChange, showSearch = false
                     {'<'}Code<span style={{ color: '#a78bfa' }}>Quest</span>{' />'}
                 </Link>
 
-                {/* Search Bar (center) */}
+                {/* Search Bar (center) - desktop only */}
                 {showSearch && user && (
-                    <div style={{
+                    <div className="nav-search-bar" style={{
                         flex: '0 1 400px',
                         position: 'relative',
                         display: 'flex',
@@ -115,9 +115,9 @@ export default function Navbar({ searchQuery, onSearchChange, showSearch = false
 
                 {/* Right side */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    {/* Nav links for authenticated users */}
+                    {/* Nav links for authenticated users - DESKTOP */}
                     {user && (
-                        <>
+                        <div className="nav-desktop-links">
                             <Link
                                 href="/"
                                 style={{
@@ -160,7 +160,7 @@ export default function Navbar({ searchQuery, onSearchChange, showSearch = false
                                 <LayoutDashboard size={15} />
                                 Dashboard
                             </Link>
-                        </>
+                        </div>
                     )}
 
                     {/* Theme toggle */}
@@ -178,7 +178,7 @@ export default function Navbar({ searchQuery, onSearchChange, showSearch = false
 
                     {user ? (
                         <>
-                            <span style={{
+                            <span className="nav-desktop-links" style={{
                                 fontSize: '0.875rem',
                                 color: 'var(--text-secondary)',
                                 fontWeight: 500,
@@ -190,6 +190,7 @@ export default function Navbar({ searchQuery, onSearchChange, showSearch = false
 
                             <button
                                 onClick={handleLogout}
+                                className="nav-desktop-links"
                                 style={{
                                     display: 'flex',
                                     alignItems: 'center',
@@ -218,15 +219,25 @@ export default function Navbar({ searchQuery, onSearchChange, showSearch = false
                                 SAIR
                             </button>
 
-                            <Link href="/perfil" className="btn-neon" style={{ fontSize: '0.8rem', padding: '8px 18px' }}>
+                            <Link href="/perfil" className="btn-neon nav-desktop-links" style={{ fontSize: '0.8rem', padding: '8px 18px' }}>
                                 <User size={15} />
                                 MEU PERFIL
                             </Link>
+
+                            {/* Mobile hamburger */}
+                            <button
+                                className="nav-mobile-toggle"
+                                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                                aria-label="Menu"
+                            >
+                                {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+                            </button>
                         </>
                     ) : (
                         <>
                             <Link
                                 href="/login"
+                                className="nav-desktop-links"
                                 style={{
                                     fontSize: '0.85rem',
                                     fontWeight: 600,
@@ -254,10 +265,155 @@ export default function Navbar({ searchQuery, onSearchChange, showSearch = false
                             }}>
                                 Comecar
                             </Link>
+
+                            {/* Mobile hamburger for unauthenticated */}
+                            <button
+                                className="nav-mobile-toggle"
+                                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                                aria-label="Menu"
+                            >
+                                {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+                            </button>
                         </>
                     )}
                 </div>
             </div>
+
+            {/* Mobile Menu Overlay */}
+            {mobileMenuOpen && (
+                <div className="nav-mobile-menu">
+                    {/* Mobile search */}
+                    {showSearch && user && (
+                        <div className="nav-mobile-search" style={{ position: 'relative', display: 'none' }}>
+                            <Search size={16} style={{
+                                position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)',
+                                color: 'var(--text-muted)', pointerEvents: 'none',
+                            }} />
+                            <input
+                                type="text"
+                                placeholder="Buscar quizzes..."
+                                value={navSearch}
+                                onChange={(e) => {
+                                    setNavSearch(e.target.value);
+                                    onSearchChange?.(e.target.value);
+                                }}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' && navSearch.trim()) {
+                                        router.push(`/busca?q=${encodeURIComponent(navSearch.trim())}`);
+                                        setMobileMenuOpen(false);
+                                    }
+                                }}
+                                className="input-dark"
+                                style={{
+                                    paddingLeft: '36px',
+                                    paddingRight: '12px',
+                                    height: '44px',
+                                    width: '100%',
+                                    borderRadius: '12px',
+                                    fontSize: '0.9rem',
+                                }}
+                            />
+                        </div>
+                    )}
+
+                    {user ? (
+                        <>
+                            <div style={{
+                                padding: '12px 16px', marginBottom: '8px',
+                                borderRadius: '12px', background: 'rgba(0, 212, 255, 0.04)',
+                                border: '1px solid rgba(0, 212, 255, 0.08)',
+                            }}>
+                                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Logado como</p>
+                                <p style={{ fontSize: '1rem', fontWeight: 700, color: '#00d4ff' }}>{userName || 'jogador'}</p>
+                            </div>
+
+                            <Link
+                                href="/"
+                                onClick={() => setMobileMenuOpen(false)}
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: '10px',
+                                    fontSize: '0.95rem', fontWeight: 600,
+                                    color: 'var(--text-primary)', textDecoration: 'none',
+                                    padding: '14px 16px', borderRadius: '12px',
+                                    transition: 'background 0.2s',
+                                }}
+                            >
+                                <Home size={18} /> Home
+                            </Link>
+                            <Link
+                                href="/dashboard"
+                                onClick={() => setMobileMenuOpen(false)}
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: '10px',
+                                    fontSize: '0.95rem', fontWeight: 600,
+                                    color: 'var(--text-primary)', textDecoration: 'none',
+                                    padding: '14px 16px', borderRadius: '12px',
+                                    transition: 'background 0.2s',
+                                }}
+                            >
+                                <LayoutDashboard size={18} /> Dashboard
+                            </Link>
+                            <Link
+                                href="/perfil"
+                                onClick={() => setMobileMenuOpen(false)}
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: '10px',
+                                    fontSize: '0.95rem', fontWeight: 600,
+                                    color: 'var(--text-primary)', textDecoration: 'none',
+                                    padding: '14px 16px', borderRadius: '12px',
+                                    transition: 'background 0.2s',
+                                }}
+                            >
+                                <User size={18} /> Meu Perfil
+                            </Link>
+
+                            <div style={{ height: '1px', background: 'var(--border-color)', margin: '8px 0' }} />
+
+                            <button
+                                onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: '10px',
+                                    fontSize: '0.95rem', fontWeight: 600,
+                                    color: '#ef4444', background: 'none',
+                                    border: 'none', cursor: 'pointer',
+                                    padding: '14px 16px', borderRadius: '12px',
+                                    fontFamily: 'inherit', width: '100%',
+                                    transition: 'background 0.2s',
+                                }}
+                            >
+                                <LogOut size={18} /> Sair
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <Link
+                                href="/login"
+                                onClick={() => setMobileMenuOpen(false)}
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: '10px',
+                                    fontSize: '0.95rem', fontWeight: 600,
+                                    color: 'var(--text-primary)', textDecoration: 'none',
+                                    padding: '14px 16px', borderRadius: '12px',
+                                }}
+                            >
+                                Entrar
+                            </Link>
+                            <Link
+                                href="/cadastro"
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="btn-3d"
+                                style={{
+                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    fontSize: '0.95rem', padding: '14px 16px', borderRadius: '12px',
+                                    textDecoration: 'none',
+                                }}
+                            >
+                                Comecar Agora
+                            </Link>
+                        </>
+                    )}
+                </div>
+            )}
         </nav>
     );
 }

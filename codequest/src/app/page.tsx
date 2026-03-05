@@ -107,7 +107,7 @@ export default function Home() {
           <section style={{
             background: 'linear-gradient(135deg, #00d4ff 0%, #7c3aed 50%, #a78bfa 100%)',
             borderRadius: '0 0 32px 32px',
-            padding: '56px 24px 48px',
+            padding: 'clamp(32px, 5vw, 56px) clamp(12px, 3vw, 24px) clamp(32px, 5vw, 48px)',
             position: 'relative',
             overflow: 'hidden',
           }}>
@@ -127,11 +127,11 @@ export default function Home() {
 
             <div style={{
               maxWidth: '1280px', margin: '0 auto', position: 'relative', zIndex: 10,
-              display: 'flex', alignItems: 'center', gap: '40px',
+              display: 'flex', alignItems: 'center', gap: 'clamp(20px, 4vw, 40px)',
               flexWrap: 'wrap',
             }}>
               {/* Left: Greeting + XP Progress */}
-              <div className="animate-fade-in-up" style={{ flex: '1 1 420px' }}>
+              <div className="animate-fade-in-up" style={{ flex: '1 1 300px' }}>
                 <h1 style={{
                   fontSize: 'clamp(1.8rem, 4vw, 2.8rem)',
                   fontWeight: 800,
@@ -206,11 +206,11 @@ export default function Home() {
 
               {/* Right: Daily Challenge Card - dark card */}
               <div className="animate-fade-in-up" style={{
-                flex: '0 1 360px',
+                flex: '0 1 320px',
                 background: 'var(--bg-card)',
                 border: '2px solid rgba(255, 255, 255, 0.08)',
                 borderRadius: '20px',
-                padding: '32px',
+                padding: 'clamp(20px, 4vw, 32px)',
                 animationDelay: '0.15s',
                 boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
               }}>
@@ -268,11 +268,11 @@ export default function Home() {
 
           {/* Quiz Categories - Improved Carousel */}
           <section style={{
-            padding: '56px 24px',
+            padding: 'clamp(24px, 5vw, 56px) clamp(12px, 3vw, 24px)',
             background: 'var(--bg-card)',
             border: '1px solid var(--card-border)',
             borderRadius: '24px',
-            margin: '0 16px',
+            margin: '0 clamp(8px, 2vw, 16px)',
             position: 'relative',
           }}>
             <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
@@ -491,10 +491,10 @@ export default function Home() {
           </section>
 
           {/* Quick Stats */}
-          <section style={{ padding: '0 24px 48px' }}>
+          <section style={{ padding: '40px 24px 48px' }}>
             <div style={{
               maxWidth: '1280px', margin: '0 auto',
-              display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px',
+              display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px',
             }}>
               <div className="stat-card animate-fade-in-up">
                 <div className="stat-card-icon" style={{ background: 'rgba(0, 212, 255, 0.08)' }}>
