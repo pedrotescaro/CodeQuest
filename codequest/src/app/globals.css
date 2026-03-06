@@ -926,8 +926,37 @@ body {
   }
 
   .dashboard-stats-grid {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: repeat(2, 1fr) !important;
     gap: 12px !important;
+  }
+
+  .dash-hero {
+    border-radius: 0 0 24px 24px !important;
+    padding: 28px 16px 32px !important;
+  }
+
+  .dash-hero-flex {
+    flex-direction: column !important;
+    gap: 20px !important;
+    align-items: stretch !important;
+  }
+
+  .dash-hero-left {
+    flex: 1 1 auto !important;
+  }
+
+  .dash-hero-left h1 {
+    font-size: 1.4rem !important;
+  }
+
+  .dash-hero-right {
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .dash-quiz-card {
+    animation-delay: 0s !important;
   }
 
   /* Quiz page */
@@ -1079,12 +1108,30 @@ body {
     gap: 20px !important;
   }
 
+  .dashboard-stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
   .dashboard-stats-grid .card {
     padding: 16px !important;
   }
 
   .dashboard-stats-grid .card p:last-child {
     font-size: 1.25rem !important;
+  }
+
+  .dash-hero {
+    padding: 20px 12px 24px !important;
+    border-radius: 0 0 18px 18px !important;
+  }
+
+  .dash-hero-left h1 {
+    font-size: 1.2rem !important;
+  }
+
+  .dash-hero-right {
+    padding: 16px !important;
+    border-radius: 14px !important;
   }
 
   /* Quiz page small mobile */
