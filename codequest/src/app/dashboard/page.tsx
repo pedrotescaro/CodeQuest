@@ -543,6 +543,20 @@ export default function DashboardPage() {
                                             })}
                                         </div>
                                     )}
+                                    <Link
+                                        href="/ranking"
+                                        style={{
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                                            padding: '10px', fontSize: '0.8rem', fontWeight: 700,
+                                            color: '#f59e0b', textDecoration: 'none',
+                                            borderTop: '1px solid var(--border-color)',
+                                            transition: 'background 0.2s',
+                                            borderRadius: '0 0 14px 14px',
+                                        }}
+                                    >
+                                        <Trophy size={14} />
+                                        Ver Ranking Completo
+                                    </Link>
                                 </div>
                             </div>
 

@@ -1183,4 +1183,58 @@ body {
   .perfil-stats-grid {
     grid-template-columns: 1fr !important;
   }
+
+  .loja-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ====================== */
+/*    TERMO ANIMATIONS    */
+/* ====================== */
+
+@keyframes termoFlip {
+  0% { transform: scaleY(1); }
+  50% { transform: scaleY(0); }
+  100% { transform: scaleY(1); }
+}
+
+@keyframes termoShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+.termo-flip {
+  animation: termoFlip 0.4s ease-out;
+}
+
+.termo-shake {
+  animation: termoShake 0.4s ease-out;
+}
+
+/* ====================== */
+/*      LOJA GRID         */
+/* ====================== */
+
+@media (max-width: 768px) {
+  .loja-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ====================== */
+/*   RANKING RESPONSIVE   */
+/* ====================== */
+
+@media (max-width: 640px) {
+  .ranking-header,
+  .ranking-row {
+    grid-template-columns: 40px 1fr 70px 55px !important;
+  }
+  .ranking-hide-mobile {
+    display: none !important;
+  }
 }

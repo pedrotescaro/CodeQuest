@@ -6,10 +6,13 @@ import { useEffect, useState } from 'react';
 import { getUserData, getXpParaProximoNivel, UserData } from '@/lib/firestore';
 import { categorias } from '@/lib/quizzes';
 import Navbar from '@/components/Navbar';
+import AvatarPreview from '@/components/AvatarPreview';
+import { defaultAvatar } from '@/lib/avatarData';
 import {
-    Trophy, Zap, Flame, BookOpen, Settings, LogOut, Code2, User,
+    Trophy, Zap, Flame, BookOpen, Settings, LogOut, Code2, Coins, Gamepad2, ShoppingBag,
 } from 'lucide-react';
 import { languageIconMap } from '@/components/LanguageIcons';
+import Link from 'next/link';
 
 export default function PerfilPage() {
     const { user, logout, loading: authLoading } = useAuth();
@@ -79,12 +82,12 @@ export default function PerfilPage() {
                         flexWrap: 'wrap',
                     }}>
                         {/* Avatar */}
-                        <div className="profile-avatar">
-                            <User size={32} />
-                            <div className="profile-level-badge">
-                                Lvl {userData.nivel}
-                            </div>
-                        </div>
+                        <AvatarPreview
+                            config={userData.avatar || defaultAvatar}
+                            size={88}
+                            showBadge
+                            nivel={userData.nivel}
+                        />
 
                         {/* Info */}
                         <div style={{ flex: 1, minWidth: '200px' }}>
@@ -122,10 +125,14 @@ export default function PerfilPage() {
 
                             {/* Action Buttons */}
                             <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                                <button className="btn-neon" style={{ fontSize: '0.8rem', padding: '8px 18px' }}>
-                                    <Settings size={14} />
-                                    Editar Perfil
-                                </button>
+                                <Link href="/loja" className="btn-neon" style={{ fontSize: '0.8rem', padding: '8px 18px', textDecoration: 'none' }}>
+                                    <ShoppingBag size={14} />
+                                    Loja & Avatar
+                                </Link>
+                                <Link href="/minigames" className="btn-ghost" style={{ fontSize: '0.8rem', padding: '8px 18px', textDecoration: 'none' }}>
+                                    <Gamepad2 size={14} />
+                                    Minigames
+                                </Link>
                                 <button
                                     onClick={handleLogout}
                                     className="btn-outline-neon"
@@ -192,6 +199,18 @@ export default function PerfilPage() {
                                     Quizzes Concluidos
                                 </p>
                                 <p style={{ fontSize: '1.5rem', fontWeight: 800, color: '#10b981' }}>{quizzesCompletos}</p>
+                            </div>
+                        </div>
+
+                        <div className="stat-card animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+                            <div className="stat-card-icon" style={{ background: 'rgba(245, 158, 11, 0.08)' }}>
+                                <Coins size={20} style={{ color: '#eab308' }} />
+                            </div>
+                            <div>
+                                <p style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                    Moedas
+                                </p>
+                                <p style={{ fontSize: '1.5rem', fontWeight: 800, color: '#eab308' }}>{userData.moedas || 0}</p>
                             </div>
                         </div>
                     </div>

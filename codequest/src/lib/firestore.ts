@@ -13,18 +13,34 @@ import {
     serverTimestamp,
 } from 'firebase/firestore';
 import { db } from './firebase';
+import { AvatarConfig, defaultAvatar, getItem } from './avatarData';
 
 export interface UserData {
     nome: string;
     email: string;
     xp: number;
     nivel: number;
+    moedas: number;
     ofensiva: number;
     ultimaAtividade: Timestamp | null;
+    avatar: AvatarConfig;
+    itensDesbloqueados: string[];
     quizzesCompletos: {
         [categoria: string]: {
             melhorScore: number;
             tentativas: number;
+        };
+    };
+    minigames?: {
+        termo?: {
+            ultimoDia: string;
+            vitorias: number;
+            sequencia: number;
+            melhorSequencia: number;
+        };
+        codeRush?: {
+            melhorPontuacao: number;
+            partidasJogadas: number;
         };
     };
 }
@@ -39,9 +55,13 @@ export async function createUserProfile(
         email,
         xp: 0,
         nivel: 1,
+        moedas: 0,
         ofensiva: 0,
         ultimaAtividade: null,
+        avatar: defaultAvatar,
+        itensDesbloqueados: ['cabelo_padrao', 'rosto_padrao', 'roupa_padrao', 'acessorio_nenhum', 'fundo_padrao'],
         quizzesCompletos: {},
+        minigames: {},
     });
 }
 
@@ -153,6 +173,7 @@ export async function saveQuizResult(
     if (!userData) return 0;
 
     const xpGanho = score * 10; // 10 XP por acerto
+    const moedasGanhas = score * 5; // 5 moedas por acerto
 
     const quizzesCompletos = { ...userData.quizzesCompletos };
     const anterior = quizzesCompletos[categoria];
@@ -167,6 +188,7 @@ export async function saveQuizResult(
 
     await updateDoc(doc(db, 'users', uid), {
         xp: increment(xpGanho),
+        moedas: increment(moedasGanhas),
         nivel: novoNivel,
         quizzesCompletos,
     });
@@ -190,4 +212,131 @@ export async function getLeaderboard(): Promise<
             ofensiva: data.ofensiva,
         };
     });
+}
+
+export interface RankingPlayer {
+    nome: string;
+    xp: number;
+    nivel: number;
+    ofensiva: number;
+    moedas: number;
+    avatar: AvatarConfig | null;
+    quizzesCompletos: number;
+}
+
+export async function getFullRanking(maxResults = 50): Promise<RankingPlayer[]> {
+    const q = query(collection(db, 'users'), orderBy('xp', 'desc'), limit(maxResults));
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((d) => {
+        const data = d.data();
+        return {
+            nome: data.nome,
+            xp: data.xp,
+            nivel: data.nivel,
+            ofensiva: data.ofensiva,
+            moedas: data.moedas || 0,
+            avatar: data.avatar || null,
+            quizzesCompletos: data.quizzesCompletos ? Object.keys(data.quizzesCompletos).length : 0,
+        };
+    });
+}
+
+// =============================================
+// Avatar & Shop functions
+// =============================================
+
+export async function buyAvatarItem(uid: string, itemId: string): Promise<{ success: boolean; message: string }> {
+    const userData = await getUserData(uid);
+    if (!userData) return { success: false, message: 'Usuário não encontrado' };
+
+    const item = getItem(itemId);
+    if (!item) return { success: false, message: 'Item não encontrado' };
+
+    if ((userData.itensDesbloqueados || []).includes(itemId)) {
+        return { success: false, message: 'Item já desbloqueado' };
+    }
+
+    if (item.nivelMinimo && userData.nivel < item.nivelMinimo) {
+        return { success: false, message: `Nível mínimo: ${item.nivelMinimo}` };
+    }
+
+    if ((userData.moedas || 0) < item.preco) {
+        return { success: false, message: 'Moedas insuficientes' };
+    }
+
+    const novosItens = [...(userData.itensDesbloqueados || []), itemId];
+    await updateDoc(doc(db, 'users', uid), {
+        moedas: increment(-item.preco),
+        itensDesbloqueados: novosItens,
+    });
+
+    return { success: true, message: 'Item comprado!' };
+}
+
+export async function saveAvatar(uid: string, avatar: AvatarConfig): Promise<void> {
+    await updateDoc(doc(db, 'users', uid), { avatar });
+}
+
+export async function addCoins(uid: string, amount: number): Promise<void> {
+    await updateDoc(doc(db, 'users', uid), {
+        moedas: increment(amount),
+    });
+}
+
+// =============================================
+// Minigame functions
+// =============================================
+
+export async function saveTermoResult(
+    uid: string,
+    daySeed: string,
+    won: boolean
+): Promise<number> {
+    const userData = await getUserData(uid);
+    if (!userData) return 0;
+
+    const prev = userData.minigames?.termo;
+    const newSequencia = won ? (prev?.sequencia || 0) + 1 : 0;
+    const moedasGanhas = won ? 20 : 0;
+    const xpGanho = won ? 30 : 5;
+
+    await updateDoc(doc(db, 'users', uid), {
+        'minigames.termo': {
+            ultimoDia: daySeed,
+            vitorias: (prev?.vitorias || 0) + (won ? 1 : 0),
+            sequencia: newSequencia,
+            melhorSequencia: Math.max(prev?.melhorSequencia || 0, newSequencia),
+        },
+        xp: increment(xpGanho),
+        moedas: increment(moedasGanhas),
+        nivel: calcularNivel(userData.xp + xpGanho),
+    });
+
+    await updateStreak(uid);
+    return moedasGanhas;
+}
+
+export async function saveCodeRushResult(
+    uid: string,
+    pontuacao: number
+): Promise<number> {
+    const userData = await getUserData(uid);
+    if (!userData) return 0;
+
+    const prev = userData.minigames?.codeRush;
+    const moedasGanhas = Math.floor(pontuacao / 10) * 5;
+    const xpGanho = Math.floor(pontuacao / 5) * 3;
+
+    await updateDoc(doc(db, 'users', uid), {
+        'minigames.codeRush': {
+            melhorPontuacao: Math.max(prev?.melhorPontuacao || 0, pontuacao),
+            partidasJogadas: (prev?.partidasJogadas || 0) + 1,
+        },
+        xp: increment(xpGanho),
+        moedas: increment(moedasGanhas),
+        nivel: calcularNivel(userData.xp + xpGanho),
+    });
+
+    await updateStreak(uid);
+    return moedasGanhas;
 }

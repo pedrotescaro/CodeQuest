@@ -6,7 +6,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getUserData } from '@/lib/firestore';
-import { Sun, Moon, LogOut, User, Menu, X, Search, Home, LayoutDashboard } from 'lucide-react';
+import { Sun, Moon, LogOut, User, Menu, X, Search, Home, LayoutDashboard, Gamepad2, Trophy } from 'lucide-react';
 
 interface NavbarProps {
     searchQuery?: string;
@@ -171,6 +171,48 @@ export default function Navbar({ searchQuery, onSearchChange, showSearch = false
                             >
                                 <LayoutDashboard size={15} />
                                 Dashboard
+                            </Link>
+                            <Link
+                                href="/minigames"
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: '5px',
+                                    fontSize: '0.8rem', fontWeight: 600,
+                                    color: 'var(--text-secondary)', textDecoration: 'none',
+                                    padding: '6px 12px', borderRadius: '8px',
+                                    transition: 'all 0.2s ease',
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.color = '#a78bfa';
+                                    e.currentTarget.style.background = 'rgba(167, 139, 250, 0.06)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.color = 'var(--text-secondary)';
+                                    e.currentTarget.style.background = 'transparent';
+                                }}
+                            >
+                                <Gamepad2 size={15} />
+                                Minigames
+                            </Link>
+                            <Link
+                                href="/ranking"
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: '5px',
+                                    fontSize: '0.8rem', fontWeight: 600,
+                                    color: 'var(--text-secondary)', textDecoration: 'none',
+                                    padding: '6px 12px', borderRadius: '8px',
+                                    transition: 'all 0.2s ease',
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.color = '#f59e0b';
+                                    e.currentTarget.style.background = 'rgba(245, 158, 11, 0.06)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.color = 'var(--text-secondary)';
+                                    e.currentTarget.style.background = 'transparent';
+                                }}
+                            >
+                                <Trophy size={15} />
+                                Ranking
                             </Link>
                         </div>
                     )}
@@ -418,6 +460,32 @@ export default function Navbar({ searchQuery, onSearchChange, showSearch = false
                                 }}
                             >
                                 <LayoutDashboard size={18} /> Dashboard
+                            </Link>
+                            <Link
+                                href="/minigames"
+                                onClick={() => setMobileMenuOpen(false)}
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: '10px',
+                                    fontSize: '0.95rem', fontWeight: 600,
+                                    color: 'var(--text-primary)', textDecoration: 'none',
+                                    padding: '14px 16px', borderRadius: '12px',
+                                    transition: 'background 0.2s',
+                                }}
+                            >
+                                <Gamepad2 size={18} /> Minigames
+                            </Link>
+                            <Link
+                                href="/ranking"
+                                onClick={() => setMobileMenuOpen(false)}
+                                style={{
+                                    display: 'flex', alignItems: 'center', gap: '10px',
+                                    fontSize: '0.95rem', fontWeight: 600,
+                                    color: 'var(--text-primary)', textDecoration: 'none',
+                                    padding: '14px 16px', borderRadius: '12px',
+                                    transition: 'background 0.2s',
+                                }}
+                            >
+                                <Trophy size={18} /> Ranking
                             </Link>
                             <Link
                                 href="/perfil"
