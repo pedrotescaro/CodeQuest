@@ -89,6 +89,31 @@ export default function Home() {
     };
   }, [updateScrollButtons]);
 
+  const terminalLines = [
+    { text: '> codequest.init()', color: '#00d4ff' },
+    { text: '✓ Loading quiz engine...', color: '#10b981' },
+    { text: '✓ AI question generator ready', color: '#10b981' },
+    { text: '✓ 18+ programming languages loaded', color: '#10b981' },
+    { text: '> player.start({ mode: "learn" })', color: '#a78bfa' },
+    { text: '🚀 Ready to code!', color: '#f59e0b' },
+  ];
+
+  const [visibleLines, setVisibleLines] = useState(0);
+
+  useEffect(() => {
+    if (authLoading || user) return;
+    const timer = setInterval(() => {
+      setVisibleLines(prev => {
+        if (prev >= terminalLines.length) {
+          clearInterval(timer);
+          return prev;
+        }
+        return prev + 1;
+      });
+    }, 600);
+    return () => clearInterval(timer);
+  }, [authLoading, user]);
+
   if (!authLoading && user && userData) {
     const xpProgress = getXpParaProximoNivel(userData.xp);
     const progressPercent = (xpProgress.atual / xpProgress.necessario) * 100;
@@ -547,31 +572,6 @@ export default function Home() {
   // ===========================
   // LANDING PAGE (not logged in)
   // ===========================
-
-  const terminalLines = [
-    { text: '> codequest.init()', color: '#00d4ff' },
-    { text: '✓ Loading quiz engine...', color: '#10b981' },
-    { text: '✓ AI question generator ready', color: '#10b981' },
-    { text: '✓ 18+ programming languages loaded', color: '#10b981' },
-    { text: '> player.start({ mode: "learn" })', color: '#a78bfa' },
-    { text: '🚀 Ready to code!', color: '#f59e0b' },
-  ];
-
-  const [visibleLines, setVisibleLines] = useState(0);
-
-  useEffect(() => {
-    if (authLoading || user) return;
-    const timer = setInterval(() => {
-      setVisibleLines(prev => {
-        if (prev >= terminalLines.length) {
-          clearInterval(timer);
-          return prev;
-        }
-        return prev + 1;
-      });
-    }, 600);
-    return () => clearInterval(timer);
-  }, [authLoading, user]);
 
   const matrixChars = ['0', '1', '{', '}', '<', '>', '/', '=', ';', '(', ')', '[', ']', '#', '*', '+', '&', '|', '!', '?', '@', '$', '%', '^'];
 
