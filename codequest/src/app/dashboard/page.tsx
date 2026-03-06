@@ -74,7 +74,7 @@ export default function DashboardPage() {
     return (
         <>
             <Navbar />
-            <div style={{ minHeight: '100vh', paddingTop: '80px', paddingBottom: '48px', paddingLeft: 'clamp(12px, 3vw, 24px)', paddingRight: 'clamp(12px, 3vw, 24px)', background: 'var(--background)' }}>
+            <div style={{ minHeight: '100vh', paddingTop: '80px', paddingBottom: '48px', paddingLeft: 'clamp(8px, 3vw, 24px)', paddingRight: 'clamp(8px, 3vw, 24px)', background: 'var(--background)' }}>
                 <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
                     {/* Welcome Header */}
                     <div className="animate-fade-in-up" style={{ marginBottom: '32px' }}>

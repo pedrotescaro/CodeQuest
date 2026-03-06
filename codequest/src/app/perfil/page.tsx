@@ -66,7 +66,7 @@ export default function PerfilPage() {
     return (
         <>
             <Navbar />
-            <div style={{ minHeight: '100vh', paddingTop: '80px', paddingBottom: '48px', paddingLeft: '24px', paddingRight: '24px', background: 'var(--background)' }}>
+            <div style={{ minHeight: '100vh', paddingTop: '80px', paddingBottom: '48px', paddingLeft: 'clamp(8px, 3vw, 24px)', paddingRight: 'clamp(8px, 3vw, 24px)', background: 'var(--background)' }}>
                 <div style={{ maxWidth: '900px', margin: '0 auto' }}>
 
                     {/* Profile Card */}

@@ -107,9 +107,9 @@ export default function Home() {
           <section className="hero-section" style={{
             background: 'linear-gradient(135deg, #00d4ff 0%, #7c3aed 50%, #a78bfa 100%)',
             borderRadius: '0 0 32px 32px',
-            padding: 'clamp(32px, 5vw, 56px) clamp(12px, 3vw, 24px) clamp(32px, 5vw, 48px)',
+            padding: 'clamp(24px, 5vw, 56px) clamp(12px, 3vw, 24px) clamp(24px, 5vw, 48px)',
             position: 'relative',
-            overflow: 'hidden',
+            overflow: 'visible',
           }}>
             {/* Background decorative elements */}
             <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
@@ -133,17 +133,19 @@ export default function Home() {
               {/* Left: Greeting + XP Progress */}
               <div className="animate-fade-in-up hero-left" style={{ flex: '1 1 300px' }}>
                 <h1 style={{
-                  fontSize: 'clamp(1.8rem, 4vw, 2.8rem)',
+                  fontSize: 'clamp(1.25rem, 4vw, 2.8rem)',
                   fontWeight: 800,
-                  lineHeight: 1.15,
+                  lineHeight: 1.2,
                   marginBottom: '12px',
                   color: '#ffffff',
                   letterSpacing: '-0.02em',
+                  wordBreak: 'break-word' as const,
+                  overflowWrap: 'break-word' as const,
                 }}>
                   Pronto para jogar,{' '}
                   <span style={{ color: '#fbbf24' }}>{userData.nome}</span>?
                 </h1>
-                <p style={{ fontSize: '1rem', color: 'rgba(255, 255, 255, 0.8)', marginBottom: '28px', lineHeight: 1.6 }}>
+                <p style={{ fontSize: 'clamp(0.85rem, 2.5vw, 1rem)', color: 'rgba(255, 255, 255, 0.8)', marginBottom: '24px', lineHeight: 1.6 }}>
                   Continue sua jornada de programacao e ganhe recompensas.
                 </p>
 
@@ -206,11 +208,12 @@ export default function Home() {
 
               {/* Right: Daily Challenge Card - dark card */}
               <div className="animate-fade-in-up daily-card hero-right" style={{
-                flex: '0 1 320px',
+                flex: '0 1 340px',
+                minWidth: 0,
                 background: 'var(--bg-card)',
                 border: '2px solid rgba(255, 255, 255, 0.08)',
                 borderRadius: '20px',
-                padding: 'clamp(20px, 4vw, 32px)',
+                padding: 'clamp(16px, 4vw, 32px)',
                 animationDelay: '0.15s',
                 boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
               }}>
@@ -268,11 +271,11 @@ export default function Home() {
 
           {/* Quiz Categories - Improved Carousel */}
           <section className="carousel-section" style={{
-            padding: 'clamp(24px, 5vw, 56px) clamp(12px, 3vw, 24px)',
+            padding: 'clamp(20px, 5vw, 56px) clamp(8px, 3vw, 24px)',
             background: 'var(--bg-card)',
             border: '1px solid var(--card-border)',
             borderRadius: '24px',
-            margin: '0 clamp(8px, 2vw, 16px)',
+            margin: '24px clamp(8px, 2vw, 16px) 0',
             position: 'relative',
           }}>
             <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
@@ -491,7 +494,7 @@ export default function Home() {
           </section>
 
           {/* Quick Stats */}
-          <section className="stats-grid-wrapper" style={{ padding: '40px 24px 48px' }}>
+          <section className="stats-grid-wrapper" style={{ padding: 'clamp(24px, 5vw, 40px) clamp(8px, 3vw, 24px) clamp(32px, 5vw, 48px)' }}>
             <div className="stats-grid" style={{
               maxWidth: '1280px', margin: '0 auto',
               display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px',
