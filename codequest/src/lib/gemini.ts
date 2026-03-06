@@ -3,7 +3,26 @@ import app from './firebase';
 import type { Pergunta } from './quizzes';
 
 const ai = getAI(app, { backend: new GoogleAIBackend() });
-const model = getGenerativeModel(ai, { model: 'gemini-2.0-flash' });
+const model = getGenerativeModel(ai, { model: 'gemini-2.5-flash' });
+
+async function tentarComRetry<T>(fn: () => Promise<T>, maxTentativas = 3): Promise<T> {
+    for (let i = 0; i < maxTentativas; i++) {
+        try {
+            return await fn();
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            const is429 = msg.includes('429') || msg.includes('quota');
+            if (is429 && i < maxTentativas - 1) {
+                const delay = (i + 1) * 15000;
+                console.warn(`Quota atingido, tentando novamente em ${delay / 1000}s...`);
+                await new Promise(r => setTimeout(r, delay));
+                continue;
+            }
+            throw error;
+        }
+    }
+    throw new Error('Máximo de tentativas atingido');
+}
 
 export async function gerarPerguntasComIA(
     categoriaNome: string,
@@ -49,7 +68,7 @@ Retorne APENAS um JSON válido, sem markdown, sem blocos de código, neste forma
 Onde "respostaCorreta" é o índice (0-3) da alternativa correta e "dificuldade" é "facil", "medio" ou "dificil".`;
 
     try {
-        const result = await model.generateContent(prompt);
+        const result = await tentarComRetry(() => model.generateContent(prompt));
         const text = result.response.text();
 
         if (!text) {
