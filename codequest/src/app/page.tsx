@@ -7,10 +7,10 @@ import { getUserData, getXpParaProximoNivel, UserData } from '@/lib/firestore';
 import { categorias } from '@/lib/quizzes';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import CatMascot from '@/components/CatMascot';
+import CodeHeroIllustration from '@/components/CodeHeroIllustration';
 import {
   Trophy, Flame, Zap, BookOpen, Play, ArrowRight,
-  Code2, Terminal, Braces, ChevronRight, ChevronLeft, Target,
+  Code2, Terminal, ChevronRight, ChevronLeft, Target,
   TrendingUp, Calendar, Sparkles, Shield, Gamepad2,
   Search,
 } from 'lucide-react';
@@ -564,17 +564,22 @@ export default function Home() {
         overflow: 'hidden',
         position: 'relative',
       }}>
-        {/* Background subtle orbs */}
+        {/* Background gradient orbs */}
         <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
           <div style={{
-            position: 'absolute', top: '-160px', right: '-160px', width: '500px', height: '500px',
-            borderRadius: '50%', filter: 'blur(150px)',
-            background: 'radial-gradient(circle, rgba(0, 212, 255, 0.07), transparent 70%)',
+            position: 'absolute', top: '-200px', right: '-100px', width: '600px', height: '600px',
+            borderRadius: '50%', filter: 'blur(180px)',
+            background: 'radial-gradient(circle, rgba(0, 212, 255, 0.10), transparent 70%)',
           }} />
           <div style={{
-            position: 'absolute', bottom: '-160px', left: '-160px', width: '500px', height: '500px',
-            borderRadius: '50%', filter: 'blur(150px)',
-            background: 'radial-gradient(circle, rgba(124, 58, 237, 0.07), transparent 70%)',
+            position: 'absolute', bottom: '-200px', left: '-100px', width: '600px', height: '600px',
+            borderRadius: '50%', filter: 'blur(180px)',
+            background: 'radial-gradient(circle, rgba(124, 58, 237, 0.10), transparent 70%)',
+          }} />
+          <div style={{
+            position: 'absolute', top: '30%', left: '50%', width: '400px', height: '400px',
+            borderRadius: '50%', filter: 'blur(150px)', transform: 'translateX(-50%)',
+            background: 'radial-gradient(circle, rgba(245, 158, 11, 0.04), transparent 70%)',
           }} />
         </div>
 
@@ -600,48 +605,14 @@ export default function Home() {
           alignItems: 'center', gap: '48px', position: 'relative', zIndex: 10,
           flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center',
         }} className="landing-hero-flex">
-          {/* Mascot */}
-          <div className="animate-fade-in landing-mascot" style={{ flex: '1 1 300px', display: 'flex', justifyContent: 'center' }}>
-            <div style={{ position: 'relative' }}>
-              <div className="animate-float">
-                <CatMascot size={250} />
-              </div>
-
-              {/* Floating badges */}
-              <div style={{
-                position: 'absolute', top: '-16px', right: '-16px',
-                padding: '5px 12px', borderRadius: '999px', fontSize: '13px', fontWeight: 700,
-                background: 'linear-gradient(135deg, #10b981, #059669)', color: 'white',
-                boxShadow: '0 4px 12px rgba(16, 185, 129, 0.25)',
-                animation: 'pulse-slow 2s ease-in-out infinite',
-                display: 'flex', alignItems: 'center', gap: '4px',
-              }}>
-                <Zap size={13} />
-                +10 XP
-              </div>
-              <div style={{
-                position: 'absolute', bottom: '40px', left: '-24px',
-                padding: '5px 12px', borderRadius: '999px', fontSize: '13px', fontWeight: 700,
-                background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: 'white',
-                boxShadow: '0 4px 12px rgba(245, 158, 11, 0.25)',
-                animation: 'pulse-slow 2s ease-in-out infinite',
-                animationDelay: '1s',
-                display: 'flex', alignItems: 'center', gap: '4px',
-              }}>
-                <Flame size={13} />
-                7 dias
-              </div>
-            </div>
-          </div>
-
-          {/* Text */}
+          {/* Text - comes first for importance */}
           <div className="animate-fade-in-up landing-text" style={{
-            flex: '1 1 400px', textAlign: 'left',
+            flex: '1 1 420px', textAlign: 'left',
           }}>
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: '8px',
               padding: '6px 16px', borderRadius: '999px',
-              fontSize: '12px', fontWeight: 600, marginBottom: '24px',
+              fontSize: '12px', fontWeight: 600, marginBottom: '28px',
               background: 'rgba(0, 212, 255, 0.06)', border: '1px solid rgba(0, 212, 255, 0.12)',
               color: '#00d4ff',
             }}>
@@ -649,20 +620,23 @@ export default function Home() {
               Plataforma Gamificada de Programacao
             </div>
             <h1 style={{
-              fontSize: 'clamp(2rem, 5vw, 3.2rem)', fontWeight: 800,
-              lineHeight: 1.1, marginBottom: '24px', color: 'var(--text-primary)',
+              fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 800,
+              lineHeight: 1.08, marginBottom: '24px', color: 'var(--text-primary)',
               letterSpacing: '-0.03em',
             }}>
-              Domine a programacao.{' '}
-              <span className="gradient-text-neon">Suba de nivel codando!</span>
+              Aprenda codigo{' '}
+              <span className="gradient-text-neon">jogando quizzes.</span>
             </h1>
-            <p style={{ fontSize: '1.05rem', marginBottom: '32px', color: 'var(--text-secondary)', maxWidth: '540px', lineHeight: 1.7 }}>
-              Transforme seu estudo em um jogo. Complete quizzes, ganhe XP e mantenha
-              sua ofensiva de codigo ativa todos os dias.
+            <p style={{
+              fontSize: 'clamp(1rem, 2.5vw, 1.15rem)', marginBottom: '36px',
+              color: 'var(--text-secondary)', maxWidth: '520px', lineHeight: 1.7,
+            }}>
+              Complete desafios, ganhe XP, suba de nivel e construa uma ofensiva diaria.
+              O jeito mais divertido de dominar programacao.
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
               <Link href="/cadastro" className="btn-3d" style={{
-                fontSize: '1rem', padding: '14px 32px', borderRadius: '12px',
+                fontSize: '1rem', padding: '16px 36px', borderRadius: '14px',
               }}>
                 Comecar Agora
                 <ArrowRight size={18} />
@@ -676,209 +650,327 @@ export default function Home() {
                 onMouseEnter={(e) => (e.currentTarget.style.color = '#00d4ff')}
                 onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
               >
-                Saiba mais
+                Como funciona
                 <ChevronRight size={16} />
               </Link>
             </div>
+
+            {/* Social proof mini-stats */}
+            <div style={{
+              display: 'flex', gap: '32px', marginTop: '48px', flexWrap: 'wrap',
+            }}>
+              {[
+                { value: '6+', label: 'Linguagens' },
+                { value: '100+', label: 'Perguntas' },
+                { value: '100%', label: 'Gratuito' },
+              ].map((s, i) => (
+                <div key={i} style={{ textAlign: 'left' }}>
+                  <p className="neon-text" style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '2px' }}>{s.value}</p>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 500 }}>{s.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Illustration */}
+          <div className="animate-fade-in landing-illustration" style={{
+            flex: '1 1 360px', display: 'flex', justifyContent: 'center',
+          }}>
+            <div style={{ position: 'relative' }}>
+              <div className="animate-float">
+                <CodeHeroIllustration size={380} />
+              </div>
+
+              {/* Floating badges */}
+              <div style={{
+                position: 'absolute', top: '10px', right: '-10px',
+                padding: '7px 14px', borderRadius: '12px', fontSize: '13px', fontWeight: 700,
+                background: 'rgba(16, 185, 129, 0.15)', color: '#10b981',
+                border: '1px solid rgba(16, 185, 129, 0.2)',
+                backdropFilter: 'blur(12px)',
+                animation: 'pulse-slow 3s ease-in-out infinite',
+                display: 'flex', alignItems: 'center', gap: '5px',
+              }}>
+                <Zap size={13} />
+                +10 XP
+              </div>
+              <div style={{
+                position: 'absolute', bottom: '50px', left: '-20px',
+                padding: '7px 14px', borderRadius: '12px', fontSize: '13px', fontWeight: 700,
+                background: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b',
+                border: '1px solid rgba(245, 158, 11, 0.2)',
+                backdropFilter: 'blur(12px)',
+                animation: 'pulse-slow 3s ease-in-out infinite',
+                animationDelay: '1.5s',
+                display: 'flex', alignItems: 'center', gap: '5px',
+              }}>
+                <Flame size={13} />
+                Ofensiva: 7 dias
+              </div>
+              <div style={{
+                position: 'absolute', bottom: '0px', right: '20px',
+                padding: '7px 14px', borderRadius: '12px', fontSize: '13px', fontWeight: 700,
+                background: 'rgba(124, 58, 237, 0.15)', color: '#a78bfa',
+                border: '1px solid rgba(124, 58, 237, 0.2)',
+                backdropFilter: 'blur(12px)',
+                animation: 'pulse-slow 3s ease-in-out infinite',
+                animationDelay: '0.8s',
+                display: 'flex', alignItems: 'center', gap: '5px',
+              }}>
+                <Trophy size={13} />
+                Nivel 5
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Como Funciona */}
-      <section id="como-funciona" style={{ padding: '96px 24px', position: 'relative' }}>
-        <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: '64px',
-            flexWrap: 'wrap', justifyContent: 'center',
-          }} className="landing-features">
-            <div className="landing-features-left" style={{ flex: '1 1 400px', display: 'flex', flexDirection: 'column', gap: '32px' }}>
-              <div>
-                <h2 style={{
-                  fontSize: 'clamp(1.5rem, 4vw, 2.25rem)', fontWeight: 800,
-                  lineHeight: 1.2, marginBottom: '16px', color: 'var(--text-primary)',
-                  letterSpacing: '-0.02em',
+      {/* Como Funciona - Steps Section */}
+      <section id="como-funciona" style={{ padding: '100px 24px', position: 'relative' }}>
+        <div style={{ maxWidth: '1080px', margin: '0 auto' }}>
+          {/* Section Header */}
+          <div style={{ textAlign: 'center', marginBottom: '64px' }}>
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: '8px',
+              padding: '6px 16px', borderRadius: '999px',
+              fontSize: '12px', fontWeight: 600, marginBottom: '20px',
+              background: 'rgba(124, 58, 237, 0.06)', border: '1px solid rgba(124, 58, 237, 0.12)',
+              color: '#a78bfa',
+            }}>
+              <Shield size={14} />
+              Como funciona
+            </div>
+            <h2 style={{
+              fontSize: 'clamp(1.6rem, 4vw, 2.5rem)', fontWeight: 800,
+              lineHeight: 1.15, marginBottom: '16px', color: 'var(--text-primary)',
+              letterSpacing: '-0.02em',
+            }}>
+              A mecanica e simples.{' '}
+              <span className="gradient-text">O aprendizado e real.</span>
+            </h2>
+            <p style={{
+              fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.7,
+              maxWidth: '600px', margin: '0 auto',
+            }}>
+              Em tres passos, voce transforma seus estudos de programacao em uma
+              jornada interativa e recompensadora.
+            </p>
+          </div>
+
+          {/* Steps Grid */}
+          <div className="landing-steps-grid" style={{
+            display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '24px',
+          }}>
+            {[
+              {
+                step: '01',
+                icon: <Terminal size={24} style={{ color: '#00d4ff' }} />,
+                title: 'Escolha um Quiz',
+                desc: 'Selecione entre JavaScript, Python, SQL, React e outras linguagens populares.',
+                accent: '#00d4ff',
+              },
+              {
+                step: '02',
+                icon: <TrendingUp size={24} style={{ color: '#a78bfa' }} />,
+                title: 'Responda e Ganhe XP',
+                desc: 'Cada resposta correta vale pontos de experiencia. Acumule XP e suba de nivel.',
+                accent: '#a78bfa',
+              },
+              {
+                step: '03',
+                icon: <Calendar size={24} style={{ color: '#f59e0b' }} />,
+                title: 'Construa sua Ofensiva',
+                desc: 'Jogue todo dia e mantenha seu combo ativo. Consistencia e a chave do progresso.',
+                accent: '#f59e0b',
+              },
+            ].map((item, i) => (
+              <div
+                key={i}
+                className="card animate-fade-in-up landing-step-card"
+                style={{
+                  padding: '36px 28px',
+                  animationDelay: `${i * 0.12}s`,
+                  position: 'relative',
+                  overflow: 'hidden',
+                }}
+              >
+                {/* Step number watermark */}
+                <div style={{
+                  position: 'absolute', top: '12px', right: '20px',
+                  fontSize: '4rem', fontWeight: 900, lineHeight: 1,
+                  color: item.accent, opacity: 0.06,
+                  fontFamily: 'monospace',
                 }}>
-                  A mecanica e simples.{' '}
-                  <span className="gradient-text">O aprendizado e real.</span>
-                </h2>
-                <p style={{ fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.7 }}>
-                  O CodeQuest transforma o seu estudo de programacao. Ao inves de apenas ler, voce
-                  testa seus conhecimentos de forma interativa e divertida.
+                  {item.step}
+                </div>
+
+                <div style={{
+                  width: '52px', height: '52px', borderRadius: '14px',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  background: `${item.accent}12`, marginBottom: '20px',
+                  border: `1px solid ${item.accent}18`,
+                }}>
+                  {item.icon}
+                </div>
+                <h3 style={{
+                  fontSize: '1.15rem', fontWeight: 700, marginBottom: '10px',
+                  color: 'var(--text-primary)',
+                }}>
+                  {item.title}
+                </h3>
+                <p style={{ color: 'var(--text-secondary)', lineHeight: 1.65, fontSize: '0.95rem' }}>
+                  {item.desc}
                 </p>
               </div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                <div className="feature-border" style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
-                  <div style={{
-                    width: '40px', height: '40px', borderRadius: '10px', flexShrink: 0,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    background: 'rgba(0, 212, 255, 0.08)',
-                  }}>
-                    <Terminal size={18} style={{ color: '#00d4ff' }} />
-                  </div>
-                  <div>
-                    <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '4px', color: 'var(--text-primary)' }}>
-                      Quizzes por Linguagem
-                    </h3>
-                    <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                      Teste seus conhecimentos em JavaScript, Python, SQL, React e mais.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="feature-border" style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
-                  <div style={{
-                    width: '40px', height: '40px', borderRadius: '10px', flexShrink: 0,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    background: 'rgba(124, 58, 237, 0.08)',
-                  }}>
-                    <TrendingUp size={18} style={{ color: '#a78bfa' }} />
-                  </div>
-                  <div>
-                    <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '4px', color: 'var(--text-primary)' }}>
-                      Sistema de Progressao
-                    </h3>
-                    <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                      Acumule pontos de experiencia (XP) com seus acertos e veja seu perfil subir de nivel.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="feature-border" style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
-                  <div style={{
-                    width: '40px', height: '40px', borderRadius: '10px', flexShrink: 0,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    background: 'rgba(245, 158, 11, 0.08)',
-                  }}>
-                    <Calendar size={18} style={{ color: '#f59e0b' }} />
-                  </div>
-                  <div>
-                    <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '4px', color: 'var(--text-primary)' }}>
-                      Ofensiva Diaria
-                    </h3>
-                    <p style={{ color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                      Mantenha a consistencia. Estudar um pouco todos os dias protege o seu combo de ofensiva.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Mascot section */}
-            <div className="landing-features-mascot" style={{ flex: '1 1 300px', display: 'flex', justifyContent: 'center' }}>
-              <div style={{
-                position: 'relative', padding: '40px', borderRadius: '20px',
-                background: 'var(--bg-card)',
-                border: '1px solid var(--card-border)',
-              }}>
-                <div className="animate-float">
-                  <CatMascot size={200} />
-                </div>
-
-                <div style={{
-                  position: 'absolute', top: '16px', left: '16px',
-                  fontSize: '12px', fontFamily: 'monospace', color: 'var(--text-muted)',
-                  opacity: 0.5,
-                }}>
-                  {'// mascote oficial'}
-                </div>
-                <div style={{
-                  position: 'absolute', bottom: '16px', right: '16px',
-                  fontSize: '12px', fontFamily: 'monospace', color: 'var(--text-muted)',
-                  opacity: 0.5,
-                }}>
-                  {'cat.study();'}
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section style={{ padding: '64px 24px' }}>
-        <div className="landing-stats-grid" style={{
-          maxWidth: '960px', margin: '0 auto',
-          display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px',
-        }}>
-          {[
-            { icon: <Zap size={24} style={{ color: '#00d4ff' }} />, value: '6+', desc: 'categorias', bg: 'rgba(0, 212, 255, 0.08)' },
-            { icon: <Trophy size={24} style={{ color: '#f59e0b' }} />, value: 'XP', desc: 'gamificado', bg: 'rgba(245, 158, 11, 0.08)' },
-            { icon: <Flame size={24} style={{ color: '#ef4444' }} />, value: '\u221E', desc: 'dias possiveis', bg: 'rgba(239, 68, 68, 0.08)' },
-          ].map((stat, i) => (
-            <div
-              key={i}
-              className="card animate-fade-in-up"
-              style={{
-                padding: '28px', textAlign: 'center',
-                animationDelay: `${i * 0.12}s`,
-              }}
-            >
-              <div style={{
-                width: '52px', height: '52px', borderRadius: '14px',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: stat.bg, margin: '0 auto 16px',
-              }}>
-                {stat.icon}
-              </div>
-              <div className="neon-text" style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '4px' }}>{stat.value}</div>
-              <p style={{ fontSize: '14px', color: 'var(--text-muted)' }}>{stat.desc}</p>
-            </div>
-          ))}
+      {/* Languages Showcase */}
+      <section style={{ padding: '64px 24px 80px' }}>
+        <div style={{ maxWidth: '960px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+            <h2 style={{
+              fontSize: 'clamp(1.4rem, 3.5vw, 2rem)', fontWeight: 800,
+              color: 'var(--text-primary)', letterSpacing: '-0.02em', marginBottom: '12px',
+            }}>
+              Quizzes para todas as <span className="neon-text">linguagens</span>
+            </h2>
+            <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: 1.7 }}>
+              Escolha sua linguagem favorita e comece a praticar agora.
+            </p>
+          </div>
+
+          <div className="landing-langs-grid" style={{
+            display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+            gap: '16px',
+          }}>
+            {categorias.slice(0, 6).map((cat, i) => {
+              const LangIcon = languageIconMap[cat.id];
+              return (
+                <Link
+                  key={cat.id}
+                  href="/cadastro"
+                  className="animate-fade-in-up"
+                  style={{
+                    display: 'flex', flexDirection: 'column', alignItems: 'center',
+                    gap: '12px', padding: '28px 16px',
+                    borderRadius: '16px', textDecoration: 'none',
+                    background: 'var(--bg-card)',
+                    border: '1px solid var(--card-border)',
+                    transition: 'all 0.3s ease',
+                    animationDelay: `${i * 0.08}s`,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                    e.currentTarget.style.borderColor = `${cat.cor}40`;
+                    e.currentTarget.style.boxShadow = `0 12px 32px rgba(0,0,0,0.15), 0 0 20px ${cat.cor}10`;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.borderColor = 'var(--card-border)';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                >
+                  <div style={{
+                    width: '48px', height: '48px', borderRadius: '12px',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    background: `${cat.cor}12`, overflow: 'hidden',
+                  }}>
+                    {LangIcon ? <LangIcon size={28} /> : <Code2 size={22} style={{ color: cat.cor }} />}
+                  </div>
+                  <span style={{
+                    fontSize: '0.85rem', fontWeight: 600,
+                    color: 'var(--text-primary)',
+                  }}>
+                    {cat.nome}
+                  </span>
+                  <span style={{
+                    fontSize: '0.72rem', color: 'var(--text-muted)',
+                  }}>
+                    {cat.perguntas.length} perguntas
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section style={{ padding: '80px 24px' }}>
+      <section style={{ padding: '40px 24px 100px' }}>
         <div className="landing-cta-card" style={{
           maxWidth: '900px', margin: '0 auto', textAlign: 'center',
-          borderRadius: '20px', padding: '48px', position: 'relative', overflow: 'hidden',
-          background: 'var(--bg-card)',
+          borderRadius: '24px', padding: '60px 48px', position: 'relative', overflow: 'hidden',
+          background: 'linear-gradient(135deg, rgba(0, 212, 255, 0.06), rgba(124, 58, 237, 0.06))',
           border: '1px solid var(--card-border)',
         }}>
-          <div className="dot-pattern" style={{ position: 'absolute', inset: 0, opacity: 0.3 }} />
+          <div className="dot-pattern" style={{ position: 'absolute', inset: 0, opacity: 0.2 }} />
+
+          {/* Decorative gradient blur */}
           <div style={{
-            width: '56px', height: '56px', borderRadius: '14px',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            position: 'absolute', top: '-80px', right: '-80px', width: '250px', height: '250px',
+            borderRadius: '50%', filter: 'blur(100px)', pointerEvents: 'none',
             background: 'rgba(0, 212, 255, 0.08)',
-            margin: '0 auto 20px', position: 'relative', zIndex: 10,
+          }} />
+          <div style={{
+            position: 'absolute', bottom: '-80px', left: '-80px', width: '250px', height: '250px',
+            borderRadius: '50%', filter: 'blur(100px)', pointerEvents: 'none',
+            background: 'rgba(124, 58, 237, 0.08)',
+          }} />
+
+          <div style={{
+            width: '60px', height: '60px', borderRadius: '16px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            background: 'rgba(0, 212, 255, 0.1)',
+            border: '1px solid rgba(0, 212, 255, 0.15)',
+            margin: '0 auto 24px', position: 'relative', zIndex: 10,
           }}>
-            <Sparkles size={24} style={{ color: '#00d4ff' }} />
+            <Sparkles size={26} style={{ color: '#00d4ff' }} />
           </div>
           <h2 className="gradient-text" style={{
-            fontSize: 'clamp(1.5rem, 4vw, 2.25rem)', fontWeight: 800,
+            fontSize: 'clamp(1.6rem, 4vw, 2.5rem)', fontWeight: 800,
             marginBottom: '16px', position: 'relative', zIndex: 10,
             letterSpacing: '-0.02em',
           }}>
             Pronto para a proxima fase?
           </h2>
           <p style={{
-            marginBottom: '32px', fontSize: '1.05rem', color: 'var(--text-secondary)',
+            marginBottom: '36px', fontSize: '1.1rem', color: 'var(--text-secondary)',
             position: 'relative', zIndex: 10, lineHeight: 1.7,
+            maxWidth: '520px', margin: '0 auto 36px',
           }}>
-            Sua jornada de programacao esta apenas comecando. Transforme cada quiz em uma nova conquista.
+            Sua jornada de programacao esta apenas comecando.
+            Crie sua conta gratuita e transforme cada quiz em uma nova conquista.
           </p>
-          <Link href="/cadastro" className="btn-3d" style={{
-            fontSize: '1rem', padding: '14px 32px', borderRadius: '12px',
-            position: 'relative', zIndex: 10,
-          }}>
-            Criar Conta Gratuita
-            <ArrowRight size={18} />
-          </Link>
+          <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap', position: 'relative', zIndex: 10 }}>
+            <Link href="/cadastro" className="btn-3d" style={{
+              fontSize: '1rem', padding: '16px 36px', borderRadius: '14px',
+            }}>
+              Criar Conta Gratuita
+              <ArrowRight size={18} />
+            </Link>
+            <Link href="/login" style={{
+              fontSize: '1rem', fontWeight: 600, padding: '16px 28px', borderRadius: '14px',
+              color: 'var(--text-primary)', textDecoration: 'none',
+              background: 'var(--bg-surface)', border: '1px solid var(--border-color)',
+              transition: 'all 0.2s ease', display: 'inline-flex', alignItems: 'center', gap: '6px',
+            }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(0, 212, 255, 0.3)';
+                e.currentTarget.style.color = '#00d4ff';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'var(--border-color)';
+                e.currentTarget.style.color = 'var(--text-primary)';
+              }}
+            >
+              Ja tenho conta
+            </Link>
+          </div>
         </div>
-      </section>
-
-      {/* Final CTA */}
-      <section style={{ padding: '64px 24px', textAlign: 'center' }}>
-        <h2 style={{
-          fontSize: 'clamp(1.5rem, 4vw, 1.875rem)', fontWeight: 800, marginBottom: '16px',
-          color: 'var(--text-primary)', letterSpacing: '-0.02em',
-        }}>
-          Sua proxima conquista comeca <span className="neon-text">agora</span>.
-        </h2>
-        <p style={{ maxWidth: '540px', margin: '0 auto 32px', fontSize: '1.05rem', color: 'var(--text-secondary)', lineHeight: 1.7 }}>
-          Nao perca tempo. Junte-se a outros devs, suba no ranking e transforme seus estudos em uma grande aventura.
-        </p>
       </section>
 
       <Footer />

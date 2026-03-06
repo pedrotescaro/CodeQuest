@@ -869,21 +869,20 @@ body {
   }
 
   .landing-hero-flex > div:first-child {
-    order: 2;
-  }
-
-  .landing-hero-flex > div:last-child {
     order: 1;
   }
 
-  .landing-mascot {
+  .landing-hero-flex > div:last-child {
+    order: 2;
+  }
+
+  .landing-illustration {
     flex: 1 1 auto !important;
   }
 
-  .landing-mascot svg,
-  .landing-mascot canvas {
-    max-width: 180px !important;
-    max-height: 180px !important;
+  .landing-illustration svg {
+    max-width: 300px !important;
+    max-height: 260px !important;
   }
 
   .landing-text {
@@ -903,8 +902,12 @@ body {
     flex: 1 1 auto !important;
   }
 
-  .landing-features-mascot {
-    display: none !important;
+  .landing-steps-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .landing-langs-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
   }
 
   .landing-stats-grid {
@@ -1081,6 +1084,25 @@ body {
 
   .landing-hero p {
     font-size: 0.9rem !important;
+  }
+
+  .landing-illustration svg {
+    max-width: 240px !important;
+    max-height: 200px !important;
+  }
+
+  .landing-langs-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  .landing-steps-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .landing-step-card {
+    padding: 24px 20px !important;
   }
 
   .landing-stats-grid {
