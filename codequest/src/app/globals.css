@@ -685,19 +685,30 @@ body {
     display: flex;
     flex-direction: column;
     position: fixed;
-    top: 64px;
+    top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--background);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-top: 1px solid var(--border-color);
-    padding: 20px 16px;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--background);
+    padding: 0 16px 20px;
     gap: 6px;
-    z-index: 100;
+    z-index: 9999;
     overflow-y: auto;
+    overflow-x: hidden;
     animation: fadeIn 0.2s ease-out;
+  }
+
+  .nav-mobile-menu-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px;
+    height: 64px;
+    min-height: 64px;
+    position: sticky;
+    top: 0;
+    background-color: var(--background);
+    z-index: 1;
   }
 
   .nav-mobile-menu a,

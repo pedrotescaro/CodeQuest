@@ -30,6 +30,18 @@ export default function Navbar({ searchQuery, onSearchChange, showSearch = false
         }
     }, [user]);
 
+    // Lock body scroll when mobile menu is open
+    useEffect(() => {
+        if (mobileMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [mobileMenuOpen]);
+
     const handleLogout = async () => {
         await logout();
         router.push('/');
@@ -298,6 +310,44 @@ export default function Navbar({ searchQuery, onSearchChange, showSearch = false
             {/* Mobile Menu Overlay */}
             {mobileMenuOpen && (
                 <div className="nav-mobile-menu">
+                    {/* Mobile menu header with logo + close */}
+                    <div className="nav-mobile-menu-header">
+                        <Link
+                            href={user ? '/' : '/'}
+                            onClick={() => setMobileMenuOpen(false)}
+                            style={{
+                                fontSize: '1.35rem',
+                                fontWeight: 800,
+                                letterSpacing: '-0.03em',
+                                textDecoration: 'none',
+                                color: '#00d4ff',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '2px',
+                            }}
+                        >
+                            {'<'}Code<span style={{ color: '#a78bfa' }}>Quest</span>{' />'}
+                        </Link>
+                        <button
+                            onClick={() => setMobileMenuOpen(false)}
+                            aria-label="Fechar menu"
+                            style={{
+                                width: '40px',
+                                height: '40px',
+                                borderRadius: '10px',
+                                border: '1px solid var(--border-color)',
+                                background: 'var(--bg-surface)',
+                                color: 'var(--text-primary)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                cursor: 'pointer',
+                            }}
+                        >
+                            <X size={22} />
+                        </button>
+                    </div>
+
                     {/* Mobile search */}
                     {showSearch && user && (
                         <div className="nav-mobile-search" style={{ position: 'relative' }}>
