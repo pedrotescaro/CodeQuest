@@ -229,6 +229,14 @@ export default function Navbar({ searchQuery, onSearchChange, showSearch = false
                                 className="nav-mobile-toggle"
                                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                                 aria-label="Menu"
+                                style={{
+                                    width: '40px',
+                                    height: '40px',
+                                    borderRadius: '10px',
+                                    border: '1px solid var(--border-color)',
+                                    background: 'var(--bg-surface)',
+                                    color: 'var(--text-primary)',
+                                }}
                             >
                                 {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
                             </button>
@@ -271,6 +279,14 @@ export default function Navbar({ searchQuery, onSearchChange, showSearch = false
                                 className="nav-mobile-toggle"
                                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                                 aria-label="Menu"
+                                style={{
+                                    width: '40px',
+                                    height: '40px',
+                                    borderRadius: '10px',
+                                    border: '1px solid var(--border-color)',
+                                    background: 'var(--bg-surface)',
+                                    color: 'var(--text-primary)',
+                                }}
                             >
                                 {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
                             </button>
@@ -284,7 +300,7 @@ export default function Navbar({ searchQuery, onSearchChange, showSearch = false
                 <div className="nav-mobile-menu">
                     {/* Mobile search */}
                     {showSearch && user && (
-                        <div className="nav-mobile-search" style={{ position: 'relative', display: 'none' }}>
+                        <div className="nav-mobile-search" style={{ position: 'relative' }}>
                             <Search size={16} style={{
                                 position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)',
                                 color: 'var(--text-muted)', pointerEvents: 'none',

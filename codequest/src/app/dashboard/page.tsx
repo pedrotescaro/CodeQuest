@@ -74,7 +74,7 @@ export default function DashboardPage() {
     return (
         <>
             <Navbar />
-            <div style={{ minHeight: '100vh', paddingTop: '80px', paddingBottom: '48px', paddingLeft: '24px', paddingRight: '24px', background: 'var(--background)' }}>
+            <div style={{ minHeight: '100vh', paddingTop: '80px', paddingBottom: '48px', paddingLeft: 'clamp(12px, 3vw, 24px)', paddingRight: 'clamp(12px, 3vw, 24px)', background: 'var(--background)' }}>
                 <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
                     {/* Welcome Header */}
                     <div className="animate-fade-in-up" style={{ marginBottom: '32px' }}>
@@ -85,7 +85,7 @@ export default function DashboardPage() {
                     </div>
 
                     {/* Stats Cards */}
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px', marginBottom: '32px' }}>
+                    <div className="dashboard-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '16px', marginBottom: '32px' }}>
                         {/* XP Card */}
                         <div className="card animate-fade-in-up" style={{ padding: '24px', animationDelay: '0.1s' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
@@ -146,7 +146,7 @@ export default function DashboardPage() {
                         </div>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '32px' }}>
+                    <div className="dashboard-main-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '32px' }}>
                         {/* Quiz Categories */}
                         <div>
                             <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '16px', color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>Escolha um Quiz</h2>

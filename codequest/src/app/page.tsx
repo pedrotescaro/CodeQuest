@@ -104,7 +104,7 @@ export default function Home() {
         <Navbar searchQuery={searchQuery} onSearchChange={setSearchQuery} showSearch={true} />
         <div style={{ minHeight: '100vh', paddingTop: '64px', background: 'var(--background)' }}>
           {/* Hero Banner - Bookadex-inspired with gradient and rounded bottom */}
-          <section style={{
+          <section className="hero-section" style={{
             background: 'linear-gradient(135deg, #00d4ff 0%, #7c3aed 50%, #a78bfa 100%)',
             borderRadius: '0 0 32px 32px',
             padding: 'clamp(32px, 5vw, 56px) clamp(12px, 3vw, 24px) clamp(32px, 5vw, 48px)',
@@ -129,9 +129,9 @@ export default function Home() {
               maxWidth: '1280px', margin: '0 auto', position: 'relative', zIndex: 10,
               display: 'flex', alignItems: 'center', gap: 'clamp(20px, 4vw, 40px)',
               flexWrap: 'wrap',
-            }}>
+            }} className="hero-flex">
               {/* Left: Greeting + XP Progress */}
-              <div className="animate-fade-in-up" style={{ flex: '1 1 300px' }}>
+              <div className="animate-fade-in-up hero-left" style={{ flex: '1 1 300px' }}>
                 <h1 style={{
                   fontSize: 'clamp(1.8rem, 4vw, 2.8rem)',
                   fontWeight: 800,
@@ -148,7 +148,7 @@ export default function Home() {
                 </p>
 
                 {/* XP Progress Card - Bookadex-style glass card */}
-                <div style={{
+                <div className="xp-card" style={{
                   background: 'rgba(255, 255, 255, 0.10)',
                   backdropFilter: 'blur(12px)',
                   WebkitBackdropFilter: 'blur(12px)',
@@ -205,7 +205,7 @@ export default function Home() {
               </div>
 
               {/* Right: Daily Challenge Card - dark card */}
-              <div className="animate-fade-in-up" style={{
+              <div className="animate-fade-in-up daily-card hero-right" style={{
                 flex: '0 1 320px',
                 background: 'var(--bg-card)',
                 border: '2px solid rgba(255, 255, 255, 0.08)',
@@ -267,7 +267,7 @@ export default function Home() {
           </section>
 
           {/* Quiz Categories - Improved Carousel */}
-          <section style={{
+          <section className="carousel-section" style={{
             padding: 'clamp(24px, 5vw, 56px) clamp(12px, 3vw, 24px)',
             background: 'var(--bg-card)',
             border: '1px solid var(--card-border)',
@@ -296,7 +296,7 @@ export default function Home() {
                 <button
                   onClick={() => scrollCarousel('left')}
                   aria-label="Anterior"
-                  className={canScrollLeft ? 'carousel-arrow-active' : ''}
+                  className={`carousel-arrow-btn ${canScrollLeft ? 'carousel-arrow-active' : ''}`}
                   style={{
                     position: 'absolute', left: '-8px', top: '50%', transform: 'translateY(-50%)',
                     zIndex: 10,
@@ -333,7 +333,7 @@ export default function Home() {
                 <button
                   onClick={() => scrollCarousel('right')}
                   aria-label="Próximo"
-                  className={canScrollRight ? 'carousel-arrow-active' : ''}
+                  className={`carousel-arrow-btn ${canScrollRight ? 'carousel-arrow-active' : ''}`}
                   style={{
                     position: 'absolute', right: '-8px', top: '50%', transform: 'translateY(-50%)',
                     zIndex: 10,
@@ -390,7 +390,7 @@ export default function Home() {
                     <Link
                       key={cat.id}
                       href={`/quiz/${cat.id}`}
-                      className="animate-fade-in-up"
+                      className="animate-fade-in-up carousel-card"
                       style={{
                         width: '200px',
                         minHeight: '280px',
@@ -418,7 +418,7 @@ export default function Home() {
                       }}
                     >
                       {/* Top color band / "cover" area */}
-                      <div style={{
+                      <div className="carousel-card-cover" style={{
                         height: '140px',
                         background: `linear-gradient(135deg, ${cat.cor}25, ${cat.cor}08)`,
                         display: 'flex',
@@ -431,7 +431,7 @@ export default function Home() {
                           position: 'absolute', inset: 0, opacity: 0.05,
                           backgroundImage: `radial-gradient(circle at 30% 40%, ${cat.cor}, transparent 50%), radial-gradient(circle at 70% 60%, ${cat.cor}, transparent 50%)`,
                         }} />
-                        <div style={{
+                        <div className="carousel-card-icon" style={{
                           width: '64px', height: '64px', borderRadius: '16px',
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                           backgroundColor: `${cat.cor}20`,
@@ -491,8 +491,8 @@ export default function Home() {
           </section>
 
           {/* Quick Stats */}
-          <section style={{ padding: '40px 24px 48px' }}>
-            <div style={{
+          <section className="stats-grid-wrapper" style={{ padding: '40px 24px 48px' }}>
+            <div className="stats-grid" style={{
               maxWidth: '1280px', margin: '0 auto',
               display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px',
             }}>
@@ -550,7 +550,7 @@ export default function Home() {
       <Navbar />
 
       {/* Hero */}
-      <section style={{
+      <section className="landing-hero" style={{
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
@@ -596,9 +596,9 @@ export default function Home() {
           maxWidth: '1280px', margin: '0 auto', display: 'flex',
           alignItems: 'center', gap: '48px', position: 'relative', zIndex: 10,
           flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center',
-        }}>
+        }} className="landing-hero-flex">
           {/* Mascot */}
-          <div className="animate-fade-in" style={{ flex: '1 1 300px', display: 'flex', justifyContent: 'center' }}>
+          <div className="animate-fade-in landing-mascot" style={{ flex: '1 1 300px', display: 'flex', justifyContent: 'center' }}>
             <div style={{ position: 'relative' }}>
               <div className="animate-float">
                 <CatMascot size={250} />
@@ -632,7 +632,7 @@ export default function Home() {
           </div>
 
           {/* Text */}
-          <div className="animate-fade-in-up" style={{
+          <div className="animate-fade-in-up landing-text" style={{
             flex: '1 1 400px', textAlign: 'left',
           }}>
             <div style={{
@@ -687,8 +687,8 @@ export default function Home() {
           <div style={{
             display: 'flex', alignItems: 'center', gap: '64px',
             flexWrap: 'wrap', justifyContent: 'center',
-          }}>
-            <div style={{ flex: '1 1 400px', display: 'flex', flexDirection: 'column', gap: '32px' }}>
+          }} className="landing-features">
+            <div className="landing-features-left" style={{ flex: '1 1 400px', display: 'flex', flexDirection: 'column', gap: '32px' }}>
               <div>
                 <h2 style={{
                   fontSize: 'clamp(1.5rem, 4vw, 2.25rem)', fontWeight: 800,
@@ -762,7 +762,7 @@ export default function Home() {
             </div>
 
             {/* Mascot section */}
-            <div style={{ flex: '1 1 300px', display: 'flex', justifyContent: 'center' }}>
+            <div className="landing-features-mascot" style={{ flex: '1 1 300px', display: 'flex', justifyContent: 'center' }}>
               <div style={{
                 position: 'relative', padding: '40px', borderRadius: '20px',
                 background: 'var(--bg-card)',
@@ -794,7 +794,7 @@ export default function Home() {
 
       {/* Stats Section */}
       <section style={{ padding: '64px 24px' }}>
-        <div style={{
+        <div className="landing-stats-grid" style={{
           maxWidth: '960px', margin: '0 auto',
           display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px',
         }}>
@@ -827,7 +827,7 @@ export default function Home() {
 
       {/* CTA Section */}
       <section style={{ padding: '80px 24px' }}>
-        <div style={{
+        <div className="landing-cta-card" style={{
           maxWidth: '900px', margin: '0 auto', textAlign: 'center',
           borderRadius: '20px', padding: '48px', position: 'relative', overflow: 'hidden',
           background: 'var(--bg-card)',

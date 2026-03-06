@@ -43,7 +43,7 @@ export default function LoginPage() {
     return (
         <div style={{ minHeight: '100vh', display: 'flex', background: 'var(--background)' }}>
             {/* Left - Form */}
-            <div style={{
+            <div className="auth-form-panel" style={{
                 flex: 1,
                 display: 'flex',
                 flexDirection: 'column',
@@ -200,7 +200,7 @@ export default function LoginPage() {
             </div>
 
             {/* Right - Decorative Panel */}
-            <div style={{
+            <div className="auth-decor-panel" style={{
                 flex: 1,
                 display: 'flex',
                 alignItems: 'center',
@@ -210,7 +210,6 @@ export default function LoginPage() {
                 overflow: 'hidden',
                 background: 'linear-gradient(135deg, rgba(0, 212, 255, 0.03), rgba(124, 58, 237, 0.05))',
             }}
-                className="hidden lg:flex"
             >
                 <div className="dot-pattern" style={{ position: 'absolute', inset: 0, opacity: 0.2 }} />
                 <div style={{
