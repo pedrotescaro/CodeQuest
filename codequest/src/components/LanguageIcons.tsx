@@ -215,11 +215,36 @@ export function CppIcon({ size = 24 }: IconProps) {
     );
 }
 
+export function GitIcon({ size = 24 }: IconProps) {
+    return (
+        <svg width={size} height={size} viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+            <rect width="256" height="256" rx="12" fill="#F05032" />
+            <g transform="translate(28, 28) scale(0.78)" fill="#fff">
+                <path d="M251.172 116.594L139.4 4.828c-6.433-6.437-16.873-6.437-23.314 0l-23.21 23.21 29.443 29.443c6.842-2.312 14.688-.761 20.142 4.693 5.48 5.489 7.02 13.402 4.652 20.266l28.375 28.376c6.865-2.365 14.786-.826 20.267 4.66 7.663 7.66 7.663 20.075 0 27.74-7.665 7.666-20.08 7.666-27.749 0-5.764-5.77-7.188-14.27-4.27-21.334l-26.462-26.462-.003 69.637c1.877.95 3.635 2.232 5.134 3.73 7.664 7.662 7.664 20.076 0 27.747-7.665 7.662-20.086 7.662-27.74 0-7.665-7.671-7.665-20.085 0-27.746 1.88-1.879 4.028-3.32 6.296-4.2V87.116c-2.268-.874-4.376-2.217-6.296-4.093-5.818-5.818-7.19-14.416-4.165-21.503L81.484 32.088 4.828 108.744c-6.435 6.44-6.435 16.873 0 23.302l111.774 111.768c6.44 6.44 16.873 6.44 23.322 0l110.248-110.217c6.442-6.442 6.442-16.88 0-23.003z" />
+            </g>
+        </svg>
+    );
+}
+
+export function FlutterIcon({ size = 24 }: IconProps) {
+    return (
+        <svg width={size} height={size} viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+            <rect width="256" height="256" rx="12" fill="#027DFD" />
+            <g transform="translate(40, 28) scale(0.69)">
+                <path d="M145.5 4.8L34.1 116.7l35 35.1L215.5 4.8h-70zM145.5 116.7L89.2 173.2l35.1 35 21.2-21.3 35.1-35-35.1-35.2z" fill="#42A5F5" />
+                <path d="M124.3 208.2l21.2 21.2h70l-56.1-56.2-35.1 35z" fill="#0D47A1" />
+                <path d="M89.2 173.2l35.1-35.1 35.2 35.1-35.2 35-35.1-35z" fill="#42A5F5" opacity="0.8" />
+            </g>
+        </svg>
+    );
+}
+
 // Map category IDs to their icon components
 export const languageIconMap: Record<string, React.FC<IconProps>> = {
     javascript: JavaScriptIcon,
     python: PythonIcon,
     html: HtmlIcon,
+    htmlcss: HtmlIcon,
     css: CssIcon,
     logica: LogicIcon,
     sql: SqlIcon,
@@ -233,4 +258,6 @@ export const languageIconMap: Record<string, React.FC<IconProps>> = {
     kotlin: KotlinIcon,
     swift: SwiftIcon,
     cpp: CppIcon,
+    git: GitIcon,
+    flutter: FlutterIcon,
 };

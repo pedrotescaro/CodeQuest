@@ -7,11 +7,10 @@ import { getUserData, getXpParaProximoNivel, UserData } from '@/lib/firestore';
 import { categorias } from '@/lib/quizzes';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import CodeHeroIllustration from '@/components/CodeHeroIllustration';
 import {
   Trophy, Flame, Zap, BookOpen, Play, ArrowRight,
   Code2, Terminal, ChevronRight, ChevronLeft, Target,
-  TrendingUp, Calendar, Sparkles, Shield, Gamepad2,
+  TrendingUp, Sparkles, Shield, Gamepad2,
   Search,
 } from 'lucide-react';
 import { languageIconMap } from '@/components/LanguageIcons';
@@ -548,11 +547,39 @@ export default function Home() {
   // ===========================
   // LANDING PAGE (not logged in)
   // ===========================
+
+  const terminalLines = [
+    { text: '> codequest.init()', color: '#00d4ff' },
+    { text: '✓ Loading quiz engine...', color: '#10b981' },
+    { text: '✓ AI question generator ready', color: '#10b981' },
+    { text: '✓ 18+ programming languages loaded', color: '#10b981' },
+    { text: '> player.start({ mode: "learn" })', color: '#a78bfa' },
+    { text: '🚀 Ready to code!', color: '#f59e0b' },
+  ];
+
+  const [visibleLines, setVisibleLines] = useState(0);
+
+  useEffect(() => {
+    if (authLoading || user) return;
+    const timer = setInterval(() => {
+      setVisibleLines(prev => {
+        if (prev >= terminalLines.length) {
+          clearInterval(timer);
+          return prev;
+        }
+        return prev + 1;
+      });
+    }, 600);
+    return () => clearInterval(timer);
+  }, [authLoading, user]);
+
+  const matrixChars = ['0', '1', '{', '}', '<', '>', '/', '=', ';', '(', ')', '[', ']', '#', '*', '+', '&', '|', '!', '?', '@', '$', '%', '^'];
+
   return (
     <>
       <Navbar />
 
-      {/* Hero */}
+      {/* Hero Section */}
       <section className="landing-hero" style={{
         minHeight: '100vh',
         display: 'flex',
@@ -564,24 +591,66 @@ export default function Home() {
         overflow: 'hidden',
         position: 'relative',
       }}>
+        {/* Matrix rain background */}
+        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
+          {Array.from({ length: 30 }).map((_, i) => (
+            <div
+              key={`matrix-${i}`}
+              style={{
+                position: 'absolute',
+                left: `${(i * 3.33) % 100}%`,
+                top: 0,
+                fontSize: `${10 + (i % 3) * 2}px`,
+                fontFamily: 'monospace',
+                color: i % 3 === 0 ? 'rgba(0, 212, 255, 0.06)' : i % 3 === 1 ? 'rgba(124, 58, 237, 0.05)' : 'rgba(16, 185, 129, 0.05)',
+                animation: `matrixRain ${12 + (i * 2) % 15}s linear infinite`,
+                animationDelay: `${(i * 0.7) % 8}s`,
+                whiteSpace: 'nowrap',
+                userSelect: 'none',
+                lineHeight: 1.8,
+                letterSpacing: '4px',
+                writingMode: 'vertical-rl',
+              }}
+            >
+              {Array.from({ length: 30 }).map((_, j) => matrixChars[(i + j) % matrixChars.length]).join(' ')}
+            </div>
+          ))}
+        </div>
+
         {/* Background gradient orbs */}
         <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
           <div style={{
             position: 'absolute', top: '-200px', right: '-100px', width: '600px', height: '600px',
             borderRadius: '50%', filter: 'blur(180px)',
-            background: 'radial-gradient(circle, rgba(0, 212, 255, 0.10), transparent 70%)',
+            background: 'radial-gradient(circle, rgba(0, 212, 255, 0.12), transparent 70%)',
           }} />
           <div style={{
             position: 'absolute', bottom: '-200px', left: '-100px', width: '600px', height: '600px',
             borderRadius: '50%', filter: 'blur(180px)',
-            background: 'radial-gradient(circle, rgba(124, 58, 237, 0.10), transparent 70%)',
+            background: 'radial-gradient(circle, rgba(124, 58, 237, 0.12), transparent 70%)',
           }} />
           <div style={{
-            position: 'absolute', top: '30%', left: '50%', width: '400px', height: '400px',
-            borderRadius: '50%', filter: 'blur(150px)', transform: 'translateX(-50%)',
-            background: 'radial-gradient(circle, rgba(245, 158, 11, 0.04), transparent 70%)',
+            position: 'absolute', top: '40%', left: '20%', width: '300px', height: '300px',
+            borderRadius: '50%', filter: 'blur(120px)',
+            background: 'radial-gradient(circle, rgba(16, 185, 129, 0.06), transparent 70%)',
+            animation: 'neuralPulse 6s ease-in-out infinite',
+          }} />
+          <div style={{
+            position: 'absolute', top: '20%', right: '20%', width: '250px', height: '250px',
+            borderRadius: '50%', filter: 'blur(100px)',
+            background: 'radial-gradient(circle, rgba(245, 158, 11, 0.05), transparent 70%)',
+            animation: 'neuralPulse 8s ease-in-out infinite',
+            animationDelay: '3s',
           }} />
         </div>
+
+        {/* Scan line effect */}
+        <div style={{
+          position: 'absolute', left: 0, right: 0, height: '2px',
+          background: 'linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.08), transparent)',
+          animation: 'scanLine 8s linear infinite',
+          pointerEvents: 'none', zIndex: 1,
+        }} />
 
         {/* Code particles */}
         <div className="code-particles">
@@ -605,7 +674,7 @@ export default function Home() {
           alignItems: 'center', gap: '48px', position: 'relative', zIndex: 10,
           flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center',
         }} className="landing-hero-flex">
-          {/* Text - comes first for importance */}
+          {/* Text */}
           <div className="animate-fade-in-up landing-text" style={{
             flex: '1 1 420px', textAlign: 'left',
           }}>
@@ -616,28 +685,29 @@ export default function Home() {
               background: 'rgba(0, 212, 255, 0.06)', border: '1px solid rgba(0, 212, 255, 0.12)',
               color: '#00d4ff',
             }}>
-              <Gamepad2 size={14} />
-              Plataforma Gamificada de Programacao
+              <Sparkles size={14} />
+              Quizzes com IA Generativa
             </div>
             <h1 style={{
               fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 800,
               lineHeight: 1.08, marginBottom: '24px', color: 'var(--text-primary)',
               letterSpacing: '-0.03em',
             }}>
-              Aprenda codigo{' '}
-              <span className="gradient-text-neon">jogando quizzes.</span>
+              Aprenda a programar{' '}
+              <span className="gradient-text-neon">com inteligencia artificial.</span>
             </h1>
             <p style={{
               fontSize: 'clamp(1rem, 2.5vw, 1.15rem)', marginBottom: '36px',
               color: 'var(--text-secondary)', maxWidth: '520px', lineHeight: 1.7,
             }}>
-              Complete desafios, ganhe XP, suba de nivel e construa uma ofensiva diaria.
-              O jeito mais divertido de dominar programacao.
+              Perguntas geradas por IA, adaptadas ao seu nivel.
+              Complete quizzes, ganhe XP, suba de nivel e domine qualquer linguagem.
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
               <Link href="/cadastro" className="btn-3d" style={{
                 fontSize: '1rem', padding: '16px 36px', borderRadius: '14px',
               }}>
+                <Code2 size={18} />
                 Comecar Agora
                 <ArrowRight size={18} />
               </Link>
@@ -655,13 +725,13 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* Social proof mini-stats */}
+            {/* Stats */}
             <div style={{
               display: 'flex', gap: '32px', marginTop: '48px', flexWrap: 'wrap',
             }}>
               {[
-                { value: '6+', label: 'Linguagens' },
-                { value: '100+', label: 'Perguntas' },
+                { value: '18+', label: 'Linguagens' },
+                { value: 'IA', label: 'Perguntas unicas' },
                 { value: '100%', label: 'Gratuito' },
               ].map((s, i) => (
                 <div key={i} style={{ textAlign: 'left' }}>
@@ -672,53 +742,59 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Illustration */}
+          {/* Terminal / Code illustration */}
           <div className="animate-fade-in landing-illustration" style={{
-            flex: '1 1 360px', display: 'flex', justifyContent: 'center',
+            flex: '1 1 400px', display: 'flex', justifyContent: 'center', maxWidth: '500px',
           }}>
-            <div style={{ position: 'relative' }}>
-              <div className="animate-float">
-                <CodeHeroIllustration size={380} />
+            <div style={{ position: 'relative', width: '100%' }}>
+              {/* Main terminal */}
+              <div className="landing-code-terminal animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+                <div className="terminal-header">
+                  <div className="terminal-dot" style={{ background: '#ef4444' }} />
+                  <div className="terminal-dot" style={{ background: '#f59e0b' }} />
+                  <div className="terminal-dot" style={{ background: '#10b981' }} />
+                  <span style={{ fontSize: '11px', color: 'var(--text-muted)', marginLeft: '8px', fontFamily: 'monospace' }}>codequest.ts</span>
+                </div>
+                <pre>
+                  {terminalLines.slice(0, visibleLines).map((line, i) => (
+                    <div key={i} className="animate-fade-in" style={{
+                      color: line.color,
+                      animationDelay: `${i * 0.1}s`,
+                    }}>
+                      {line.text}
+                    </div>
+                  ))}
+                  {visibleLines < terminalLines.length && (
+                    <span style={{
+                      display: 'inline-block',
+                      width: '8px', height: '16px',
+                      background: '#00d4ff',
+                      animation: 'typewriter-blink 1s step-end infinite',
+                      verticalAlign: 'middle',
+                    }} />
+                  )}
+                </pre>
               </div>
 
-              {/* Floating badges */}
-              <div style={{
-                position: 'absolute', top: '10px', right: '-10px',
-                padding: '7px 14px', borderRadius: '12px', fontSize: '13px', fontWeight: 700,
-                background: 'rgba(16, 185, 129, 0.15)', color: '#10b981',
-                border: '1px solid rgba(16, 185, 129, 0.2)',
-                backdropFilter: 'blur(12px)',
-                animation: 'pulse-slow 3s ease-in-out infinite',
-                display: 'flex', alignItems: 'center', gap: '5px',
+              {/* Clean status bar under terminal */}
+              <div className="landing-terminal-status" style={{
+                display: 'flex', gap: '16px', marginTop: '16px',
+                justifyContent: 'center', flexWrap: 'wrap',
               }}>
-                <Zap size={13} />
-                +10 XP
-              </div>
-              <div style={{
-                position: 'absolute', bottom: '50px', left: '-20px',
-                padding: '7px 14px', borderRadius: '12px', fontSize: '13px', fontWeight: 700,
-                background: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b',
-                border: '1px solid rgba(245, 158, 11, 0.2)',
-                backdropFilter: 'blur(12px)',
-                animation: 'pulse-slow 3s ease-in-out infinite',
-                animationDelay: '1.5s',
-                display: 'flex', alignItems: 'center', gap: '5px',
-              }}>
-                <Flame size={13} />
-                Ofensiva: 7 dias
-              </div>
-              <div style={{
-                position: 'absolute', bottom: '0px', right: '20px',
-                padding: '7px 14px', borderRadius: '12px', fontSize: '13px', fontWeight: 700,
-                background: 'rgba(124, 58, 237, 0.15)', color: '#a78bfa',
-                border: '1px solid rgba(124, 58, 237, 0.2)',
-                backdropFilter: 'blur(12px)',
-                animation: 'pulse-slow 3s ease-in-out infinite',
-                animationDelay: '0.8s',
-                display: 'flex', alignItems: 'center', gap: '5px',
-              }}>
-                <Trophy size={13} />
-                Nivel 5
+                {[
+                  { icon: <Zap size={12} />, text: '+10 XP', color: '#10b981' },
+                  { icon: <Sparkles size={12} />, text: 'IA Ativa', color: '#a78bfa' },
+                  { icon: <Flame size={12} />, text: '7 dias', color: '#f59e0b' },
+                ].map((badge, i) => (
+                  <div key={i} style={{
+                    display: 'flex', alignItems: 'center', gap: '5px',
+                    fontSize: '12px', fontWeight: 600, color: badge.color,
+                    opacity: 0.8,
+                  }}>
+                    {badge.icon}
+                    {badge.text}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -727,6 +803,36 @@ export default function Home() {
 
       {/* Como Funciona - Steps Section */}
       <section id="como-funciona" style={{ padding: '100px 24px', position: 'relative' }}>
+        {/* Neural network background */}
+        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+          <svg width="100%" height="100%" style={{ position: 'absolute', inset: 0, opacity: 0.03 }}>
+            {Array.from({ length: 8 }).map((_, i) => (
+              <circle
+                key={`node-${i}`}
+                cx={`${15 + (i * 12) % 85}%`}
+                cy={`${20 + (i * 17) % 60}%`}
+                r="3"
+                fill="#00d4ff"
+              >
+                <animate attributeName="opacity" values="0.3;0.8;0.3" dur={`${3 + i}s`} repeatCount="indefinite" />
+              </circle>
+            ))}
+            {Array.from({ length: 6 }).map((_, i) => (
+              <line
+                key={`line-${i}`}
+                x1={`${15 + (i * 12) % 85}%`}
+                y1={`${20 + (i * 17) % 60}%`}
+                x2={`${15 + ((i + 2) * 12) % 85}%`}
+                y2={`${20 + ((i + 2) * 17) % 60}%`}
+                stroke="#00d4ff"
+                strokeWidth="0.5"
+              >
+                <animate attributeName="opacity" values="0.1;0.4;0.1" dur={`${4 + i}s`} repeatCount="indefinite" />
+              </line>
+            ))}
+          </svg>
+        </div>
+
         <div style={{ maxWidth: '1080px', margin: '0 auto' }}>
           {/* Section Header */}
           <div style={{ textAlign: 'center', marginBottom: '64px' }}>
@@ -737,7 +843,7 @@ export default function Home() {
               background: 'rgba(124, 58, 237, 0.06)', border: '1px solid rgba(124, 58, 237, 0.12)',
               color: '#a78bfa',
             }}>
-              <Shield size={14} />
+              <Terminal size={14} />
               Como funciona
             </div>
             <h2 style={{
@@ -753,7 +859,7 @@ export default function Home() {
               maxWidth: '600px', margin: '0 auto',
             }}>
               Em tres passos, voce transforma seus estudos de programacao em uma
-              jornada interativa e recompensadora.
+              jornada interativa com inteligencia artificial.
             </p>
           </div>
 
@@ -765,29 +871,32 @@ export default function Home() {
             {[
               {
                 step: '01',
-                icon: <Terminal size={24} style={{ color: '#00d4ff' }} />,
+                icon: <Code2 size={24} style={{ color: '#00d4ff' }} />,
                 title: 'Escolha um Quiz',
-                desc: 'Selecione entre JavaScript, Python, SQL, React e outras linguagens populares.',
+                desc: 'Selecione entre JavaScript, Python, SQL, React e mais 14 linguagens e tecnologias.',
                 accent: '#00d4ff',
+                code: 'quiz.select("python")',
               },
               {
                 step: '02',
-                icon: <TrendingUp size={24} style={{ color: '#a78bfa' }} />,
-                title: 'Responda e Ganhe XP',
-                desc: 'Cada resposta correta vale pontos de experiencia. Acumule XP e suba de nivel.',
+                icon: <Sparkles size={24} style={{ color: '#a78bfa' }} />,
+                title: 'IA Gera as Perguntas',
+                desc: 'Cada sessao traz perguntas unicas geradas por inteligencia artificial, adaptadas ao tema.',
                 accent: '#a78bfa',
+                code: 'ai.generate({ unique: true })',
               },
               {
                 step: '03',
-                icon: <Calendar size={24} style={{ color: '#f59e0b' }} />,
-                title: 'Construa sua Ofensiva',
-                desc: 'Jogue todo dia e mantenha seu combo ativo. Consistencia e a chave do progresso.',
+                icon: <TrendingUp size={24} style={{ color: '#f59e0b' }} />,
+                title: 'Ganhe XP e Suba de Nivel',
+                desc: 'Acumule pontos, mantenha sua ofensiva diaria e desbloqueie recompensas na loja.',
                 accent: '#f59e0b',
+                code: 'player.levelUp()',
               },
             ].map((item, i) => (
               <div
                 key={i}
-                className="card animate-fade-in-up landing-step-card"
+                className="card landing-feature-card animate-fade-in-up"
                 style={{
                   padding: '36px 28px',
                   animationDelay: `${i * 0.12}s`,
@@ -819,8 +928,73 @@ export default function Home() {
                 }}>
                   {item.title}
                 </h3>
-                <p style={{ color: 'var(--text-secondary)', lineHeight: 1.65, fontSize: '0.95rem' }}>
+                <p style={{ color: 'var(--text-secondary)', lineHeight: 1.65, fontSize: '0.95rem', marginBottom: '16px' }}>
                   {item.desc}
+                </p>
+                <code style={{
+                  fontSize: '0.75rem', fontFamily: 'monospace', padding: '4px 10px',
+                  background: 'rgba(0, 212, 255, 0.04)', border: '1px solid rgba(0, 212, 255, 0.08)',
+                  borderRadius: '6px', color: item.accent,
+                }}>
+                  {item.code}
+                </code>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* AI Features Section */}
+      <section style={{ padding: '40px 24px 100px', position: 'relative' }}>
+        <div style={{ maxWidth: '1080px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: '8px',
+              padding: '6px 16px', borderRadius: '999px',
+              fontSize: '12px', fontWeight: 600, marginBottom: '20px',
+              background: 'rgba(16, 185, 129, 0.06)', border: '1px solid rgba(16, 185, 129, 0.12)',
+              color: '#10b981',
+            }}>
+              <Sparkles size={14} />
+              Inteligencia Artificial
+            </div>
+            <h2 style={{
+              fontSize: 'clamp(1.4rem, 4vw, 2.2rem)', fontWeight: 800,
+              color: 'var(--text-primary)', letterSpacing: '-0.02em', marginBottom: '12px',
+            }}>
+              Powered by <span className="neon-text">Gemini AI</span>
+            </h2>
+            <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: 1.7, maxWidth: '560px', margin: '0 auto' }}>
+              Cada quiz e uma experiencia nova. A IA gera perguntas ineditas, com diferentes dificuldades e topicos.
+            </p>
+          </div>
+
+          <div style={{
+            display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+            gap: '20px',
+          }}>
+            {[
+              { icon: <Sparkles size={22} style={{ color: '#00d4ff' }} />, title: 'Perguntas Unicas', desc: 'Nunca repete. Cada sessao gera questoes completamente novas com IA.', accent: '#00d4ff' },
+              { icon: <Target size={22} style={{ color: '#a78bfa' }} />, title: 'Niveis Adaptados', desc: 'Facil, medio e dificil — distribuidos de forma inteligente em cada quiz.', accent: '#a78bfa' },
+              { icon: <Shield size={22} style={{ color: '#10b981' }} />, title: 'Fallback Seguro', desc: 'Se a IA estiver indisponivel, o quiz funciona com perguntas estaticas curadas.', accent: '#10b981' },
+              { icon: <Gamepad2 size={22} style={{ color: '#f59e0b' }} />, title: 'Minigames Extras', desc: 'DevTermo e CodeRush — minigames de programacao para ganhar moedas.', accent: '#f59e0b' },
+            ].map((feat, i) => (
+              <div key={i} className="card landing-feature-card animate-fade-in-up" style={{
+                padding: '28px 24px', animationDelay: `${i * 0.1}s`,
+              }}>
+                <div style={{
+                  width: '46px', height: '46px', borderRadius: '12px',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  background: `${feat.accent}10`, marginBottom: '16px',
+                  border: `1px solid ${feat.accent}15`,
+                }}>
+                  {feat.icon}
+                </div>
+                <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '8px', color: 'var(--text-primary)' }}>
+                  {feat.title}
+                </h3>
+                <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                  {feat.desc}
                 </p>
               </div>
             ))}
@@ -829,72 +1003,146 @@ export default function Home() {
       </section>
 
       {/* Languages Showcase */}
-      <section style={{ padding: '64px 24px 80px' }}>
-        <div style={{ maxWidth: '960px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-            <h2 style={{
-              fontSize: 'clamp(1.4rem, 3.5vw, 2rem)', fontWeight: 800,
-              color: 'var(--text-primary)', letterSpacing: '-0.02em', marginBottom: '12px',
+      <section className="langs-showcase-section" style={{ padding: '60px 24px 80px', position: 'relative', overflow: 'hidden' }}>
+        {/* Decorative background blurs */}
+        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
+          <div style={{
+            position: 'absolute', top: '-120px', left: '10%', width: '400px', height: '400px',
+            borderRadius: '50%', filter: 'blur(140px)', opacity: 0.08,
+            background: 'linear-gradient(135deg, #00d4ff, #7c3aed)',
+          }} />
+          <div style={{
+            position: 'absolute', bottom: '-100px', right: '10%', width: '350px', height: '350px',
+            borderRadius: '50%', filter: 'blur(140px)', opacity: 0.06,
+            background: 'linear-gradient(135deg, #7c3aed, #f59e0b)',
+          }} />
+        </div>
+
+        <div style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
+          {/* Header */}
+          <div style={{ textAlign: 'center', marginBottom: '56px' }}>
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: '8px',
+              padding: '6px 16px', borderRadius: '999px', marginBottom: '16px',
+              background: 'rgba(0, 212, 255, 0.08)', border: '1px solid rgba(0, 212, 255, 0.15)',
+              fontSize: '0.8rem', fontWeight: 600, color: '#00d4ff',
             }}>
-              Quizzes para todas as <span className="neon-text">linguagens</span>
+              <Code2 size={14} />
+              {categorias.length} linguagens e tecnologias
+            </div>
+            <h2 style={{
+              fontSize: 'clamp(1.5rem, 4vw, 2.4rem)', fontWeight: 800,
+              color: 'var(--text-primary)', letterSpacing: '-0.03em', marginBottom: '14px',
+              lineHeight: 1.2,
+            }}>
+              Quizzes para todas as{' '}
+              <span className="gradient-text">linguagens</span>
             </h2>
-            <p style={{ fontSize: '1rem', color: 'var(--text-secondary)', lineHeight: 1.7 }}>
-              Escolha sua linguagem favorita e comece a praticar agora.
+            <p style={{
+              fontSize: 'clamp(0.95rem, 2.5vw, 1.1rem)', color: 'var(--text-secondary)',
+              lineHeight: 1.7, maxWidth: '560px', margin: '0 auto',
+            }}>
+              De JavaScript a Flutter, de Git a C++ — escolha sua trilha favorita e 
+              domine cada tecnologia com quizzes gerados por IA.
             </p>
           </div>
 
+          {/* Languages grid - all languages */}
           <div className="landing-langs-grid" style={{
-            display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+            display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
             gap: '16px',
           }}>
-            {categorias.slice(0, 6).map((cat, i) => {
+            {categorias.map((cat, i) => {
               const LangIcon = languageIconMap[cat.id];
               return (
                 <Link
                   key={cat.id}
                   href="/cadastro"
-                  className="animate-fade-in-up"
+                  className="lang-card animate-fade-in-up"
                   style={{
-                    display: 'flex', flexDirection: 'column', alignItems: 'center',
-                    gap: '12px', padding: '28px 16px',
+                    display: 'flex', alignItems: 'center',
+                    gap: '14px', padding: '18px 16px',
                     borderRadius: '16px', textDecoration: 'none',
                     background: 'var(--bg-card)',
                     border: '1px solid var(--card-border)',
-                    transition: 'all 0.3s ease',
-                    animationDelay: `${i * 0.08}s`,
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    animationDelay: `${i * 0.04}s`,
+                    position: 'relative',
+                    overflow: 'hidden',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-4px)';
-                    e.currentTarget.style.borderColor = `${cat.cor}40`;
-                    e.currentTarget.style.boxShadow = `0 12px 32px rgba(0,0,0,0.15), 0 0 20px ${cat.cor}10`;
+                    e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)';
+                    e.currentTarget.style.borderColor = `${cat.cor}50`;
+                    e.currentTarget.style.boxShadow = `0 16px 40px rgba(0,0,0,0.12), 0 0 30px ${cat.cor}15`;
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
                     e.currentTarget.style.borderColor = 'var(--card-border)';
                     e.currentTarget.style.boxShadow = 'none';
                   }}
                 >
+                  {/* Color accent line at top */}
                   <div style={{
-                    width: '48px', height: '48px', borderRadius: '12px',
+                    position: 'absolute', top: 0, left: 0, right: 0, height: '3px',
+                    background: `linear-gradient(90deg, ${cat.cor}, ${cat.cor}60)`,
+                    opacity: 0.7, borderRadius: '16px 16px 0 0',
+                  }} />
+                  <div style={{
+                    width: '44px', height: '44px', borderRadius: '12px', flexShrink: 0,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    background: `${cat.cor}12`, overflow: 'hidden',
+                    background: `${cat.cor}15`, overflow: 'hidden',
                   }}>
-                    {LangIcon ? <LangIcon size={28} /> : <Code2 size={22} style={{ color: cat.cor }} />}
+                    {LangIcon ? <LangIcon size={26} /> : <Code2 size={20} style={{ color: cat.cor }} />}
                   </div>
-                  <span style={{
-                    fontSize: '0.85rem', fontWeight: 600,
-                    color: 'var(--text-primary)',
-                  }}>
-                    {cat.nome}
-                  </span>
-                  <span style={{
-                    fontSize: '0.72rem', color: 'var(--text-muted)',
-                  }}>
-                    {cat.perguntas.length} perguntas
-                  </span>
+                  <div style={{ minWidth: 0 }}>
+                    <span style={{
+                      fontSize: '0.9rem', fontWeight: 700,
+                      color: 'var(--text-primary)', display: 'block',
+                      marginBottom: '2px',
+                    }}>
+                      {cat.nome}
+                    </span>
+                    <span style={{
+                      fontSize: '0.72rem', color: 'var(--text-muted)',
+                      display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden', lineHeight: 1.4,
+                    }}>
+                      {cat.descricao}
+                    </span>
+                  </div>
+                  <ChevronRight size={16} style={{
+                    color: 'var(--text-muted)', marginLeft: 'auto', flexShrink: 0,
+                    opacity: 0.5,
+                  }} />
                 </Link>
               );
             })}
+          </div>
+
+          {/* Bottom CTA */}
+          <div style={{ textAlign: 'center', marginTop: '40px' }}>
+            <Link
+              href="/cadastro"
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '8px',
+                padding: '14px 32px', borderRadius: '12px', textDecoration: 'none',
+                background: 'linear-gradient(135deg, #00d4ff 0%, #7c3aed 100%)',
+                color: '#fff', fontWeight: 700, fontSize: '0.95rem',
+                transition: 'all 0.3s ease',
+                boxShadow: '0 4px 20px rgba(0, 212, 255, 0.25)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 8px 30px rgba(0, 212, 255, 0.35)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 212, 255, 0.25)';
+              }}
+            >
+              Explorar todas as trilhas
+              <ArrowRight size={18} />
+            </Link>
           </div>
         </div>
       </section>
@@ -928,27 +1176,27 @@ export default function Home() {
             border: '1px solid rgba(0, 212, 255, 0.15)',
             margin: '0 auto 24px', position: 'relative', zIndex: 10,
           }}>
-            <Sparkles size={26} style={{ color: '#00d4ff' }} />
+            <Terminal size={26} style={{ color: '#00d4ff' }} />
           </div>
           <h2 className="gradient-text" style={{
             fontSize: 'clamp(1.6rem, 4vw, 2.5rem)', fontWeight: 800,
             marginBottom: '16px', position: 'relative', zIndex: 10,
             letterSpacing: '-0.02em',
           }}>
-            Pronto para a proxima fase?
+            {'>'} Pronto para codar?
           </h2>
           <p style={{
             marginBottom: '36px', fontSize: '1.1rem', color: 'var(--text-secondary)',
             position: 'relative', zIndex: 10, lineHeight: 1.7,
             maxWidth: '520px', margin: '0 auto 36px',
           }}>
-            Sua jornada de programacao esta apenas comecando.
-            Crie sua conta gratuita e transforme cada quiz em uma nova conquista.
+            Crie sua conta gratuita e deixe a IA gerar desafios sob medida para sua evolucao.
           </p>
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap', position: 'relative', zIndex: 10 }}>
             <Link href="/cadastro" className="btn-3d" style={{
               fontSize: '1rem', padding: '16px 36px', borderRadius: '14px',
             }}>
+              <Code2 size={18} />
               Criar Conta Gratuita
               <ArrowRight size={18} />
             </Link>

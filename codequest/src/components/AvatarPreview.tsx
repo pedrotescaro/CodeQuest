@@ -1,6 +1,8 @@
 'use client';
 
-import { AvatarConfig, getItem } from '@/lib/avatarData';
+import React from 'react';
+import { AvatarConfig } from '@/lib/avatarData';
+import { backgroundSVGs, hairSVGs, faceSVGs, clothesSVGs, accessorySVGs } from './AvatarSVGs';
 
 interface AvatarPreviewProps {
   config: AvatarConfig;
@@ -9,92 +11,66 @@ interface AvatarPreviewProps {
   nivel?: number;
 }
 
-const fundoStyles: Record<string, { bg: string; effect?: string }> = {
-  fundo_padrao:  { bg: 'linear-gradient(135deg, #1a1a2e, #16213e)' },
-  fundo_matrix:  { bg: 'linear-gradient(135deg, #0d1b0e, #1a3a1a)', effect: '💚' },
-  fundo_galaxy:  { bg: 'linear-gradient(135deg, #0c0c2e, #1a0a3e, #0c0c2e)', effect: '✨' },
-  fundo_neon:    { bg: 'linear-gradient(135deg, #1a0030, #000830, #002020)', effect: '🏙️' },
-  fundo_fire:    { bg: 'linear-gradient(135deg, #1a0000, #3a0a00)', effect: '🔥' },
-};
-
 export default function AvatarPreview({ config, size = 120, showBadge, nivel }: AvatarPreviewProps) {
-  const cabelo = getItem(config.cabelo);
-  const rosto = getItem(config.rosto);
-  const roupa = getItem(config.roupa);
-  const acessorio = getItem(config.acessorio);
-  const fundo = fundoStyles[config.fundo] || fundoStyles.fundo_padrao;
+  const BgComponent = backgroundSVGs[config.fundo] || backgroundSVGs.fundo_padrao;
+  const HairComponent = hairSVGs[config.cabelo] || hairSVGs.cabelo_padrao;
+  const FaceComponent = faceSVGs[config.rosto] || faceSVGs.rosto_padrao;
+  const ClotheComponent = clothesSVGs[config.roupa] || clothesSVGs.roupa_padrao;
+  const AccComponent = config.acessorio !== 'acessorio_nenhum' ? accessorySVGs[config.acessorio] : null;
 
-  const fontSize = size * 0.28;
+  const uid = React.useId();
 
   return (
-    <div style={{
-      width: size,
-      height: size,
-      borderRadius: '50%',
-      background: fundo.bg,
-      border: '3px solid rgba(0, 212, 255, 0.25)',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      position: 'relative',
-      overflow: 'hidden',
-      boxShadow: '0 4px 24px rgba(0, 0, 0, 0.3)',
-    }}>
-      {/* Background effect */}
-      {fundo.effect && (
-        <span style={{
-          position: 'absolute',
-          top: '8%',
-          right: '12%',
-          fontSize: size * 0.15,
-          opacity: 0.5,
-          pointerEvents: 'none',
-        }}>
-          {fundo.effect}
-        </span>
-      )}
+    <div style={{ position: 'relative', width: size, height: size }}>
+      <svg
+        width={size}
+        height={size}
+        viewBox="0 0 200 200"
+        style={{
+          borderRadius: '50%',
+          overflow: 'hidden',
+          border: '3px solid rgba(0, 212, 255, 0.25)',
+          boxShadow: '0 4px 24px rgba(0, 0, 0, 0.3)',
+        }}
+      >
+        <defs>
+          <clipPath id={`avatar_clip_${uid}`}>
+            <circle cx="100" cy="100" r="98" />
+          </clipPath>
+        </defs>
+        <g clipPath={`url(#avatar_clip_${uid})`}>
+          {/* Layer 1: Background */}
+          <BgComponent />
 
-      {/* Cabelo (topo) */}
-      <span style={{ fontSize: fontSize * 0.75, lineHeight: 1, marginTop: -2 }}>
-        {cabelo?.emoji || '💇'}
-      </span>
+          {/* Layer 2: Body / Neck area — skin tone ellipse */}
+          <ellipse cx="100" cy="108" rx="18" ry="12" fill={config.corPele} />
 
-      {/* Rosto (centro) */}
-      <div style={{
-        width: size * 0.45,
-        height: size * 0.45,
-        borderRadius: '50%',
-        background: config.corPele,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        position: 'relative',
-        boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)',
-      }}>
-        <span style={{ fontSize: fontSize * 0.65 }}>
-          {rosto?.emoji || '😊'}
-        </span>
-      </div>
+          {/* Layer 3: Clothes */}
+          <ClotheComponent skinColor={config.corPele} />
 
-      {/* Roupa (baixo) */}
-      <span style={{ fontSize: fontSize * 0.65, lineHeight: 1, marginTop: -2 }}>
-        {roupa?.emoji || '👕'}
-      </span>
+          {/* Layer 4: Head — skin circle */}
+          <circle cx="100" cy="78" r="35" fill={config.corPele} />
+          {/* Subtle head shadow */}
+          <circle cx="100" cy="78" r="35" fill="rgba(0,0,0,0.04)" />
 
-      {/* Acessório (canto) */}
-      {acessorio && acessorio.id !== 'acessorio_nenhum' && (
-        <span style={{
-          position: 'absolute',
-          bottom: '8%',
-          right: '8%',
-          fontSize: size * 0.18,
-        }}>
-          {acessorio.emoji}
-        </span>
-      )}
+          {/* Layer 5: Ears */}
+          <ellipse cx="64" cy="80" rx="6" ry="8" fill={config.corPele} />
+          <ellipse cx="64" cy="80" rx="4" ry="6" fill="rgba(0,0,0,0.05)" />
+          <ellipse cx="136" cy="80" rx="6" ry="8" fill={config.corPele} />
+          <ellipse cx="136" cy="80" rx="4" ry="6" fill="rgba(0,0,0,0.05)" />
 
-      {/* Level badge */}
+          {/* Layer 6: Face features */}
+          <FaceComponent />
+
+          {/* Layer 7: Hair */}
+          <HairComponent />
+
+          {/* Layer 8: Accessory (on top of everything) */}
+          {AccComponent && <AccComponent />}
+        </g>
+      </svg>
+
+      {/* Level badge (HTML for better text rendering) */}
       {showBadge && nivel !== undefined && (
         <div style={{
           position: 'absolute',
@@ -108,6 +84,7 @@ export default function AvatarPreview({ config, size = 120, showBadge, nivel }: 
           padding: '2px 8px',
           borderRadius: '999px',
           whiteSpace: 'nowrap',
+          zIndex: 1,
         }}>
           Lvl {nivel}
         </div>

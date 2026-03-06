@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   title: 'CodeQuest — Aprenda Programação com Quizzes',
   description:
     'Plataforma gamificada de quizzes de programação. Ganhe XP, suba de nível e domine JavaScript, Python, SQL, React e mais!',
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({

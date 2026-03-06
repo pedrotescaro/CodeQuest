@@ -1,12 +1,15 @@
 'use client';
 
+import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { getUserData, saveCodeRushResult, UserData } from '@/lib/firestore';
 import { codeLanguages, CodeLanguage, CodeChallenge, normalizeCommand } from '@/lib/codeRushData';
 import Navbar from '@/components/Navbar';
-import { Coins, Trophy, Clock, ArrowLeft, Zap, ChevronRight, RotateCcw, Eye } from 'lucide-react';
+import { Coins, Trophy, Clock, ArrowLeft, Zap, ChevronRight, RotateCcw, Sparkles } from 'lucide-react';
+import { languageIconMap } from '@/components/LanguageIcons';
+import { CodeRushLogo } from '@/components/MinigameLogos';
 import Link from 'next/link';
 
 const GAME_DURATION = 60; // seconds
@@ -34,6 +37,9 @@ export default function CodeRushPage() {
 
     const inputRef = useRef<HTMLInputElement>(null);
     const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+    const [aiHintActive, setAiHintActive] = useState(false);
+    const [aiHintTyping, setAiHintTyping] = useState(false);
+    const hintTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     useEffect(() => {
         if (!authLoading && !user) { router.push('/login'); return; }
@@ -68,6 +74,8 @@ export default function CodeRushPage() {
         setCombo(0);
         setTimeLeft(GAME_DURATION);
         setShowHint(false);
+        setAiHintActive(false);
+        setAiHintTyping(false);
         setFeedback(null);
         setUserInput('');
 
@@ -129,6 +137,8 @@ export default function CodeRushPage() {
         setTimeout(() => {
             setFeedback(null);
             setShowHint(false);
+            setAiHintActive(false);
+            setAiHintTyping(false);
             setUserInput('');
             const { challenge: next, idx, newUsed } = getNextChallenge(selectedLang, usedIndices);
             setChallenge(next);
@@ -138,10 +148,35 @@ export default function CodeRushPage() {
         }, 800);
     }, [challenge, selectedLang, userInput, combo, phase, getNextChallenge, usedIndices]);
 
+    const activateAiHint = useCallback(() => {
+        if (!challenge || aiHintActive) return;
+        setShowHint(true);
+        setAiHintTyping(true);
+        // Simulate AI "thinking" before showing inline suggestion
+        if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current);
+        hintTimeoutRef.current = setTimeout(() => {
+            setAiHintTyping(false);
+            setAiHintActive(true);
+        }, 800);
+    }, [challenge, aiHintActive]);
+
+    const acceptAiSuggestion = useCallback(() => {
+        if (!aiHintActive || !challenge) return;
+        setUserInput(challenge.comando);
+        inputRef.current?.focus();
+    }, [aiHintActive, challenge]);
+
+    // Cleanup hint timeout
+    useEffect(() => {
+        return () => { if (hintTimeoutRef.current) clearTimeout(hintTimeoutRef.current); };
+    }, []);
+
     const handleSkip = useCallback(() => {
         if (!selectedLang || phase !== 'playing') return;
         setCombo(0);
         setShowHint(false);
+        setAiHintActive(false);
+        setAiHintTyping(false);
         setUserInput('');
         setFeedback(null);
         const { challenge: next, idx, newUsed } = getNextChallenge(selectedLang, usedIndices);
@@ -175,8 +210,8 @@ export default function CodeRushPage() {
                             <ArrowLeft size={18} />
                         </Link>
                         <div>
-                            <h1 style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
-                                ⚡ CodeRush
+                            <h1 style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <CodeRushLogo size={28} /> CodeRush
                             </h1>
                             <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                                 Digite o comando certo o mais rápido possível!
@@ -228,7 +263,12 @@ export default function CodeRushPage() {
                                             e.currentTarget.style.boxShadow = 'none';
                                         }}
                                     >
-                                        <div style={{ fontSize: '2rem', marginBottom: '8px' }}>{lang.icone}</div>
+                                        <div style={{ marginBottom: '8px', display: 'flex', justifyContent: 'center' }}>
+                                            {languageIconMap[lang.id]
+                                                ? React.createElement(languageIconMap[lang.id], { size: 40 })
+                                                : <span style={{ fontSize: '2rem' }}>{lang.icone}</span>
+                                            }
+                                        </div>
                                         <p style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--text-primary)' }}>{lang.nome}</p>
                                         <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 4 }}>
                                             {lang.desafios.length} desafios
@@ -276,7 +316,10 @@ export default function CodeRushPage() {
                                 transition: 'border-color 0.3s',
                             }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                                    <span style={{ fontSize: '1.2rem' }}>{selectedLang?.icone}</span>
+                                    {selectedLang && languageIconMap[selectedLang.id]
+                                        ? React.createElement(languageIconMap[selectedLang.id], { size: 24 })
+                                        : <span style={{ fontSize: '1.2rem' }}>{selectedLang?.icone}</span>
+                                    }
                                     <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
                                         {selectedLang?.nome}
                                     </span>
@@ -286,37 +329,134 @@ export default function CodeRushPage() {
                                     {challenge.descricao}
                                 </p>
 
-                                {showHint && challenge.dica && (
-                                    <p className="animate-fade-in" style={{
-                                        fontSize: '0.8rem', color: '#f59e0b', fontWeight: 600,
-                                        padding: '8px 12px', borderRadius: 8,
-                                        background: 'rgba(245, 158, 11, 0.08)',
-                                        marginBottom: 12,
-                                    }}>
-                                        💡 Dica: {challenge.dica}
-                                    </p>
-                                )}
-
-                                {/* Input */}
+                                {/* AI-style inline autocomplete input */}
                                 <div style={{ position: 'relative' }}>
+                                    {/* Ghost text layer (behind input) */}
+                                    <div
+                                        aria-hidden
+                                        style={{
+                                            position: 'absolute',
+                                            top: 0, left: 0, right: 0, bottom: 0,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            padding: '12px 16px',
+                                            fontFamily: "'Courier New', monospace",
+                                            fontSize: '0.95rem',
+                                            pointerEvents: 'none',
+                                            overflow: 'hidden',
+                                            whiteSpace: 'nowrap',
+                                        }}
+                                    >
+                                        {/* Invisible spacer matching typed text */}
+                                        <span style={{ visibility: 'hidden', whiteSpace: 'pre' }}>
+                                            {userInput}
+                                        </span>
+                                        {/* Ghost suggestion text */}
+                                        {aiHintActive && challenge && (() => {
+                                            const cmd = challenge.comando;
+                                            const lower = userInput.toLowerCase();
+                                            const cmdLower = cmd.toLowerCase();
+                                            const ghostText = cmdLower.startsWith(lower) && userInput.length > 0
+                                                ? cmd.slice(userInput.length)
+                                                : userInput.length === 0
+                                                    ? cmd
+                                                    : '';
+                                            if (!ghostText) return null;
+                                            return (
+                                                <span style={{
+                                                    color: '#7c3aed',
+                                                    opacity: 0.5,
+                                                    whiteSpace: 'pre',
+                                                    fontStyle: 'italic',
+                                                }}>
+                                                    {ghostText}
+                                                </span>
+                                            );
+                                        })()}
+                                    </div>
+
+                                    {/* Real input on top */}
                                     <input
                                         ref={inputRef}
                                         type="text"
                                         value={userInput}
                                         onChange={(e) => setUserInput(e.target.value)}
-                                        onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit(); }}
-                                        placeholder="Digite o comando aqui..."
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') handleSubmit();
+                                            if (e.key === 'Tab' && aiHintActive) {
+                                                e.preventDefault();
+                                                acceptAiSuggestion();
+                                            }
+                                        }}
+                                        placeholder={!aiHintActive ? 'Digite o comando aqui...' : ''}
                                         className="input-dark"
                                         style={{
                                             fontFamily: "'Courier New', monospace",
                                             fontSize: '0.95rem',
                                             paddingRight: '90px',
+                                            background: 'transparent',
+                                            position: 'relative',
+                                            caretColor: '#00d4ff',
                                         }}
                                         autoComplete="off"
                                         spellCheck={false}
                                         disabled={!!feedback}
                                     />
+
+                                    {/* AI thinking indicator */}
+                                    {aiHintTyping && (
+                                        <div className="animate-fade-in" style={{
+                                            position: 'absolute', top: -28, right: 0,
+                                            display: 'flex', alignItems: 'center', gap: 6,
+                                            padding: '4px 10px', borderRadius: 8,
+                                            background: 'rgba(124, 58, 237, 0.1)',
+                                            border: '1px solid rgba(124, 58, 237, 0.2)',
+                                        }}>
+                                            <Sparkles size={12} style={{ color: '#7c3aed' }} />
+                                            <span style={{ fontSize: '0.7rem', color: '#7c3aed', fontWeight: 600 }}>IA pensando...</span>
+                                            <span className="animate-pulse" style={{ width: 4, height: 4, borderRadius: '50%', background: '#7c3aed', display: 'inline-block' }} />
+                                        </div>
+                                    )}
+
+                                    {/* Tab to accept hint */}
+                                    {aiHintActive && challenge && (() => {
+                                        const cmd = challenge.comando;
+                                        const lower = userInput.toLowerCase();
+                                        const cmdLower = cmd.toLowerCase();
+                                        const hasGhost = cmdLower.startsWith(lower) || userInput.length === 0;
+                                        if (!hasGhost) return null;
+                                        return (
+                                            <div style={{
+                                                position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
+                                                display: 'flex', alignItems: 'center', gap: 4,
+                                                padding: '3px 8px', borderRadius: 6,
+                                                background: 'rgba(124, 58, 237, 0.12)',
+                                                border: '1px solid rgba(124, 58, 237, 0.25)',
+                                            }}>
+                                                <span style={{ fontSize: '0.65rem', color: '#7c3aed', fontWeight: 700 }}>Tab</span>
+                                                <span style={{ fontSize: '0.6rem', color: 'rgba(124,58,237,0.6)' }}>aceitar</span>
+                                            </div>
+                                        );
+                                    })()}
                                 </div>
+
+                                {/* AI hint label when active */}
+                                {aiHintActive && (
+                                    <div className="animate-fade-in" style={{
+                                        display: 'flex', alignItems: 'center', gap: 6,
+                                        marginTop: 8, padding: '6px 10px', borderRadius: 8,
+                                        background: 'rgba(124, 58, 237, 0.06)',
+                                        border: '1px solid rgba(124, 58, 237, 0.12)',
+                                    }}>
+                                        <Sparkles size={12} style={{ color: '#7c3aed' }} />
+                                        <span style={{ fontSize: '0.72rem', color: '#7c3aed', fontWeight: 600 }}>Sugestão da IA</span>
+                                        {challenge?.dica && (
+                                            <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginLeft: 4 }}>
+                                                — {challenge.dica}
+                                            </span>
+                                        )}
+                                    </div>
+                                )}
 
                                 {/* Feedback */}
                                 {feedback && (
@@ -340,8 +480,12 @@ export default function CodeRushPage() {
                                 <button onClick={handleSubmit} className="btn-neon" style={{ flex: 1, justifyContent: 'center' }} disabled={!!feedback || !userInput.trim()}>
                                     <ChevronRight size={16} /> Enviar
                                 </button>
-                                <button onClick={() => setShowHint(true)} className="btn-ghost" style={{ fontSize: '0.8rem', padding: '8px 14px' }} disabled={showHint || !!feedback}>
-                                    <Eye size={14} /> Dica
+                                <button onClick={activateAiHint} className="btn-ghost" style={{
+                                    fontSize: '0.8rem', padding: '8px 14px',
+                                    borderColor: aiHintActive ? '#7c3aed' : undefined,
+                                    color: aiHintActive ? '#7c3aed' : undefined,
+                                }} disabled={showHint || !!feedback}>
+                                    <Sparkles size={14} /> IA Hint
                                 </button>
                                 <button onClick={handleSkip} className="btn-ghost" style={{ fontSize: '0.8rem', padding: '8px 14px' }} disabled={!!feedback}>
                                     Pular
@@ -354,8 +498,8 @@ export default function CodeRushPage() {
                     {phase === 'ended' && (
                         <div className="animate-scale-in">
                             <div className="card" style={{ padding: '32px', textAlign: 'center' }}>
-                                <div style={{ fontSize: '3rem', marginBottom: '12px' }}>
-                                    {score >= 80 ? '🏆' : score >= 40 ? '⚡' : '💪'}
+                                <div style={{ marginBottom: '12px', display: 'flex', justifyContent: 'center' }}>
+                                    <CodeRushLogo size={64} />
                                 </div>
                                 <h2 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: 8 }}>
                                     Tempo esgotado!

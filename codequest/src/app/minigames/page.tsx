@@ -6,7 +6,8 @@ import { useEffect, useState } from 'react';
 import { getUserData, UserData } from '@/lib/firestore';
 import { getDaySeed } from '@/lib/termoData';
 import Navbar from '@/components/Navbar';
-import { Gamepad2, Coins, Trophy, Flame, Zap, ArrowRight } from 'lucide-react';
+import { Gamepad2, Coins, Trophy, Flame, Zap, ArrowRight, ShoppingBag } from 'lucide-react';
+import { DevTermoLogo, CodeRushLogo } from '@/components/MinigameLogos';
 import Link from 'next/link';
 
 const minigames = [
@@ -14,7 +15,7 @@ const minigames = [
         id: 'termo',
         nome: 'DevTermo',
         descricao: 'Adivinhe a palavra de programação do dia em 6 tentativas!',
-        emoji: '🖥️',
+        Logo: DevTermoLogo,
         cor: '#10b981',
         corBg: 'rgba(16, 185, 129, 0.08)',
         href: '/minigames/termo',
@@ -25,7 +26,7 @@ const minigames = [
         id: 'coderush',
         nome: 'CodeRush',
         descricao: 'Escolha uma linguagem e digite o comando certo contra o tempo!',
-        emoji: '⚡',
+        Logo: CodeRushLogo,
         cor: '#f59e0b',
         corBg: 'rgba(245, 158, 11, 0.08)',
         href: '/minigames/coderush',
@@ -93,7 +94,8 @@ export default function MinigamesPage() {
                             </div>
                         </div>
                         <Link href="/loja" className="btn-ghost" style={{ textDecoration: 'none', fontSize: '0.8rem' }}>
-                            🛒 Ir para Loja
+                            <ShoppingBag size={14} />
+                            Loja & Avatar
                         </Link>
                     </div>
 
@@ -159,9 +161,9 @@ export default function MinigamesPage() {
                                         width: 64, height: 64, borderRadius: 16,
                                         background: game.corBg, display: 'flex',
                                         alignItems: 'center', justifyContent: 'center',
-                                        fontSize: '2rem', flexShrink: 0,
+                                        flexShrink: 0,
                                     }}>
-                                        {game.emoji}
+                                        <game.Logo size={48} />
                                     </div>
 
                                     <div style={{ flex: 1 }}>

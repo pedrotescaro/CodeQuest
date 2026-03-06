@@ -8,6 +8,7 @@ import { avatarItems, AvatarItem, AvatarConfig, getItemsByType, skinColors } fro
 import AvatarPreview from '@/components/AvatarPreview';
 import Navbar from '@/components/Navbar';
 import { Coins, Lock, Check, ShoppingBag, Palette, ArrowLeft } from 'lucide-react';
+import { ItemPreviewSVG } from '@/components/AvatarSVGs';
 import Link from 'next/link';
 
 type TabType = AvatarItem['tipo'] | 'pele';
@@ -206,7 +207,7 @@ export default function LojaPage() {
                                                 opacity: locked ? 0.5 : 1,
                                             }}>
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-                                                    <span style={{ fontSize: '2rem' }}>{item.emoji}</span>
+                                                    <ItemPreviewSVG itemId={item.id} size={48} />
                                                     <div style={{ flex: 1 }}>
                                                         <p style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>{item.nome}</p>
                                                         <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{item.descricao}</p>

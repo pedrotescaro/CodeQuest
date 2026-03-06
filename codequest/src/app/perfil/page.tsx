@@ -3,13 +3,13 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { getUserData, getXpParaProximoNivel, UserData } from '@/lib/firestore';
+import { getUserData, getXpParaProximoNivel, updateUserName, UserData } from '@/lib/firestore';
 import { categorias } from '@/lib/quizzes';
 import Navbar from '@/components/Navbar';
 import AvatarPreview from '@/components/AvatarPreview';
 import { defaultAvatar } from '@/lib/avatarData';
 import {
-    Trophy, Zap, Flame, BookOpen, Settings, LogOut, Code2, Coins, Gamepad2, ShoppingBag,
+    Trophy, Zap, Flame, BookOpen, Settings, LogOut, Code2, Coins, Gamepad2, ShoppingBag, Pencil, Check, X,
 } from 'lucide-react';
 import { languageIconMap } from '@/components/LanguageIcons';
 import Link from 'next/link';
@@ -19,6 +19,9 @@ export default function PerfilPage() {
     const router = useRouter();
     const [userData, setUserData] = useState<UserData | null>(null);
     const [loading, setLoading] = useState(true);
+    const [editingName, setEditingName] = useState(false);
+    const [newName, setNewName] = useState('');
+    const [savingName, setSavingName] = useState(false);
 
     useEffect(() => {
         if (!authLoading && !user) {
@@ -36,6 +39,26 @@ export default function PerfilPage() {
     const handleLogout = async () => {
         await logout();
         router.push('/');
+    };
+
+    const handleEditName = () => {
+        setNewName(userData?.nome || '');
+        setEditingName(true);
+    };
+
+    const handleSaveName = async () => {
+        if (!user || !newName.trim() || newName.trim().length < 2) return;
+        setSavingName(true);
+        await updateUserName(user.uid, newName);
+        const data = await getUserData(user.uid);
+        setUserData(data);
+        setEditingName(false);
+        setSavingName(false);
+    };
+
+    const handleCancelEdit = () => {
+        setEditingName(false);
+        setNewName('');
     };
 
     if (authLoading || loading) {
@@ -91,15 +114,71 @@ export default function PerfilPage() {
 
                         {/* Info */}
                         <div style={{ flex: 1, minWidth: '200px' }}>
-                            <h1 style={{
-                                fontSize: '1.5rem',
-                                fontWeight: 800,
-                                color: 'var(--text-primary)',
-                                marginBottom: '4px',
-                                letterSpacing: '-0.02em',
-                            }}>
-                                {userData.nome}
-                            </h1>
+                            {editingName ? (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                                    <input
+                                        type="text"
+                                        value={newName}
+                                        onChange={(e) => setNewName(e.target.value)}
+                                        maxLength={30}
+                                        autoFocus
+                                        onKeyDown={(e) => { if (e.key === 'Enter') handleSaveName(); if (e.key === 'Escape') handleCancelEdit(); }}
+                                        style={{
+                                            fontSize: '1.3rem', fontWeight: 800, color: 'var(--text-primary)',
+                                            background: 'var(--bg-surface)', border: '2px solid #00d4ff',
+                                            borderRadius: 10, padding: '6px 12px', outline: 'none',
+                                            fontFamily: 'inherit', width: '200px',
+                                        }}
+                                    />
+                                    <button
+                                        onClick={handleSaveName}
+                                        disabled={savingName || !newName.trim() || newName.trim().length < 2}
+                                        style={{
+                                            width: 34, height: 34, borderRadius: 8, border: 'none',
+                                            background: '#10b981', color: 'white', cursor: 'pointer',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            opacity: savingName || !newName.trim() || newName.trim().length < 2 ? 0.5 : 1,
+                                        }}
+                                    >
+                                        <Check size={16} />
+                                    </button>
+                                    <button
+                                        onClick={handleCancelEdit}
+                                        style={{
+                                            width: 34, height: 34, borderRadius: 8, border: 'none',
+                                            background: 'var(--bg-surface-lighter)', color: 'var(--text-secondary)',
+                                            cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        }}
+                                    >
+                                        <X size={16} />
+                                    </button>
+                                </div>
+                            ) : (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                                    <h1 style={{
+                                        fontSize: '1.5rem',
+                                        fontWeight: 800,
+                                        color: 'var(--text-primary)',
+                                        letterSpacing: '-0.02em',
+                                    }}>
+                                        {userData.nome}
+                                    </h1>
+                                    <button
+                                        onClick={handleEditName}
+                                        title="Editar nome"
+                                        style={{
+                                            width: 30, height: 30, borderRadius: 8, border: '1px solid var(--border-color)',
+                                            background: 'var(--bg-surface)', color: 'var(--text-muted)',
+                                            cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            transition: 'all 0.15s ease',
+                                        }}
+                                        onMouseEnter={e => { e.currentTarget.style.color = '#00d4ff'; e.currentTarget.style.borderColor = '#00d4ff'; }}
+                                        onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-muted)'; e.currentTarget.style.borderColor = 'var(--border-color)'; }}
+                                    >
+                                        <Pencil size={13} />
+                                    </button>
+                                </div>
+                            )}
                             <p style={{
                                 fontSize: '0.875rem',
                                 color: 'var(--text-secondary)',
@@ -121,6 +200,18 @@ export default function PerfilPage() {
                                 <div className="progress-bar-bg" style={{ height: '8px' }}>
                                     <div className="progress-bar-fill" style={{ width: `${progressPercent}%` }} />
                                 </div>
+                            </div>
+
+                            {/* Moedas */}
+                            <div style={{
+                                display: 'inline-flex', alignItems: 'center', gap: '6px',
+                                background: 'rgba(234, 179, 8, 0.08)', border: '1px solid rgba(234, 179, 8, 0.2)',
+                                borderRadius: '999px', padding: '4px 14px', marginBottom: '16px',
+                            }}>
+                                <Coins size={15} style={{ color: '#eab308' }} />
+                                <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#eab308' }}>
+                                    {userData.moedas || 0}
+                                </span>
                             </div>
 
                             {/* Action Buttons */}
@@ -202,17 +293,7 @@ export default function PerfilPage() {
                             </div>
                         </div>
 
-                        <div className="stat-card animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-                            <div className="stat-card-icon" style={{ background: 'rgba(245, 158, 11, 0.08)' }}>
-                                <Coins size={20} style={{ color: '#eab308' }} />
-                            </div>
-                            <div>
-                                <p style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                                    Moedas
-                                </p>
-                                <p style={{ fontSize: '1.5rem', fontWeight: 800, color: '#eab308' }}>{userData.moedas || 0}</p>
-                            </div>
-                        </div>
+
                     </div>
 
                     {/* Quiz History */}

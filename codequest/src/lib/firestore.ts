@@ -106,6 +106,12 @@ export function getXpParaProximoNivel(xp: number): { atual: number; necessario: 
     };
 }
 
+export async function updateUserName(uid: string, nome: string): Promise<void> {
+    const trimmed = nome.trim();
+    if (!trimmed || trimmed.length < 2 || trimmed.length > 30) return;
+    await updateDoc(doc(db, 'users', uid), { nome: trimmed });
+}
+
 export async function updateUserXP(uid: string, xpGanho: number): Promise<void> {
     const userData = await getUserData(uid);
     if (!userData) return;
